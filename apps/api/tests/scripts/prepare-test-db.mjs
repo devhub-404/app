@@ -20,7 +20,7 @@ function run(command, args, options = {}) {
   return (result.stdout ?? '').trim();
 }
 
-run('docker', [...compose, 'up', '-d', 'db', 'redis-test', 'minio-test']);
+run('docker', [...compose, 'up', '-d', '--wait', 'db', 'redis-test', 'minio-test']);
 
 run('docker', [...compose, '--profile', 'init', 'run', '--rm', 'minio-test-init']);
 
