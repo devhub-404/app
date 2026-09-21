@@ -18376,6 +18376,10 @@
         "properties": {
           "status": {
             "type": "string",
+            "enum": [
+              "ready",
+              "not_ready"
+            ],
             "example": "ready"
           },
           "ready": {
