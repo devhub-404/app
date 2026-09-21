@@ -6,7 +6,7 @@
     "slug": "local-stack-observatory",
     "summary": "Painel para acompanhar saúde e estado de um stack local.",
     "description": "Projeto experimental para tornar health checks, mailbox local e jobs pendentes compreensíveis durante o desenvolvimento.",
-    "projectUrl": "https://local.devhub.example/observatory",
+    "projectUrl": "https://local.devhub-404.example/observatory",
     "repositoryUrl": "https://github.com/devhub-community/local-stack-observatory",
     "status": "published",
     "publishedAt": "2026-08-18T12:00:00.000Z"

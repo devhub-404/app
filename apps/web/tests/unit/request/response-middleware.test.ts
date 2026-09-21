@@ -11,7 +11,7 @@ test('response middleware rewrites unexpected render failures to the server erro
   const response = new Response('server error', { status: 500 });
   let rewrittenPath: string | undefined;
   const context = {
-    request: new Request('https://devhub.test/articles/example'),
+    request: new Request('https://devhub-404.test/articles/example'),
     locals: { sessionDurationMs: undefined, sessionLookup: undefined },
     rewrite: async (path: string) => {
       rewrittenPath = path;

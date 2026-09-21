@@ -56,7 +56,7 @@ function assertTestInfrastructure(databaseUrl: string, readDatabaseUrl: string, 
     ['DB_PRIMARY_URL', databaseUrl],
     ['DB_READONLY_URL', readDatabaseUrl],
   ] as const) {
-    if (!/\/devhub_test(?:\?|$)/.test(value)) {
+    if (!/\/devhub_404_test(?:\?|$)/.test(value)) {
       throw new Error(`Refusing to run tests against a non-test database in ${name}: ${value}`);
     }
   }

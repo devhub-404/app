@@ -247,7 +247,7 @@ not depend on the Container's local disk.
 
 ### Development
 
-Local Docker Compose provides PostgreSQL for `devhub_dev`, local Redis, and
+Local Docker Compose provides PostgreSQL for `devhub_404_dev`, local Redis, and
 separate persistent volumes for the local environment.
 
 | Service | Address |

@@ -3,7 +3,7 @@ import { DocumentBuilder, type OpenAPIObject, SwaggerModule } from '@nestjs/swag
 import { AppResponses } from '@/app/http/app-response-catalog';
 
 const swaggerConfig = new DocumentBuilder()
-  .setTitle('DevHub API')
+  .setTitle('DevHub 404 API')
   .setVersion('1.0')
   .addCookieAuth('devhub_session')
   .build();

@@ -14,7 +14,7 @@ if (!['development', 'test'].includes(seedEnvironment)) {
 }
 const databaseUrl = process.env.DB_PRIMARY_URL;
 if (!databaseUrl) throw new Error('DB_PRIMARY_URL is missing from the selected environment file');
-const databaseName = seedEnvironment === 'test' ? 'devhub_test' : 'devhub_dev';
+const databaseName = seedEnvironment === 'test' ? 'devhub_404_test' : 'devhub_404_dev';
 if (!new RegExp(`/${databaseName}(?:\\?|$)`).test(databaseUrl)) {
   throw new Error(`Refusing to seed a non-${seedEnvironment} database`);
 }
@@ -414,9 +414,9 @@ async function main() {
       'utf8',
     );
     console.log(`${seedEnvironment} seed applied from ${Object.keys(manifest.files).length} JSON datasets.`);
-    console.log('  member@devhub.local / DevHub-Member-2026!');
-    console.log('  moderator@devhub.local / DevHub-Moderator-2026!');
-    console.log('  admin@devhub.local  / DevHub-Admin-2026!');
+    console.log('  member@devhub-404.local / DevHub-Member-2026!');
+    console.log('  moderator@devhub-404.local / DevHub-Moderator-2026!');
+    console.log('  admin@devhub-404.local  / DevHub-Admin-2026!');
   } catch (error) {
     await db.query('ROLLBACK').catch(() => {});
     throw error;

@@ -12,7 +12,7 @@ pnpm dev:setup
 `dev:setup` runs, in this order:
 
 1. starts PostgreSQL, Redis, and the local S3-compatible object store;
-2. applies migrations to `devhub_dev`;
+2. applies migrations to `devhub_404_dev`;
 3. resets the development database;
 4. loads deterministic static fixtures for the local application surfaces.
 
@@ -65,7 +65,7 @@ pnpm start:purge           # inicia separadamente o Worker de purge
 ```
 
 Reset and seed are allowed only with `APP_ENV=development` and only for a URL
-that points to `devhub_dev`. The static datasets live under
+that points to `devhub_404_dev`. The static datasets live under
 `apps/api/scripts/seed/data`; the script loads them in dependency order and
 validates the local database through its foreign keys.
 
@@ -78,8 +78,8 @@ validates the local database through its foreign keys.
 | Object storage API | `http://localhost:9010` |
 | Object storage console | `http://localhost:9011` |
 
-The database uses the Docker volume `devhub-dev-db`, and Redis uses
-`devhub-dev-redis`. Object storage uses `devhub-dev-object-store`.
+The database uses the Docker volume `devhub-404-dev-db`, and Redis uses
+`devhub-404-dev-redis`. Object storage uses `devhub-404-dev-object-store`.
 `infra:dev:down` does not remove these volumes.
 
 To remove persisted data, removal must be explicit:
