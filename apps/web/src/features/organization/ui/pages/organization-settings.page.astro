@@ -1,0 +1,19 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import OrganizationSettings from '../components/organization-settings.component.tsx';
+const slug = Astro.params['slug'] ?? '';
+import { translate as translateI18n } from '@/features/organization/i18n';
+---
+
+<SectionHeader
+    size="sm"
+    eyebrow={translateI18n(Astro.locals.locale, 'accountorganizations.organizations')}
+    title={translateI18n(Astro.locals.locale, 'organizationsettings.manageOrganization')}
+    description={translateI18n(
+      Astro.locals.locale,
+      'organizationsettings.membershipActiveControlsWhoCanRepresentThisIdentityCollective',
+    )}
+  /><div class="py-6">
+    <Container size="full"><OrganizationSettings locale={Astro.locals.locale} client:load slug={slug} /></Container>
+  </div>

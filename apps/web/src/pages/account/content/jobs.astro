@@ -1,0 +1,11 @@
+---
+import { AccountJobsPage } from '@/features/job/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/job/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'accountjobs.devhubMyJobs')} description={translate(locale, 'accountjobs.manageOpportunitiesPublishedByAccount')} keywords="devhub,account,jobs">
+  <AccountJobsPage />
+</AppLayout>

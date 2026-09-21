@@ -1,0 +1,37 @@
+[
+  {
+    "id": "e1000000-0000-4000-8000-000000000001",
+    "questionId": "e0000000-0000-4000-8000-000000000001",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "content": "Imports para repositories ou schemas de outro módulo são um sinal forte. O contrato público deve representar o caso de uso, não o detalhe de persistência.",
+    "acceptedAt": "2026-08-23T12:00:00.000Z"
+  },
+  {
+    "id": "e1000000-0000-4000-8000-000000000002",
+    "questionId": "e0000000-0000-4000-8000-000000000002",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "content": "Compare EXPLAIN ANALYZE em volume representativo e observe também o custo de escrita, cache e manutenção. O índice precisa reduzir trabalho do caminho que importa.",
+    "acceptedAt": "2026-08-21T12:00:00.000Z"
+  },
+  {
+    "id": "e1000000-0000-4000-8000-000000000003",
+    "questionId": "e0000000-0000-4000-8000-000000000003",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "content": "Use uma chave de idempotência derivada da intenção e persista o resultado antes de tentar novamente. O worker deve distinguir falha transitória de payload inválido.",
+    "acceptedAt": null
+  },
+  {
+    "id": "e1000000-0000-4000-8000-000000000004",
+    "questionId": "e0000000-0000-4000-8000-000000000004",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "content": "Mantenha o estado do formulário no cliente, apresente o erro perto do campo ou ação causal e ofereça retry sem reconstruir o formulário.",
+    "acceptedAt": null
+  },
+  {
+    "id": "e1000000-0000-4000-8000-000000000005",
+    "questionId": "e0000000-0000-4000-8000-000000000001",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "content": "Além dos imports, observe se uma mudança interna exige alterações em vários módulos sem um contrato explícito.",
+    "acceptedAt": null
+  }
+]

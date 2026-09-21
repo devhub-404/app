@@ -1,0 +1,17 @@
+---
+import { getQuestionQuery, QuestionPage, type Question } from '@/features/q-and-a/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/q-and-a/i18n';
+
+const id = Astro.params['id'] ?? '';
+const locale = Astro.locals.locale;
+const result = await getQuestionQuery(id, Astro.locals.api);
+const initialItem: Question | null = result.data?.data ?? null;
+if (result.response?.status === 404 || (!result.error && !initialItem)) return Astro.redirect('/404');
+if (result.error) throw new Error(result.error.code ?? 'QUESTION_REQUEST_FAILED');
+const initialError = false;
+---
+
+<AppLayout title={translate(locale, 'questiondetail.devhubQ')} description={translate(locale, 'questiondetail.questionTechnicalAnswersCommunity')} keywords="devhub,q&a">
+  <QuestionPage {id} {initialItem} {initialError} />
+</AppLayout>

@@ -1,0 +1,20 @@
+---
+import AccountPageComposition from '@/features/account/public/layout';
+import MyOrganizations from '../components/my-organizations.component.tsx';
+import { translate as translateI18n } from '@/features/organization/i18n';
+import { routes } from '@/shared/navigation/routes';
+---
+
+  <AccountPageComposition
+    active="organizations"
+    heading={translateI18n(Astro.locals.locale, 'accountorganizations.organizations')}
+    subheading={translateI18n(
+      Astro.locals.locale,
+      'accountorganizations.manageIdentitiesCollectiveWhichYouParticipates',
+    )}
+  >
+    <a slot="headerActions" href={routes.organizationNew} class="action action-primary">
+      {translateI18n(Astro.locals.locale, 'organizationcreate.newOrganization')}
+    </a>
+    <MyOrganizations locale={Astro.locals.locale} client:load />
+  </AccountPageComposition>

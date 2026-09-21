@@ -1,0 +1,11 @@
+---
+import { AccountQuestionsPage as QuestionsPage } from '@/features/account/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateApp } from '@/shared/i18n/app';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translateApp(locale, 'questions.questions')} description={translateApp(locale, 'questions.questionsCreatedByAccount')} keywords="questions">
+  <QuestionsPage />
+</AppLayout>

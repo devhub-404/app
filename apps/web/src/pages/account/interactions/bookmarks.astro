@@ -1,0 +1,11 @@
+---
+import { BookmarksPage } from '@/features/account/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/account/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'bookmarks.devhubBookmarks')} description={translate(locale, 'bookmarks.libraryPersonalContentSaved')} keywords="devhub,bookmarks,saved">
+  <BookmarksPage />
+</AppLayout>

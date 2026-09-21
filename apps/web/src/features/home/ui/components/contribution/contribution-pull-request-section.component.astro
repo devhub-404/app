@@ -1,0 +1,50 @@
+---
+import { routes } from '@/shared/navigation/routes';
+import { env } from '@/shared/runtime/env';
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+const formats = [
+  ['contribute.pr.tools', 'contribute.pr.toolsDescription', routes.tools],
+  ['contribute.pr.cheatsheets', 'contribute.pr.cheatsheetsDescription', routes.cheatsheets],
+  ['contribute.pr.roadmaps', 'contribute.pr.roadmapsDescription', routes.roadmaps],
+] as const;
+---
+
+<section class="px-6 py-16 sm:py-24">
+  <div class="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.7fr_1.3fr]">
+    <div>
+      <p class="text-eyebrow">{t('contribute.prEyebrow')}</p>
+      <h2 class="heading-large-section mt-3">{t('contribute.prTitle')}</h2>
+      <p class="text-muted-body mt-4">{t('contribute.prDescription')}</p>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-3">
+      {
+        formats.map(([title, description, href]) => (
+          <a
+            href={href}
+            class="rounded-[16px] border border-line bg-surface p-5 transition duration-standard ease-standard hover:border-action-border hover:bg-surface-elevated"
+          >
+            <h3 class="heading-callout">
+              {t(title)}
+            </h3>
+            <p class="text-muted-body mt-2">
+              {t(description)}
+            </p>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <div
+    class="mx-auto mt-8 flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 rounded-[16px] border border-line bg-surface-subtle p-5"
+  >
+    <p class="text-muted-body max-w-2xl">{t('contribute.prBoundary')}</p>
+    <a
+      href={`${env.github.repoUrl}/pulls`}
+      target="_blank"
+      rel="noreferrer"
+      class="text-sm font-semibold text-content-accent hover:text-content">{t('contribute.prAction')}</a
+    >
+  </div>
+</section>

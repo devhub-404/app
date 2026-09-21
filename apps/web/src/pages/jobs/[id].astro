@@ -1,0 +1,22 @@
+---
+import { getJobQuery, JobPage, type Job } from '@/features/job/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/job/i18n';
+
+const id = Astro.params['id'] ?? '';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const result = await getJobQuery(id, Astro.locals.api);
+const initialJob: Job | null = result.data?.data ?? null;
+if (result.response?.status === 404 || (!result.error && !initialJob)) return Astro.redirect('/404');
+if (result.error) throw new Error(result.error.code ?? 'JOB_REQUEST_FAILED');
+const initialError = false;
+---
+
+<AppLayout
+  title={t('jobdetail.devhubJob')}
+  description={t('jobdetail.opportunityProfessionalPublishedDevhub')}
+  keywords="devhub,jobs"
+>
+  <JobPage {id} {initialJob} {initialError} />
+</AppLayout>

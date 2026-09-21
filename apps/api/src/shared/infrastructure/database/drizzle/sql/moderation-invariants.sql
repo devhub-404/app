@@ -1,0 +1,1 @@
+-- Report invariants were retired with the legacy Report domain.

@@ -1,0 +1,33 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '../../i18n';
+import { getTechnologyLogo } from '@/shared/content/technology-logos';
+interface Props {
+  entry: CollectionEntry<'cheatsheets'>;
+}
+
+const { entry } = Astro.props;
+const locale = Astro.locals.locale;
+const technologyLogo = getTechnologyLogo(entry.data.slug);
+const { Content } = await render(entry);
+---
+
+  <div class="mx-auto w-full max-w-7xl">
+    <section class="px-6 py-8 sm:px-8">
+      <div class="flex items-center justify-between gap-4">
+        {
+          technologyLogo && (
+            <div class="grid size-12 shrink-0 place-items-center rounded-xl border border-line bg-surface-subtle p-2">
+              <img src={technologyLogo} alt="" class="size-full object-contain" width="72" height="72" />
+            </div>
+          )
+        }
+        <BackLink href={routes.cheatsheets} label={translateI18n(locale, 'cheatsheets.back')} />
+      </div>
+      <article class="content-prose mt-4 min-w-0">
+        <Content />
+      </article>
+    </section>
+  </div>

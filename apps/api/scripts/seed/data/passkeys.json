@@ -1,0 +1,13 @@
+[
+  {
+    "id": "55555555-5555-4555-8555-555555555558",
+    "userId": "55555555-5555-4555-8555-555555555555",
+    "webauthnId": "local-passkey-mariana",
+    "publicKey": "local-development-public-key",
+    "counter": 3,
+    "deviceType": "single_device",
+    "backedUp": false,
+    "transports": ["internal"],
+    "deviceName": "Notebook local"
+  }
+]

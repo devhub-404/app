@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import ContributionCallout from '@/shared/ui/components/surfaces/contribution-callout.component.astro';
+import { env } from '@/shared/runtime/env';
+import { translate as translateI18n } from '../../i18n';
+import { translate as translateShared } from '@/shared/i18n/app';
+import StaticContentListing from '@/shared/ui/components/listing/static-content-listing.component.tsx';
+import { selectLocalizedEntries } from '@/shared/content/localized-entries';
+import { getTechnologyLogo } from '@/shared/content/technology-logos';
+import { parseSearchQuery } from '@/shared/ui/schemas/search.schema.ts';
+const locale = Astro.locals.locale;
+const { q: initialQuery, tags: initialTags } = parseSearchQuery(Astro.url.searchParams);
+const allEntries = selectLocalizedEntries(
+  await getCollection('roadmaps', ({ data }) => data.status === 'published'),
+  locale,
+);
+const tagOptions = [...new Set(allEntries.flatMap((entry) => entry.data.metadata.tags))].map((slug) => ({
+  slug,
+  name: slug,
+}));
+const items = allEntries
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+  .map(({ data }) => ({
+    id: data.slug,
+    title: data.title,
+    description: data.description,
+    logo: getTechnologyLogo(data.slug),
+    tags: data.metadata.tags,
+    searchText: data.metadata.tags.join(' '),
+  }));
+---
+
+  <SectionHeader
+    eyebrow={translateI18n(locale, 'roadmaps.structuredLearning')}
+    title={translateI18n(locale, 'roadmaps.roadmaps')}
+    description={translateI18n(
+      locale,
+      'roadmaps.pathsProgressiveTransformFundamentalsPracticeProjectsConsolidateEachStep',
+    )}
+  />
+  <Container size="full" class="py-6 sm:py-8">
+    <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div class="min-w-0">
+        <StaticContentListing
+          client:load
+          items={items}
+          initialQuery={initialQuery}
+          initialTags={initialTags}
+          initialOptions={tagOptions}
+          basePath={routes.roadmaps}
+          label={translateI18n(locale, 'roadmaps.roadmap')}
+          searchPlaceholder={translateShared(locale, 'filters.searchPlaceholder')}
+          emptyMessage={translateShared(locale, 'filters.noResults')}
+        />
+      </div>
+      <aside class="space-y-4 lg:sticky lg:top-6">
+        <ContributionCallout
+          eyebrow={translateShared(Astro.locals.locale, 'slug.contribute')}
+          title={translateI18n(Astro.locals.locale, 'roadmaps.buildRoadmap')}
+          description={translateI18n(Astro.locals.locale, 'roadmaps.fixOrAddRoadmapMarkdownPullRequest')}
+          actionLabel={translateShared(Astro.locals.locale, 'pages.openRepository')}
+          actionHref={`https://github.com/${env.github.repoOwner}/${env.github.repoName}`}
+        />
+      </aside>
+    </div>
+  </Container>

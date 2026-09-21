@@ -1,0 +1,70 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import TitleCard from '@/features/home/ui/components/title-card.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+const cards = [
+  ['about.find', 'about.findDescription'],
+  ['about.share', 'about.shareDescription'],
+  ['about.maintain', 'about.maintainDescription'],
+] as const;
+---
+
+  <MarketingSurface>
+    <div>
+      <section class="px-6 pb-20 pt-10">
+        <div class="mx-auto w-full max-w-6xl">
+          <span class="inline-flex rounded-full border border-line bg-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-[.2em] text-content-muted">{t('about.eyebrow')}</span>
+          <h1 class="heading-marketing mt-5 max-w-4xl">{t('about.title')}</h1>
+          <p class="text-intro mt-5 max-w-3xl">{t('about.description')}</p>
+          <div class="mt-8 border-y border-line py-5 text-sm font-medium text-content-accent">{t('about.flow')}</div>
+          <div class="mt-10 grid gap-4 md:grid-cols-3">
+            {cards.map(([title, description]) => <TitleCard title={t(title)} description={t(description)} />)}
+          </div>
+          <section class="mt-12 rounded-3xl border border-line bg-surface-subtle p-7">
+            <p class="text-eyebrow">{t('about.whyEyebrow')}</p><h2 class="heading-section mt-2 max-w-3xl">
+              {t('about.whyTitle')}
+            </h2><p class="text-muted-body mt-4 max-w-3xl">{t('about.whyDescription')}</p>
+          </section>
+          <section class="mt-12 rounded-3xl border border-line bg-surface p-7">
+            <p class="text-eyebrow">
+              {t('about.catalogEyebrow')}
+            </p><h2 class="heading-section mt-2">
+              {t('about.catalogTitle')}
+            </h2><p class="text-muted-body mt-3 max-w-3xl">{t('about.catalogDescription')}</p>
+          </section>
+          <section class="mt-12 grid gap-5 lg:grid-cols-2">
+            <div class="rounded-3xl border border-line bg-surface p-7">
+              <p class="text-eyebrow">
+                {t('about.principlesEyebrow')}
+              </p><h2 class="heading-section mt-2">{t('about.principlesTitle')}</h2><p class="text-muted-body mt-3">
+                {t('about.principlesDescription')}
+              </p>
+            </div><div class="rounded-3xl border border-line bg-surface p-7">
+              <p class="text-eyebrow">
+                {t('about.supportEyebrow')}
+              </p><h2 class="heading-section mt-2">{t('about.supportTitle')}</h2><p class="text-muted-body mt-3">
+                {t('about.supportDescription')}
+              </p>
+            </div>
+          </section>
+          <section class="mt-12 grid gap-6 border-t border-line pt-10 lg:grid-cols-[.8fr_1.2fr]">
+            <p class="text-eyebrow">
+              {t('about.ambitionEyebrow')}
+            </p><div>
+              <h2 class="heading-section">{t('about.ambitionTitle')}</h2><p class="text-muted-body mt-3 max-w-2xl">
+                {t('about.ambitionDescription')}
+              </p>
+            </div>
+          </section>
+          <div class="mt-12 flex flex-wrap gap-3">
+            <a href={routes.search} class="action action-primary">{t('about.explore')}</a>
+            <a href={routes.contribute} class="action action-secondary">{t('about.contribute')}</a>
+            <a href={routes.faq} class="action action-secondary">{t('about.faq')}</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </MarketingSurface>

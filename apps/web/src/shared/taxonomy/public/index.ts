@@ -1,0 +1,31 @@
+export {
+  archiveTag,
+  createTag,
+  createTagAlias,
+  deleteTag,
+  deleteTagAlias,
+  deleteTagIdentityTerm,
+  listTagAliases,
+  listTagIdentityTerms,
+  listTags,
+  listTagsPage,
+  mergeTags,
+  resolveTag,
+  setTagIdentityTerm,
+  unarchiveTag,
+  updateTag,
+} from '../actions/taxonomy.action.ts';
+
+export type {
+  CreateTagAliasDTO,
+  CreateTagDTO,
+  ListTagsPageQuery,
+  ListTagsQuery,
+  MergeTagsDTO,
+  PaginatedTagsDTO,
+  SetTagIdentityTermDTO,
+  TagAliasDTO,
+  TagDTO,
+  TagIdentityTermDTO,
+  UpdateTagDTO,
+} from '../types/taxonomy.type.ts';

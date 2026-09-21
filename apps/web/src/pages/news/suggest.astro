@@ -1,0 +1,11 @@
+---
+import { NewsSuggestionPage } from '@/features/news/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/news/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'newssuggestionpage.title')} description={translate(locale, 'newssuggestionpage.description')} keywords="devhub,news,suggestion">
+  <NewsSuggestionPage />
+</AppLayout>

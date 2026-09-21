@@ -1,0 +1,55 @@
+---
+import Container from './container.component.astro';
+import Heading from '@/shared/ui/components/typography/heading.component.tsx';
+import Text from '@/shared/ui/components/typography/text.component.tsx';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  size?: 'sm' | 'md';
+  containerSize?: 'sm' | 'md' | 'lg' | 'full';
+  border?: boolean;
+}
+
+const { eyebrow, title, description, size = 'md', containerSize = 'full', border = false } = Astro.props;
+const compact = size === 'sm';
+const hasActions = Astro.slots.has('actions');
+const hasNavigation = Astro.slots.has('navigation');
+---
+
+<header class:list={[border && 'border-b border-line', compact ? 'py-5' : 'py-7 sm:py-8']}>
+  <Container size={containerSize}>
+    <div class="grid gap-5">
+      <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
+        <div class="grid min-w-0 max-w-3xl gap-2">
+          {eyebrow && <Text variant="eyebrow">{eyebrow}</Text>}
+          <Heading level={1} variant={compact ? 'pageCompact' : 'page'}>
+            {title}
+          </Heading>
+          {
+            description && (
+              <Text variant="lead" class="max-w-2xl">
+                {description}
+              </Text>
+            )
+          }
+        </div>
+        {
+          hasActions && (
+            <div class="flex shrink-0 flex-wrap items-center gap-2">
+              <slot name="actions" />
+            </div>
+          )
+        }
+      </div>
+      {
+        hasNavigation && (
+          <div>
+            <slot name="navigation" />
+          </div>
+        )
+      }
+    </div>
+  </Container>
+</header>

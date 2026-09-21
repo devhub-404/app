@@ -1,0 +1,11 @@
+---
+import { ResourceSuggestionPage } from '@/features/resource/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/resource/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'resourcesuggestionpage.title')} description={translate(locale, 'resourcesuggestionpage.description')} keywords="devhub,resource,suggestion">
+  <ResourceSuggestionPage />
+</AppLayout>

@@ -1,0 +1,58 @@
+---
+import { routes } from '@/shared/navigation/routes';
+import { env } from '@/shared/runtime/env';
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+const formats = [
+  ['contribute.platform.articles', 'contribute.platform.articlesDescription', routes.articleNew],
+  ['contribute.platform.questions', 'contribute.platform.questionsDescription', routes.questionNew],
+  ['contribute.platform.resources', 'contribute.platform.resourcesDescription', routes.resourceNew],
+  ['contribute.platform.projects', 'contribute.platform.projectsDescription', routes.projectNew],
+  ['contribute.platform.events', 'contribute.platform.eventsDescription', routes.eventNew],
+  ['contribute.platform.jobs', 'contribute.platform.jobsDescription', routes.jobNew],
+  ['contribute.platform.news', 'contribute.platform.newsDescription', routes.newsNew],
+] as const;
+---
+
+<section class="border-y border-line bg-surface-subtle px-6 py-16 sm:py-20">
+  <div class="mx-auto grid w-full max-w-6xl gap-4 lg:grid-cols-3">
+    <div class="rounded-[18px] border border-action-border bg-selected p-6 lg:col-span-2">
+      <p class="text-accent-label">
+        {t('contribute.platformEyebrow')}
+      </p>
+      <h2 class="heading-large-section-compact mt-3">
+        {t('contribute.platformTitle')}
+      </h2>
+      <p class="text-muted-body mt-3 max-w-2xl">{t('contribute.platformDescription')}</p>
+      <div class="mt-7 grid gap-3 sm:grid-cols-2">
+        {
+          formats.map(([title, description, href]) => (
+            <a
+              href={href}
+              class="rounded-xl border border-line bg-surface p-4 transition duration-standard ease-standard hover:border-action-border"
+            >
+              <h3 class="heading-callout">
+                {t(title)}
+              </h3>
+              <p class="text-muted-body mt-2">
+                {t(description)}
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+    <div class="rounded-[18px] border border-line bg-surface p-6">
+      <p class="text-eyebrow">
+        {t('contribute.sponsorEyebrow')}
+      </p>
+      <h2 class="heading-section mt-3">{t('contribute.sponsorTitle')}</h2>
+      <p class="text-muted-body mt-3">{t('contribute.sponsorDescription')}</p>
+      <div class="mt-7">
+        <a href={env.github.sponsorUrl} target="_blank" rel="noreferrer" class="action action-primary"
+          >{t('contribute.sponsorAction')}</a>
+      </div>
+    </div>
+  </div>
+</section>

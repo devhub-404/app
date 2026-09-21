@@ -1,0 +1,12 @@
+export { PasswordRegisterStartDTO } from '@/modules/auth/application/password/dtos/in/password-register-start.dto';
+export { PasswordRegisterFinishDTO } from '@/modules/auth/application/password/dtos/in/password-register-finish.dto';
+export { PasswordLoginStartDTO } from '@/modules/auth/application/password/dtos/in/password-login-start.dto';
+export { PasswordLoginFinishDTO } from '@/modules/auth/application/password/dtos/in/password-login-finish.dto';
+export { PasswordChangeStartDTO } from '@/modules/auth/application/password/dtos/in/password-change-start.dto';
+export { PasswordChangeCompleteDTO } from '@/modules/auth/application/password/dtos/in/password-change-complete.dto';
+export { PasswordRecoverStartDTO } from '@/modules/auth/application/password/dtos/in/password-recover-start.dto';
+export { PasswordRecoverPrepareDTO } from '@/modules/auth/application/password/dtos/in/password-recover-prepare.dto';
+export { PasswordCredentialCreateCompleteDTO } from '@/modules/auth/application/password/dtos/in/password-credential-create-complete.dto';
+export { PasswordRecoverCompleteDTO } from '@/modules/auth/application/password/dtos/in/password-recover-complete.dto';
+export { PasswordCredentialCreateStartDTO } from '@/modules/auth/application/password/dtos/in/password-credential-create-start.dto';
+export * from '@/modules/auth/application/password/dtos/in/password-command-input.dto';

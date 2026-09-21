@@ -1,0 +1,86 @@
+---
+import { Circle, CircleCheck } from 'lucide-solid';
+import type { QuestionListItem } from '@/features/q-and-a/types/q-and-a.type.ts';
+import { routes } from '@/shared/navigation/routes';
+import { formatLocalizedDate } from '@/shared/i18n/core';
+import { translate as translateI18n } from '@/features/q-and-a/i18n';
+import TagLink from '@/shared/ui/components/navigation/tag-link.component.tsx';
+
+interface Props {
+  question: QuestionListItem;
+}
+const { question } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1], values?: unknown[]) => translateI18n(locale, key, values);
+const createdAt = formatLocalizedDate(question.createdAt, locale, {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
+const statusLabel =
+  question.status === 'closed'
+    ? t('questions.closedOne')
+    : question.acceptedAnswerId
+      ? t('questions.solvedOne')
+      : t('questions.openOne');
+---
+
+<article
+  class="rounded-2xl border border-line bg-surface-elevated p-5 shadow-sm transition duration-standard ease-standard hover:border-action-border hover:shadow-md sm:p-6"
+>
+  <div
+    class:list={[
+      'flex items-center gap-2 text-xs font-semibold uppercase tracking-[.16em]',
+      question.status === 'closed'
+        ? 'text-content-muted'
+        : question.acceptedAnswerId
+          ? 'text-success'
+          : 'text-content-accent',
+    ]}
+  >
+    <span class="inline-flex size-5 items-center justify-center rounded-full bg-current/10">
+      {question.status === 'closed' ? <CircleCheck class="size-4" /> : <Circle class="size-2.5 fill-current" />}
+    </span>
+    {statusLabel}
+  </div>
+  <h2 class="heading-subsection mt-2 text-xl">
+    <a href={routes.question(question.id)} class="transition hover:text-content-accent">{question.title}</a>
+  </h2>
+  <div class="mt-2 flex flex-wrap gap-2">
+    {question.tagSlugs.map((tag) => <TagLink slug={tag} label={tag} />)}
+  </div>
+  <div
+    class="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-line pt-3 text-sm text-content-muted"
+  >
+    <span>
+      {t('questions.by')}
+      {' '}
+      {
+        question.author ? (
+          <a
+            href={routes.profile(question.author.username)}
+            class="font-semibold text-content hover:text-content-accent"
+          >
+            {question.author.displayName || question.author.username}
+          </a>
+        ) : (
+          t('questiondetail.anonymous')
+        )
+      }
+      {' · '}{createdAt}
+    </span>
+    <div class="flex items-center gap-4">
+      <span
+        >{question.answerCount}
+        {question.answerCount === 1 ? t('questions.answerOne') : t('questions.answerMany')}</span
+      >
+      <a
+        href={routes.question(question.id)}
+        class="inline-flex min-h-9 items-center justify-center rounded-lg border border-line bg-surface px-3 text-xs font-semibold text-content transition hover:border-action-border hover:bg-surface-subtle hover:text-content-accent"
+        >{t('questions.openQuestion')}</a
+      >
+    </div>
+  </div>
+</article>

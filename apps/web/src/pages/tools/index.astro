@@ -1,0 +1,15 @@
+---
+import { ToolsPage } from '@/features/tool/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/tool/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout
+  title={translateI18n(locale, 'toolsindex.devhubTools')}
+  description={translateI18n(locale, 'toolsindex.toolsLocalTasksQuickDevelopment')}
+  keywords="devhub,tools,developer-tools"
+>
+  <ToolsPage />
+</AppLayout>

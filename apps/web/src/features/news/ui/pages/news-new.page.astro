@@ -1,0 +1,14 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import NewNewsForm from '@/features/news/ui/components/forms/solid/new-news-form.component.tsx';
+import { translate as translateI18n } from '@/features/news/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <SectionHeader
+    eyebrow={translateI18n(locale, 'newsnew.contribute')}
+    title={translateI18n(locale, 'newsform.newNews')}
+    description={translateI18n(locale, 'newsnew.recordSourceRelevantEcosystemPreparePublicationEditorial')}
+  />
+  <div class="py-6 sm:py-8"><Container size="full"><NewNewsForm locale={locale} client:load /></Container></div>

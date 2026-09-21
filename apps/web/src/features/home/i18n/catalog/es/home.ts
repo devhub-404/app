@@ -1,0 +1,83 @@
+export const catalog = {
+  'home.metaTitle': 'DevHub 404 — Encuentra lo que necesitas. Comparte lo que sabes.',
+  'home.metaDescription':
+    'Un ecosistema donde desarrolladores encuentran conocimiento, herramientas, referencias, oportunidades y comunidad.',
+  'home.metaKeywords': 'DevHub 404, desarrolladores, programación, conocimiento, herramientas, comunidad',
+  'home.eyebrow': 'Para desarrolladores',
+  'home.heroTitle': 'Encuentra lo que necesitas para seguir avanzando.',
+  'home.heroDescription':
+    'Conocimiento, referencias, herramientas, oportunidades y comunidad en un solo lugar, para reducir la distancia entre una duda y el siguiente paso.',
+  'home.findAction': 'Encontrar lo que necesito',
+  'home.contributeAction': 'Compartir lo que sé',
+  'home.promiseEyebrow': 'DevHub 404',
+  'home.promiseTitle': 'Un punto de convergencia para quienes desarrollan software.',
+  'home.promiseDescription':
+    'Usa lo que te ayuda a aprender, resolver, construir y evolucionar. Cuando puedas, deja algo mejor para la siguiente persona.',
+  'home.tagline': 'Encuentra lo que necesitas. Comparte lo que sabes.',
+  'home.stepsEyebrow': 'Cómo funciona',
+  'home.stepsTitle': 'Menos tiempo buscando dónde. Más tiempo avanzando.',
+  'home.stepsDescription':
+    'DevHub organiza los recursos por el papel que cumplen en tu siguiente paso, sin exigir que ya sepas dónde buscar.',
+  'home.step.need': 'Empieza por la necesidad',
+  'home.step.needDescription': 'Nombra lo que necesitas entender, resolver, usar o construir.',
+  'home.step.find': 'Encuentra el formato adecuado',
+  'home.step.findDescription':
+    'Accede a una explicación, una referencia, una herramienta o la experiencia de otra persona.',
+  'home.step.advance': 'Avanza con contexto',
+  'home.step.advanceDescription':
+    'Convierte lo que encontraste en una decisión, una solución o una contribución que acorte el camino de otra persona.',
+  'home.whyEyebrow': 'Por qué existe',
+  'home.whyTitle': 'La información existe. El camino sigue fragmentado.',
+  'home.whyParagraphOne':
+    'Quienes desarrollan software alternan entre documentación, respuestas, referencias, herramientas, proyectos, oportunidades y personas. Estos recursos son valiosos, pero suelen vivir separados, sin conservar el contexto entre una necesidad y la siguiente decisión.',
+  'home.whyParagraphTwo':
+    'DevHub 404 acerca esas partes. Convierte una brecha en contexto utilizable y ayuda a que lo que funciona para una persona pueda ser encontrado por quien venga después.',
+  'home.formatsEyebrow': 'El ecosistema',
+  'home.formatsTitle': 'Un lugar, distintas formas de avanzar.',
+  'home.formatsDescription': 'Cada espacio atiende una necesidad diferente. Elige lo que mejor cierre tu brecha ahora.',
+  'home.format.articles': 'Artículos',
+  'home.format.articlesDescription': 'Explicaciones detalladas para comprender un tema.',
+  'home.format.codex': 'Codex',
+  'home.format.codexDescription': 'Conceptos, definiciones y relaciones organizados por tema.',
+  'home.format.cheatsheets': 'Cheatsheets',
+  'home.format.cheatsheetsDescription': 'Referencia rápida para consultar mientras trabajas.',
+  'home.format.roadmaps': 'Roadmaps',
+  'home.format.roadmapsDescription': 'Direcciones de aprendizaje para orientar tu evolución.',
+  'home.format.questions': 'Q&A',
+  'home.format.questionsDescription': 'Preguntas y respuestas para resolver bloqueos específicos.',
+  'home.format.resources': 'Recursos',
+  'home.format.resourcesDescription': 'Referencias externas seleccionadas por lo que te ayudan a hacer.',
+  'home.format.tools': 'Herramientas',
+  'home.format.toolsDescription': 'Herramientas para realizar tareas prácticas.',
+  'home.format.projects': 'Proyectos',
+  'home.format.projectsDescription': 'Cosas construidas por la comunidad para descubrir y usar.',
+  'home.format.events': 'Events',
+  'home.format.eventsDescription': 'Acontecimientos para participar y conectar.',
+  'home.format.jobs': 'Empleos',
+  'home.format.jobsDescription': 'Oportunidades profesionales para tu próximo movimiento.',
+  'home.format.news': 'Noticias',
+  'home.format.newsDescription': 'Actualizaciones para seguir el ecosistema de desarrollo.',
+  'home.openFormat': 'Abrir',
+  'home.contributionEyebrow': 'Contribuye',
+  'home.contributionTitle': '¿Encontraste un camino? Ayuda a que otros puedan encontrarlo.',
+  'home.contributionDescription':
+    'Comparte una explicación, responde una pregunta, recomienda una referencia o muestra algo que construiste.',
+  'home.contributionAction': 'Ver formas de contribuir',
+  'home.supportEyebrow': 'Sostenibilidad',
+  'home.supportTitle': 'El conocimiento abierto necesita un hogar.',
+  'home.supportDescription':
+    'DevHub 404 se mantiene mediante GitHub Sponsors, con el apoyo de personas y organizaciones que creen en el proyecto.',
+  'home.supportAction': 'Apoyar mediante GitHub Sponsors',
+  'home.integrityEyebrow': 'Nuestros compromisos',
+  'home.integrityTitle': 'Un ecosistema para desarrolladores debe seguir siendo confiable.',
+  'home.integrityDescription':
+    'DevHub 404 se guía por utilidad, contexto y corrección — no por retener la atención ni distorsionar el descubrimiento.',
+  'home.integrity.1.title': 'Hecho para desarrolladores',
+  'home.integrity.1.description':
+    'La experiencia comienza con las necesidades de quienes desarrollan, aprenden, resuelven y construyen.',
+  'home.integrity.2.title': 'Descubrimiento independiente',
+  'home.integrity.2.description':
+    'Los intereses comerciales no deben decidir qué aparece orgánicamente ni qué merece contexto.',
+  'home.integrity.3.title': 'Conocimiento corregible',
+  'home.integrity.3.description': 'La comunidad puede ampliar, cuestionar y mejorar las contribuciones.',
+} as const;

@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import ArticlesModerationList from '@/features/panel/ui/components/articles-moderation-list.component.tsx';
+import { translate as translateI18n } from '@/features/panel/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="articles"
+    heading={translateI18n(locale, 'articlesmoderationlist.articles')}
+    subheading={translateI18n(locale, 'panelarticles.viewStatusesSignalsModerationWithoutAssumeManagementAuthorial')}
+  >
+    <ArticlesModerationList locale={locale} client:load />
+  </PanelPageComposition>

@@ -1,0 +1,9 @@
+export { DiscoveryListInputDTO } from './discovery-list.input.dto';
+export { GetFeedInputDTO } from './get-feed.input.dto';
+export { GetRelatedContentInputDTO } from './get-related-content.input.dto';
+export { GetRelatedContentPathDTO } from './get-related-content-path.input.dto';
+export { GetRelatedContentQueryDTO } from './get-related-content-query.input.dto';
+export { ListPopularContentInputDTO } from './list-popular-content.input.dto';
+export { ListRecentContentInputDTO } from './list-recent-content.input.dto';
+export { ListTrendingContentInputDTO } from './list-trending-content.input.dto';
+export { SearchExploreInputDTO } from './search-explore.input.dto';

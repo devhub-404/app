@@ -1,0 +1,17 @@
+---
+import { translate, type TranslationKey } from '@/features/home/i18n';
+const t = (key: TranslationKey) => translate(Astro.locals.locale, key);
+---
+
+<section class="px-6 py-16 sm:py-24">
+  <div class="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+    <div>
+      <p class="text-eyebrow">{t('home.whyEyebrow')}</p>
+      <h2 class="heading-large-section mt-3">{t('home.whyTitle')}</h2>
+    </div>
+    <div class="max-w-3xl space-y-5 text-base leading-7 text-content-muted">
+      <p class="text-body">{t('home.whyParagraphOne')}</p>
+      <p class="text-body">{t('home.whyParagraphTwo')}</p>
+    </div>
+  </div>
+</section>

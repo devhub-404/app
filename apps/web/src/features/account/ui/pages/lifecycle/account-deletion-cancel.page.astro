@@ -1,0 +1,11 @@
+---
+import { AuthPageComposition } from '@/features/auth/public';
+import AccountDeletionCancel from '../../components/account-deletion-cancel.component.tsx';
+import { translate } from '@/features/account/i18n';
+const token = Astro.url.searchParams.get('token') ?? '';
+const locale = Astro.locals.locale;
+---
+
+  <AuthPageComposition title={translate(locale, 'lifecycle.deletionMetaTitle')}>
+    <AccountDeletionCancel client:load token={token} locale={locale} />
+  </AuthPageComposition>

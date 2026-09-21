@@ -1,0 +1,72 @@
+---
+import { ReportButton } from '@/features/report/public';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import type { Event } from '@/features/event/types/event.type.ts';
+import { routes } from '@/shared/navigation/routes';
+import { formatLocalizedDate } from '@/shared/i18n/core';
+import { translate as translateI18n } from '@/features/event/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+interface Props {
+  event: Event | null;
+}
+
+const { event } = Astro.props;
+const formatDate = (value: string) => formatLocalizedDate(value, locale, { dateStyle: 'full', timeStyle: 'short' });
+---
+
+  <SectionHeader
+    eyebrow={t('eventdetail.events')}
+    title={event?.title ?? t('eventdetail.notFound')}
+    description={event?.description ?? t('eventdetail.notFoundDescription')}
+  >
+    <BackLink slot="actions" href={routes.events} label={t('eventdetail.events')} />
+  </SectionHeader>
+  {
+    event && (
+      <div class="py-6 sm:py-8">
+        <Container size="sm">
+          <article class="rounded-3xl border border-line bg-surface-elevated p-6">
+            <>
+              <header>
+                <>
+                  <h1 class="heading-visually-hidden sr-only">
+                    {event.title}
+                  </h1>
+                  <dl class="space-y-2 text-sm">
+                    <div>
+                      <>
+                        <dt class="sr-only">{t('eventdetail.event')}</dt>
+                        <dd class="text-content">
+                          {formatDate(event.startsAt)} {t('events.upTo')} {formatDate(event.endsAt)}
+                        </dd>
+                      </>
+                    </div>
+                    {event.location && (
+                      <div>
+                        <dt class="sr-only">{t('eventdetail.event')}</dt>
+                        <dd class="text-content-muted">{event.location}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </>
+              </header>
+              <div class="mt-6">
+                <div class="flex flex-wrap gap-2">
+                  <>
+                    <a href={event.url ?? '#'} target="_blank" rel="noreferrer" class="action action-primary">
+                      {t('eventdetail.openSiteOfficial')}
+                    </a>
+                    <ReportButton target="resource" id={event.id} locale={locale} client:idle />
+                  </>
+                </div>
+              </div>
+            </>
+          </article>
+        </Container>
+      </div>
+    )
+  }

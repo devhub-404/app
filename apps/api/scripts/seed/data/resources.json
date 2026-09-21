@@ -1,0 +1,37 @@
+[
+  {
+    "id": "c0000000-0000-4000-8000-000000000001",
+    "title": "Documentação PostgreSQL",
+    "description": "Documentação oficial para schemas, consultas, índices e transações PostgreSQL.",
+    "url": "https://www.postgresql.org/docs/",
+    "status": "active"
+  },
+  {
+    "id": "c0000000-0000-4000-8000-000000000002",
+    "title": "TypeScript Handbook",
+    "description": "Referência oficial para tipos, narrowing, generics e configuração do TypeScript.",
+    "url": "https://www.typescriptlang.org/docs/handbook/",
+    "status": "active"
+  },
+  {
+    "id": "c0000000-0000-4000-8000-000000000003",
+    "title": "OWASP Cheat Sheet Series",
+    "description": "Guias práticos de segurança para aplicações e equipes de desenvolvimento.",
+    "url": "https://cheatsheetseries.owasp.org/",
+    "status": "active"
+  },
+  {
+    "id": "c0000000-0000-4000-8000-000000000004",
+    "title": "MDN Web Docs",
+    "description": "Referência aberta para tecnologias da Web, APIs e padrões de frontend.",
+    "url": "https://developer.mozilla.org/",
+    "status": "archived"
+  },
+  {
+    "id": "c0000000-0000-4000-8000-000000000005",
+    "title": "OpenTelemetry Docs",
+    "description": "Documentação para instrumentação, traces, métricas e logs observáveis.",
+    "url": "https://opentelemetry.io/docs/",
+    "status": "active"
+  }
+]

@@ -1,0 +1,11 @@
+---
+import { NewsNewPage } from '@/features/news/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/news/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'newsnew.devhubNewNews')} description={translate(locale, 'newsnew.createPublicationEditorialDevhub')} keywords="devhub,news,editorial">
+  <NewsNewPage />
+</AppLayout>

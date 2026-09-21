@@ -1,0 +1,32 @@
+[
+  { "id": "10000000-0000-4000-8000-000000000001", "name": "Arquitetura", "slug": "arquitetura", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000002", "name": "PostgreSQL", "slug": "postgresql", "status": "active" },
+  {
+    "id": "10000000-0000-4000-8000-000000000003",
+    "name": "Observabilidade",
+    "slug": "observabilidade",
+    "status": "active"
+  },
+  { "id": "10000000-0000-4000-8000-000000000004", "name": "TypeScript", "slug": "typescript", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000005", "name": "Frontend", "slug": "frontend", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000006", "name": "Segurança", "slug": "seguranca", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000007", "name": "Carreira", "slug": "carreira", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000008", "name": "Produto", "slug": "produto", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000009", "name": "Performance", "slug": "performance", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000010", "name": "Legado", "slug": "legado", "status": "archived" },
+  { "id": "10000000-0000-4000-8000-000000000011", "name": "Backend", "slug": "backend", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000012", "name": "DevOps", "slug": "devops", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000013", "name": "Banco de Dados", "slug": "banco-de-dados", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000014", "name": "APIs", "slug": "apis", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000015", "name": "UX", "slug": "ux", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000016", "name": "Produtividade", "slug": "produtividade", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000017", "name": "Sistemas Distribuídos", "slug": "sistemas-distribuidos", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000018", "name": "Testes", "slug": "testes", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000019", "name": "CI/CD", "slug": "ci-cd", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000020", "name": "Clean Code", "slug": "clean-code", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000021", "name": "Python", "slug": "python", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000022", "name": "React", "slug": "react", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000023", "name": "Cloud", "slug": "cloud", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000024", "name": "Mensageria", "slug": "mensageria", "status": "active" },
+  { "id": "10000000-0000-4000-8000-000000000025", "name": "Carreira Técnica", "slug": "carreira-tecnica", "status": "active" }
+]

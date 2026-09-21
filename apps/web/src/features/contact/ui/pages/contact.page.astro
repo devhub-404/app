@@ -1,0 +1,73 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import ContactForm from '@/features/contact/ui/components/contact-form.component.tsx';
+import { env } from '@/shared/runtime/env';
+import { translate } from '@/features/contact/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+---
+
+  <MarketingSurface>
+    <div class="px-6 pb-20 pt-10">
+      <div class="mx-auto w-full max-w-5xl">
+        <span class="inline-flex rounded-full border border-line bg-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-[.2em] text-content-muted">{t('contact.eyebrow')}</span>
+        <h1 class="heading-marketing mt-5 max-w-3xl">{t('contact.title')}</h1>
+        <p class="text-intro mt-4 max-w-3xl">{t('contact.description')}</p>
+        <section class="mt-8 rounded-3xl border border-line bg-surface-subtle p-6">
+          <h2 class="heading-tiny text-xs">
+            {t('contact.channelsEyebrow')}
+          </h2><p class="text-muted-body mt-2">{t('contact.channelsDescription')}</p><div
+            class="mt-4 grid gap-3 sm:grid-cols-3"
+          >
+            <a
+              href="mailto:contact@devhub404.org"
+              class="rounded-2xl border border-line bg-surface p-4 hover:border-action-border"
+              ><span class="text-sm font-semibold text-content">{t('contact.general')}</span><span
+                class="mt-1 block text-sm text-content-muted">contact@devhub404.org</span
+              ></a
+            ><a
+              href="mailto:privacy@devhub404.org"
+              class="rounded-2xl border border-line bg-surface p-4 hover:border-action-border"
+              ><span class="text-sm font-semibold text-content">{t('contact.privacy')}</span><span
+                class="mt-1 block text-sm text-content-muted">privacy@devhub404.org</span
+              ></a
+            ><a
+              href="mailto:security@devhub404.org"
+              class="rounded-2xl border border-line bg-surface p-4 hover:border-action-border"
+              ><span class="text-sm font-semibold text-content">{t('contact.security')}</span><span
+                class="mt-1 block text-sm text-content-muted">security@devhub404.org</span
+              ></a
+            >
+          </div>
+        </section>
+        <div class="mt-8 grid gap-5 lg:grid-cols-[1fr_.42fr]">
+          <div>
+            <ContactForm locale={Astro.locals.locale} client:load />
+          </div>
+          <aside class="space-y-4">
+            <a
+              href={env.discordUrl}
+              target="_blank"
+              rel="noreferrer"
+              class="block rounded-2xl border border-line bg-surface p-5 hover:border-action-border"
+              ><p class="text-eyebrow">
+                {t('contact.openEyebrow')}
+              </p><h2 class="heading-callout mt-2">{t('contact.openTitle')}</h2><p class="text-muted mt-2">
+                {t('contact.openDescription')}
+              </p></a
+            >
+            <div class="rounded-2xl border border-line bg-surface p-5">
+              <p class="text-eyebrow">
+                {t('contact.sensitiveEyebrow')}
+              </p><p class="text-muted mt-2">{t('contact.sensitiveDescription')}</p>
+            </div>
+            <div class="rounded-2xl border border-line bg-surface p-5">
+              <p class="text-eyebrow">
+                {t('contact.beforeEyebrow')}
+              </p><p class="text-muted mt-2">{t('contact.beforeDescription')}</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </MarketingSurface>

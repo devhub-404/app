@@ -1,0 +1,11 @@
+---
+import { HomePage } from '@/features/home/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/home/i18n';
+
+const t = (key: Parameters<typeof translate>[1]) => translate(Astro.locals.locale, key);
+---
+
+<AppLayout title={t('home.metaTitle')} description={t('home.metaDescription')} keywords={t('home.metaKeywords')}>
+  <HomePage />
+</AppLayout>

@@ -1,0 +1,19 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import QAndAContributionsPage from '@/features/account/ui/components/content/q-and-a-contributions-page.component.tsx';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateAccount } from '@/features/account/i18n';
+import { translate as translateApp } from '@/shared/i18n/app';
+
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="questions"
+    heading={translateApp(locale, 'questions.questions')}
+    subheading={translateApp(locale, 'questions.questionsCreatedByAccount')}
+  >
+    <a slot="headerActions" href={routes.questionNew} class="action action-primary"
+      >{translateAccount(locale, 'accountactions.newQuestion')}</a>
+    <QAndAContributionsPage kind="question" locale={locale} client:load />
+  </AccountPageComposition>

@@ -1,0 +1,47 @@
+export const catalog = {
+  'home.intent.learn': 'Aprender',
+  'home.intent.learnDescription': 'Entenda conceitos, decisões e práticas.',
+  'home.intent.solve': 'Resolver',
+  'home.intent.solveDescription': 'Encontre respostas para problemas concretos.',
+  'home.intent.use': 'Usar',
+  'home.intent.useDescription': 'Acesse ferramentas e referências para executar.',
+  'home.intent.build': 'Construir',
+  'home.intent.buildDescription': 'Veja projetos e compartilhe o que criou.',
+  'home.intent.join': 'Participar',
+  'home.intent.joinDescription': 'Descubra eventos, vagas e conversas.',
+  'home.surface.jobsEvents': 'Oportunidades para avançar e participar.',
+  'home.surface.explore': 'Pesquise na base inteira e filtre pelo tipo de próximo passo que você procura.',
+  'home.surface.articles': 'Explicações, análises, guias e experiências com autoria explícita.',
+  'home.surface.questions': 'Perguntas concretas, respostas úteis e threads estáveis depois de resolvidas.',
+  'home.surface.resources': 'Referências externas para chegar à fonte original, não apenas a um resumo.',
+  'home.surface.news': 'Atualizações temporais para entender o que mudou no ecossistema.',
+  'home.surface.projects': 'O que desenvolvedores constroem, aprendem e colocam em circulação.',
+  'home.surface.jobs': 'Oportunidades profissionais com remuneração e candidatura claramente descritas.',
+  'home.surface.tools': 'Utilidades práticas para transformar intenção em execução.',
+  'home.principle.find': 'Encontre',
+  'home.principle.findDescription': 'Pesquisa, Tags e conteúdo relacionado reduzem o custo de chegar a algo relevante.',
+  'home.principle.contribute': 'Contribua',
+  'home.principle.contributeDescription':
+    'Publique no formato adequado: Artigo, Pergunta, Recurso, Projeto ou outro tipo de contribuição.',
+  'home.principle.correct': 'Corrija',
+  'home.principle.correctDescription':
+    'Reports registram problemas; contexto, fontes e decisões tornam a base corrigível.',
+  'home.faq.social': 'O DevHub é uma rede social?',
+  'home.faq.socialAnswer':
+    'Não. Perfis dão contexto à autoria e às contribuições, mas não existe reputação global, follower graph ou ranking de desenvolvedores.',
+  'home.faq.order': 'Como o conteúdo é ordenado?',
+  'home.faq.orderAnswer':
+    'Pesquisa usa relevância textual. Popular usa votos positivos. Em alta usa votos recentes. Recentes usa data.',
+  'home.faq.ads': 'Há anúncios?',
+  'home.faq.adsAnswer':
+    'Não vendemos posicionamento. O projeto é sustentado por GitHub Sponsors e sponsors reconhecidos sem influência sobre conteúdo ou ranking.',
+  'home.contributors': 'Contribuidores',
+  'home.contributorsTitle': 'Quem fortalece o Dev Hub',
+  'home.contributorsDescription':
+    'Pessoas reais mantendo o projeto vivo no GitHub. Seu apoio ajuda a evoluir a plataforma.',
+  'home.sponsor': 'Apoiar no GitHub',
+  'home.contributorsError': 'Não foi possível carregar os contribuidores agora.',
+  'home.noContributors': 'Nenhum contribuidor encontrado ainda.',
+  'home.contributions': 'contribuições',
+  'home.contributorAvatar': 'Avatar de',
+} as const;

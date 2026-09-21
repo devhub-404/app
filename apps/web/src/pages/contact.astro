@@ -1,0 +1,11 @@
+---
+import { ContactPage } from '@/features/contact/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/contact/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'contact.metaTitle')} description={translate(locale, 'contact.metaDescription')} keywords={translate(locale, 'contact.metaKeywords')}>
+  <ContactPage />
+</AppLayout>

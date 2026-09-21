@@ -1,0 +1,15 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import FeedClient from './feed-client.component.tsx';
+
+interface Props {
+  mode: 'recent' | 'trending';
+  tags: string[];
+}
+
+const { mode, tags } = Astro.props;
+---
+
+<Container size="full" class="pb-16">
+  <FeedClient client:load {mode} {tags} />
+</Container>

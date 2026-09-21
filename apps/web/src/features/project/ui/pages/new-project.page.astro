@@ -1,0 +1,24 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import NewProject from '../components/new-project.component.tsx';
+import { translate as translateI18n } from '@/features/project/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <SectionHeader
+    eyebrow={translateI18n(locale, 'projectmanagement.projects')}
+    title={translateI18n(locale, 'newproject.newProject')}
+    description={translateI18n(locale, 'newproject.presentYouBuiltContextEnoughWhoWantUnderstandOrAccess')}
+  >
+    <Fragment slot="actions"
+      ><BackLink href={routes.projects} label={translateI18n(locale, 'projectmanagement.projects')} /></Fragment
+    >
+  </SectionHeader>
+  <div class="py-6 sm:py-8">
+    <Container size="sm">
+      <NewProject locale={locale} client:load />
+    </Container>
+  </div>

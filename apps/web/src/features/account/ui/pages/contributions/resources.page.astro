@@ -1,0 +1,17 @@
+---
+import { routes } from '@/shared/navigation/routes';
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import MyResourceSuggestions from '@/features/account/ui/components/contributions/my-resource-suggestions.component.tsx';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="resourceSuggestions"
+    heading={translateI18n(locale, 'resources.resourceSuggestions')}
+    subheading={translateI18n(locale, 'resources.trackSubmittedUrlsStatus')}
+  >
+    <a slot="headerActions" href={routes.resourceSuggest} class="action action-primary"
+      >{translateI18n(locale, 'resources.suggestResource')}</a>
+    <MyResourceSuggestions locale={locale} client:load />
+  </AccountPageComposition>

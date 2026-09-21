@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import { ReportsAdminList } from '@/features/report/public';
+import { translate } from '@/features/panel/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="reports"
+    heading={translate(locale, 'panelNav.reports')}
+    subheading={translate(locale, 'adminoverview.reportsCasesContentHidden')}
+  >
+    <ReportsAdminList locale={locale} client:load />
+  </PanelPageComposition>

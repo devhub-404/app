@@ -1,0 +1,37 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import Section from '@/shared/ui/layouts/components/section.component.astro';
+import NewsHighlights from './news-highlights.component.tsx';
+import NewsListing from './news-listing.component.tsx';
+import type { NewsListingState } from './news-listing.component.tsx';
+import { translate as translateI18n } from '@/features/news/i18n';
+
+interface Props {
+  pageSize: number;
+  initialState: NewsListingState;
+}
+
+const { pageSize, initialState } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<Container size="full" class="p-8">
+  <div class="grid gap-8">
+    <NewsHighlights client:visible locale={locale} {pageSize} {initialState} />
+
+    <Section title={t('news.trackEcosystem')}>
+      <div id="news">
+        <NewsListing
+          client:load
+          initialItems={[]}
+          initialTotal={0}
+          initialError={false}
+          pageSize={pageSize}
+          initialState={initialState satisfies NewsListingState}
+          initialView="grid"
+        />
+      </div>
+    </Section>
+  </div>
+</Container>

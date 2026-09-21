@@ -1,0 +1,11 @@
+---
+import { OrganizationsPage } from '@/features/organization/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/organization/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'accountorganizations.devhubOrganizations')} description={translate(locale, 'organizations.identitiesCollectiveEcosystem')} keywords="devhub,organizations">
+  <OrganizationsPage />
+</AppLayout>

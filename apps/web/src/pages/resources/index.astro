@@ -1,0 +1,22 @@
+---
+import { ResourcesPage, type ResourceItem } from '@/features/resource/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/resource/i18n';
+import { parseListingSearch } from '@/shared/ui/schemas/search.schema.ts';
+
+const { query, tags, page } = parseListingSearch(Astro.url.searchParams);
+const pageSize = 9;
+const resources: ResourceItem[] = [];
+const total = 0;
+const failed = false;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<AppLayout
+  title={t('resourcesindex.devhubResources')}
+  description={t('resourcesindex.referencesExternalCuratedDevelopers')}
+  keywords="devhub,resources,references,tools"
+>
+  <ResourcesPage {resources} {total} {failed} {pageSize} query={query} {tags} {page} />
+</AppLayout>

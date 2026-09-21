@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import { translate as translateI18n } from '@/shared/i18n/app';
+import QuestionsAdminList from '@/features/panel/ui/components/questions-admin-list.component.tsx';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="questions"
+    heading={translateI18n(locale, 'questions.questions')}
+    subheading={translateI18n(locale, 'questions.inventoryNecessaryManagementQWithoutAuthorityEditingAuthorial')}
+  >
+    <QuestionsAdminList locale={locale} client:load />
+  </PanelPageComposition>

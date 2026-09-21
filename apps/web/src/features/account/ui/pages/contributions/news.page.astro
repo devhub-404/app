@@ -1,0 +1,17 @@
+---
+import { routes } from '@/shared/navigation/routes';
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import MyNewsSuggestionsPage from '@/features/account/ui/components/contributions/my-news-suggestions-page.component.tsx';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="newsSuggestions"
+    heading={translateI18n(locale, 'news.mySuggestionsNews')}
+    subheading={translateI18n(locale, 'news.trackYourSubmittedUrls')}
+  >
+    <a slot="headerActions" href={routes.newsSuggest} class="action action-primary"
+      >{translateI18n(locale, 'news.suggestNews')}</a>
+    <MyNewsSuggestionsPage locale={locale} client:load />
+  </AccountPageComposition>

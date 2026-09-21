@@ -1,0 +1,5 @@
+[
+  { "id": "11000000-0000-4000-8000-000000000001", "name": "GitHub Blog", "domain": "github.blog" },
+  { "id": "11000000-0000-4000-8000-000000000002", "name": "PostgreSQL News", "domain": "postgresql.org" },
+  { "id": "11000000-0000-4000-8000-000000000003", "name": "Cloudflare Blog", "domain": "blog.cloudflare.com" }
+]

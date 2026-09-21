@@ -1,0 +1,7 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import NewArticleForm from '@/features/article/ui/components/forms/solid/new-article-form.component.tsx';
+const locale = Astro.locals.locale;
+---
+
+  <div class="py-6 sm:py-8"><Container size="full"><NewArticleForm locale={locale} client:load /></Container></div>

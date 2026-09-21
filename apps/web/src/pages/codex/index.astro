@@ -1,0 +1,12 @@
+---
+import { CodexPage } from '@/features/codex/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/codex/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<AppLayout title={t('codex.devhub')} description={t('codex.overview')} keywords="devhub,codex,concepts">
+  <CodexPage />
+</AppLayout>

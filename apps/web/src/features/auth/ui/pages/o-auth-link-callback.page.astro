@@ -1,0 +1,14 @@
+---
+import AuthPageComposition from '@/features/auth/ui/components/auth-page-composition.component.astro';
+import OAuthLinkCallback from '@/features/auth/ui/components/o-auth-link-callback.component.tsx';
+import { translate } from '@/features/auth/i18n';
+const { provider } = Astro.params;
+const locale = Astro.locals.locale;
+---
+
+  <AuthPageComposition
+    title={translate(locale, 'page.oauthLinkTitle')}
+    subtitle={translate(locale, 'page.oauthLinkSubtitle')}
+  >
+    <OAuthLinkCallback provider={provider ?? ''} locale={locale} client:load />
+  </AuthPageComposition>

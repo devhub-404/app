@@ -1,0 +1,40 @@
+[
+  {
+    "id": "91000000-0000-4000-8000-000000000001",
+    "submittedByAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Pessoa Desenvolvedora de Observabilidade",
+    "description": "Sugestão de vaga para instrumentação, métricas e diagnóstico de serviços.",
+    "employmentType": "full_time",
+    "workplaceType": "remote",
+    "location": null,
+    "compensationMin": "14000",
+    "compensationMax": "19000",
+    "compensationCurrency": "BRL",
+    "compensationUnit": "monthly",
+    "applicationUrl": "https://observa.example/careers",
+    "sourceUrl": "https://observa.example/jobs/observability",
+    "tagSlugs": ["observabilidade", "typescript"],
+    "status": "pending"
+  },
+  {
+    "id": "91000000-0000-4000-8000-000000000002",
+    "submittedByAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Engenheiro de Dados de Produto",
+    "description": "Vaga aceita para validar o histórico de moderação de contribuições.",
+    "employmentType": "contract",
+    "workplaceType": "hybrid",
+    "location": "São Paulo, BR",
+    "compensationMin": "180",
+    "compensationMax": "220",
+    "compensationCurrency": "BRL",
+    "compensationUnit": "hourly",
+    "applicationUrl": "https://dados-abertos.example/apply",
+    "sourceUrl": "https://dados-abertos.example/jobs/data",
+    "tagSlugs": ["banco-de-dados", "produto"],
+    "status": "accepted",
+    "acceptedJobId": "90000000-0000-4000-8000-000000000004",
+    "decidedByAccountId": "11111111-1111-4111-8111-111111111111",
+    "decisionNote": "A vaga foi vinculada ao anúncio já publicado.",
+    "decidedAt": "2026-08-17T12:00:00.000Z"
+  }
+]

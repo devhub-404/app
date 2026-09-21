@@ -1,0 +1,30 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import HomeHero from '@/features/home/ui/components/home/home-hero.component.astro';
+import HomeSteps from '@/features/home/ui/components/home/home-steps.component.astro';
+import HomeWhy from '@/features/home/ui/components/home/home-why.component.astro';
+import HomeFormats from '@/features/home/ui/components/home/home-formats.component.astro';
+import HomeIntegrity from '@/features/home/ui/components/home/home-integrity.component.astro';
+import HomeContribution from '@/features/home/ui/components/home/home-contribution.component.astro';
+import Contributors from '@/features/home/ui/components/contributors.component.tsx';
+import { env } from '@/shared/runtime/env';
+import HomeSupport from '@/features/home/ui/components/home/home-support.component.astro';
+
+---
+
+  <MarketingSurface>
+    <div>
+      <HomeHero />
+      <HomeSteps />
+      <HomeWhy />
+      <HomeFormats />
+      <HomeIntegrity />
+      <HomeContribution />
+      <Contributors
+        client:visible
+        apiUrl={`https://api.github.com/repos/${env.github.repoOwner}/${env.github.repoName}/contributors?per_page=12`}
+        sponsorUrl={env.github.sponsorUrl}
+      />
+      <HomeSupport />
+    </div>
+  </MarketingSurface>

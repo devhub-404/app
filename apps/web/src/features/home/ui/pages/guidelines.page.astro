@@ -1,0 +1,56 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+const expected = ['guidelines.do1', 'guidelines.do2', 'guidelines.do3', 'guidelines.do4'] as const;
+const prohibited = ['guidelines.no1', 'guidelines.no2', 'guidelines.no3', 'guidelines.no4'] as const;
+---
+
+  <MarketingSurface>
+    <div>
+      <section class="px-6 pb-20 pt-10">
+        <div class="mx-auto max-w-5xl">
+          <span class="inline-flex rounded-full border border-line bg-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-[.2em] text-content-muted">{t('guidelines.eyebrow')}</span>
+          <h1 class="heading-marketing mt-5 max-w-4xl">{t('guidelines.title')}</h1>
+          <p class="text-intro mt-5 max-w-3xl">{t('guidelines.description')}</p>
+          <div class="mt-12 grid gap-5 lg:grid-cols-2">
+            <section class="rounded-3xl border border-line bg-surface p-7">
+              <p class="text-eyebrow">
+                {t('guidelines.doEyebrow')}
+              </p><h2 class="heading-section mt-2">{t('guidelines.doTitle')}</h2><ul
+                class="mt-5 space-y-3 text-sm leading-6 text-content-muted"
+              >
+                {expected.map((key) => <li class="border-l-2 border-action-border pl-4">{t(key)}</li>)}
+              </ul>
+            </section><section class="rounded-3xl border border-line bg-surface p-7">
+              <p class="text-eyebrow">
+                {t('guidelines.noEyebrow')}
+              </p><h2 class="heading-section mt-2">{t('guidelines.noTitle')}</h2><ul
+                class="mt-5 space-y-3 text-sm leading-6 text-content-muted"
+              >
+                {prohibited.map((key) => <li class="border-l-2 border-danger-border pl-4">{t(key)}</li>)}
+              </ul>
+            </section>
+          </div>
+          <section class="mt-8 rounded-3xl border border-line bg-surface-subtle p-7">
+            <p class="text-eyebrow">
+              {t('guidelines.moderationEyebrow')}
+            </p><h2 class="heading-section mt-2">{t('guidelines.moderationTitle')}</h2><p class="text-muted-body mt-3 max-w-3xl">
+              {t('guidelines.moderationDescription')}
+            </p>
+          </section>
+          <div
+            class="mt-8 flex flex-col gap-4 rounded-3xl border border-line p-7 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <p class="text-eyebrow">
+                {t('guidelines.reportEyebrow')}
+              </p><p class="text-muted-body mt-2 max-w-2xl">{t('guidelines.reportDescription')}</p>
+            </div><a href={routes.contact} class="action action-primary">{t('guidelines.contactAction')}</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </MarketingSurface>

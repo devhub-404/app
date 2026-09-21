@@ -1,0 +1,151 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import CodexEntry from './codex-entry.component.astro';
+import CodexRelatedContent from './codex-related-content.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '../../i18n';
+import { getTechnologyLogo } from '@/shared/content/technology-logos';
+import { selectLocalizedEntries } from '@/shared/content/localized-entries';
+
+interface Props {
+  entry: CollectionEntry<'codex'>;
+  entries: CollectionEntry<'codex'>[];
+}
+
+const { entry, entries } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+
+const otherEntries = entries
+  .filter((item) => item.data.slug !== entry.data.slug)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+const tags = entry.data.tags;
+type ContentView = 'overview' | 'articles' | 'news' | 'projects' | 'questions' | 'resources';
+type RelatedView = Exclude<ContentView, 'overview'>;
+const relatedViews = ['articles', 'news', 'projects', 'questions', 'resources'] as const;
+const requestedView = Astro.url.searchParams.get('view');
+const isRelatedView = (value: string | null): value is RelatedView =>
+  value !== null && relatedViews.includes(value as RelatedView);
+const activeView: ContentView = isRelatedView(requestedView) ? requestedView : 'overview';
+
+const [cheatsheetEntries, roadmapEntries] = await Promise.all([
+  getCollection('cheatsheets', ({ data }) => data.status === 'published'),
+  getCollection('roadmaps', ({ data }) => data.status === 'published'),
+]);
+const cheatsheetItems = selectLocalizedEntries(cheatsheetEntries, locale)
+  .filter((item) => item.data.topic === entry.data.slug)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+  .map((item) => ({
+    title: item.data.title,
+    description: item.data.description,
+    href: routes.cheatsheet(item.data.slug),
+    logo: getTechnologyLogo(item.data.slug),
+  }));
+const roadmap = selectLocalizedEntries(roadmapEntries, locale).find((item) => item.data.slug === entry.data.slug);
+const roadmapItems =
+  roadmap?.data.sections.map((section) => ({
+    title: section.title,
+    description: `${section.topics.length} ${t('codex.topics')}`,
+    href: `${routes.roadmap(entry.data.slug)}?topic=${encodeURIComponent(section.topics[0]?.id ?? '')}`,
+    logo: entry.data.branding.logo,
+  })) ?? [];
+const tabs = [
+  { key: 'overview' as const, label: t('codex.overviewLabel'), href: Astro.url.pathname },
+  ...relatedViews.map((key) => ({
+    key,
+    label: t(`codex.${key}` as Parameters<typeof translateI18n>[1]),
+    href: `${Astro.url.pathname}?view=${key}`,
+  })),
+];
+---
+
+<div class="mx-auto min-h-screen w-full px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+  <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+    <div class="min-w-0">
+      <nav class="mb-4 flex items-center gap-2 text-xs text-content-muted" aria-label={t('codex.breadcrumb')}>
+        <a href={routes.codex} class="hover:text-content-accent">{t('codex.devhubShort')}</a>
+        <span aria-hidden="true">›</span>
+        <span class="text-content">{entry.data.title}</span>
+      </nav>
+      <CodexEntry entry={entry.data} locale={locale} />
+
+      <nav class="mt-5 flex gap-1 overflow-x-auto border-b border-line" aria-label={t('codex.contentNavigation')}>
+        {
+          tabs.map((tab) => (
+            <a
+              href={tab.href}
+              aria-current={activeView === tab.key ? 'page' : undefined}
+              class:list={[
+                'whitespace-nowrap border-b-2 px-3 py-3 text-xs font-medium transition-colors first:pl-0',
+                activeView === tab.key
+                  ? 'border-action text-content'
+                  : 'border-transparent text-content-muted hover:border-line hover:text-content',
+              ]}
+            >
+              {tab.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <CodexRelatedContent
+        server:defer
+        view={activeView}
+        tags={tags}
+        path={Astro.url.pathname}
+        slug={entry.data.slug}
+        roadmapItems={roadmapItems}
+        cheatsheetItems={cheatsheetItems}
+      >
+        <div slot="fallback" class="mt-6 min-h-24 rounded-2xl border border-line bg-surface-subtle" aria-hidden="true">
+        </div>
+      </CodexRelatedContent>
+    </div>
+
+    <aside class="space-y-4 lg:sticky lg:top-6 lg:self-start">
+      <section class="rounded-2xl border border-line bg-surface-elevated p-5">
+        <h2 class="heading-tiny-accent text-xs">{t('codex.howToUse')}</h2>
+        <p class="text-muted-body mt-4">{entry.data.description}</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          {
+            entry.data.tags.map((tag) => (
+              <span class="rounded-full bg-surface-subtle px-2.5 py-1 text-xs text-content-muted">{tag}</span>
+            ))
+          }
+        </div>
+      </section>
+      {
+        otherEntries.length > 0 && (
+          <section class="rounded-2xl border border-line bg-surface-elevated p-5">
+            <h2 class="heading-tiny-accent text-xs">
+              {t('codex.otherEntries')}
+            </h2>
+            <ul class="mt-3 space-y-1">
+              {otherEntries.map((item) => (
+                <li>
+                  <a
+                    href={`/codex/${item.data.slug}`}
+                    class="block rounded-lg px-3 py-2 text-sm text-content-muted hover:bg-hover hover:text-content"
+                  >
+                    {item.data.title}
+                    <span class="float-right" aria-hidden="true">
+                      →
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+      <section class="rounded-2xl border border-line bg-surface-elevated p-5">
+        <h2 class="heading-callout text-base">{t('codex.projectCta')}</h2>
+        <p class="text-muted-body mt-2">{t('codex.projectCtaDescription')}</p>
+        <a href={routes.projects} class="action action-primary mt-4 w-full">
+          {t('codex.exploreProjects')} →
+        </a>
+      </section>
+    </aside>
+  </div>
+</div>

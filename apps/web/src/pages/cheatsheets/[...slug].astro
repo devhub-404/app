@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import { CheatsheetPage } from '@/features/cheatsheet/public';
+import { selectLocalizedEntry } from '@/shared/content/localized-entries';
+import AppLayout from '@/app/ui/AppLayout.astro';
+
+const entry = selectLocalizedEntry(
+  await getCollection('cheatsheets', ({ data }) => data.status === 'published'),
+  Astro.params['slug'] ?? '',
+  Astro.locals.locale,
+);
+if (!entry) return Astro.redirect('/404');
+---
+
+<AppLayout
+  title={`DevHub - ${entry.data.title}`}
+  description={entry.data.description}
+  keywords={`devhub,cheatsheet,${entry.data.tags.join(',')}`}
+>
+  <CheatsheetPage entry={entry} />
+</AppLayout>

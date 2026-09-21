@@ -1,0 +1,17 @@
+---
+import { routes } from '@/shared/navigation/routes';
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import MyEventSuggestions from '@/features/account/ui/components/contributions/my-event-suggestions.component.tsx';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="eventSuggestions"
+    heading={translateI18n(locale, 'events.eventSuggestions')}
+    subheading={translateI18n(locale, 'events.trackYourSubmittedEvents')}
+  >
+    <a slot="headerActions" href={routes.eventNew} class="action action-primary"
+      >{translateI18n(locale, 'events.suggestEvent')}</a>
+    <MyEventSuggestions locale={locale} client:load />
+  </AccountPageComposition>

@@ -1,0 +1,25 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import QuestionDetail from './question-detail.component.tsx';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '@/features/q-and-a/i18n';
+import type { Question } from '@/features/q-and-a/types/q-and-a.type.ts';
+
+const locale = Astro.locals.locale;
+interface Props {
+  id: string;
+  initialItem?: Question | null;
+  initialError?: boolean;
+}
+
+const { id, initialItem, initialError } = Astro.props;
+---
+
+<div>
+  <div class="py-5 sm:py-6">
+    <Container><BackLink href={routes.questions} label={translateI18n(locale, 'newquestion.q')} /></Container>
+  </div><div class="pb-10 sm:pb-14">
+    <Container><QuestionDetail locale={locale} client:load id={id} {initialItem} {initialError} /></Container>
+  </div>
+</div>

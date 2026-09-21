@@ -1,0 +1,76 @@
+---
+import '@/features/home/ui/styles/theme.css';
+import NotFoundKnowledge from '@/features/home/ui/components/not-found-knowledge.component.tsx';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const quickLinks = [
+  [t('shell.articles'), routes.articles],
+  [t('shell.questions'), routes.questions],
+  [t('shell.resources'), routes.resources],
+  [t('shell.projects'), routes.projects],
+  [t('shell.jobs'), routes.jobs],
+  [t('shell.tools'), routes.tools],
+];
+---
+
+  <div class="relative min-h-screen overflow-hidden bg-canvas text-content">
+    <div class="pointer-events-none absolute inset-0 bg-accent-gradient" aria-hidden="true"></div>
+    <div
+      class="pointer-events-none absolute -left-20 top-36 size-64 rounded-full bg-action-muted blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute -right-28 -top-10 size-80 rounded-full bg-action-subtle blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative z-10">
+      <div class="px-6 pb-16 pt-6">
+        <div class="mx-auto w-full max-w-6xl space-y-6">
+          <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,.85fr)]">
+            <div class="h-fit rounded-3xl border border-line bg-surface-elevated p-9 shadow-ui-surface">
+              <p class="text-eyebrow">
+                {t('notfound.resourceNotFoundEyebrow')}
+              </p><h1 class="heading-marketing mt-3">
+                {translateI18n(Astro.locals.locale, 'notfound.failedAddressDoesNotEndDiscovery')}
+              </h1><p class="text-muted-body mt-4 max-w-2xl">
+                {translateI18n(Astro.locals.locale, 'notfound.routeGapIsNotKnowledgeGap')}
+              </p><div class="mt-7 flex flex-wrap gap-3">
+                <a href={routes.search} class="action action-primary">
+                  {translateI18n(Astro.locals.locale, 'notfound.searchDevhub')}
+                </a>
+                <a href={routes.home} class="action action-secondary">
+                  {translateI18n(Astro.locals.locale, 'notfound.backHome')}
+                </a>
+              </div>
+            </div>
+            <aside class="h-fit rounded-3xl border border-line bg-surface-elevated p-7 shadow-ui-surface">
+              <p class="text-accent-label"> 404 </p><p class="text-muted mt-3">
+                {translateI18n(Astro.locals.locale, 'notfound.pathBackToKnowledge')}
+              </p><nav
+                class="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3"
+                aria-label={translateI18n(Astro.locals.locale, 'notfound.knowledgeShelf')}
+              >
+                {
+                  quickLinks.map(([label, href]) => (
+                    <a
+                      href={href}
+                      class="flex min-h-14 items-center justify-center rounded-xl border border-line bg-surface px-3 py-2 text-center text-xs font-semibold text-content transition duration-standard ease-standard hover:border-action-border hover:bg-hover hover:text-content-accent"
+                    >
+                      {label}
+                    </a>
+                  ))
+                }
+              </nav><p class="text-caption mt-5">
+                {translateI18n(Astro.locals.locale, 'notfound.chooseTopicOrSearch')}
+              </p>
+            </aside>
+          </div>
+          <NotFoundKnowledge locale={Astro.locals.locale} client:visible />
+        </div>
+      </div>
+    </div>
+  </div>

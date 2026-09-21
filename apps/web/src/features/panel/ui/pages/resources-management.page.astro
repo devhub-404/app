@@ -1,0 +1,18 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import ResourceManagement from '@/features/panel/ui/components/resource-management.component.tsx';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '@/features/panel/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="resources"
+    heading={translateI18n(locale, 'panelresources.resources')}
+    subheading={translateI18n(locale, 'panelresources.manageSuggestionsResourcesPublishedArchivedRejected')}
+  >
+    <a slot="headerActions" href={routes.resourceNew} class="action action-primary">
+      {translateI18n(locale, 'resourcesadminlist.createResource')}
+    </a>
+    <ResourceManagement locale={locale} client:load />
+  </PanelPageComposition>

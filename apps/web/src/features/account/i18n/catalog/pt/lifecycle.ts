@@ -1,0 +1,23 @@
+export const catalog = {
+  'lifecycle.deletionLoading': 'Cancelando a exclusão…',
+  'lifecycle.deletionTitle': 'Exclusão cancelada',
+  'lifecycle.deletionBody':
+    'A solicitação de exclusão foi cancelada. Por segurança, entre novamente para criar uma nova sessão.',
+  'lifecycle.login': 'Ir para o login',
+  'lifecycle.deletionErrorTitle': 'Não foi possível cancelar a exclusão',
+  'lifecycle.deletionErrorBody': 'O link pode ter expirado, já ter sido usado ou a retenção pode ter terminado.',
+  'lifecycle.deletionMetaTitle': 'DevHub — Cancelar exclusão',
+  'lifecycle.deletionMetaDescription': 'Cancele a exclusão da sua conta durante a janela de retenção.',
+  'lifecycle.reactivationLoading': 'Reativando conta…',
+  'lifecycle.reactivationTitle': 'Confirme o MFA',
+  'lifecycle.reactivationBody': 'A conta foi reativada, mas a sessão só será criada após um segundo fator válido.',
+  'lifecycle.reactivationTotp': 'Código do autenticador',
+  'lifecycle.codeRequired': 'Informe um código.',
+  'lifecycle.reactivationRecovery': 'Código de recuperação',
+  'lifecycle.reactivationConfirm': 'Confirmar código',
+  'lifecycle.reactivationUseRecovery': 'Usar código de recuperação',
+  'lifecycle.reactivationError': 'Não foi possível reativar a conta.',
+  'lifecycle.reactivationLogin': 'Voltar ao login',
+  'lifecycle.reactivationMetaTitle': 'DevHub — Reativar conta',
+  'lifecycle.reactivationMetaDescription': 'Reative sua conta com uma prova válida.',
+} as const;

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "10300000-0000-4000-8000-000000000001",
+    "ownerAccountId": "22222222-2222-4222-8222-222222222222",
+    "purpose": "content",
+    "objectKey": "seed/articles/architecture.webp",
+    "contentType": "image/webp",
+    "size": 184320,
+    "status": "pending"
+  },
+  {
+    "id": "10300000-0000-4000-8000-000000000002",
+    "ownerAccountId": "22222222-2222-4222-8222-222222222222",
+    "purpose": "avatar",
+    "objectKey": "seed/avatars/reviewer.webp",
+    "contentType": "image/webp",
+    "size": 42180,
+    "status": "pending"
+  }
+]

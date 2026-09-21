@@ -1,0 +1,17 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import MyArticlesPage from '@/features/account/ui/components/articles/my-articles-page.component.tsx';
+import { translate as translateI18n } from '@/features/account/i18n';
+import { routes } from '@/shared/navigation/routes';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="articles"
+    heading={translateI18n(locale, 'myarticles.myArticles')}
+    subheading={translateI18n(locale, 'myarticles.manageTrackArticlesAssociatedAccount')}
+  >
+    <a slot="headerActions" href={routes.articleNew} class="action action-primary"
+      >{translateI18n(locale, 'accountactions.newArticle')}</a>
+    <MyArticlesPage locale={locale} client:load />
+  </AccountPageComposition>

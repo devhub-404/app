@@ -1,0 +1,18 @@
+---
+import { FeedPage } from '@/features/discovery/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/discovery/i18n';
+
+const params = Astro.url.searchParams;
+const mode = params.get('mode') === 'trending' ? 'trending' : 'recent';
+const tags = (params.get('tags') ?? '')
+  .split(',')
+  .map((tag) => tag.trim())
+  .filter(Boolean);
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<AppLayout title={t('feed.devhubFeed')} description={t('feed.updatesMoreRelevantDevhubOnlyPlace')} keywords="devhub,feed,updates,community">
+  <FeedPage {mode} {tags} />
+</AppLayout>

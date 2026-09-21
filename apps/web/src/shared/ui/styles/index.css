@@ -1,0 +1,667 @@
+@import 'tailwindcss';
+@import './theme.css';
+
+/*
+ * Tailwind is the only styling bridge exposed to UI components. The names
+ * below are utility-facing aliases; every visual value resolves back to a
+ * token declared in theme.css.
+ */
+@theme inline {
+  /* Background */
+  --color-canvas: var(--color-bg-canvas);
+  --color-surface: var(--color-bg-surface);
+  --color-surface-subtle: var(--color-bg-surface-subtle);
+  --color-surface-elevated: var(--color-bg-surface-elevated);
+  --color-surface-overlay: var(--color-bg-surface-overlay);
+  --color-surface-inset: var(--color-bg-surface-inset);
+  --color-hover: var(--color-bg-hover);
+  --color-active: var(--color-bg-active);
+  --color-selected: var(--color-bg-selected);
+  --color-disabled: var(--color-bg-disabled);
+
+  /* Text */
+  --color-content: var(--color-text);
+  --color-content-muted: var(--color-text-muted);
+  --color-content-subtle: var(--color-text-subtle);
+  --color-content-disabled: var(--color-text-disabled);
+  --color-content-inverse: var(--color-text-inverse);
+  --color-content-accent: var(--color-text-accent);
+  --color-content-on-accent: var(--color-text-on-accent);
+
+  /* Border */
+  --color-line: var(--color-border);
+  --color-line-strong: var(--color-border-strong);
+  --color-line-disabled: var(--color-border-disabled);
+  --color-separator: var(--color-divider);
+
+  /* Accent / action */
+  --color-action: var(--color-accent);
+  --color-action-hover: var(--color-accent-hover);
+  --color-action-active: var(--color-accent-active);
+  --color-action-bright: var(--color-accent-bright);
+  --color-action-subtle: var(--color-accent-subtle);
+  --color-action-muted: var(--color-accent-muted);
+  --color-action-border: var(--color-accent-border);
+  --color-action-deep: var(--color-accent-deep);
+
+  /* Focus */
+  --color-focus: var(--color-focus-ring);
+
+  /* Status */
+  --color-success: var(--color-status-success);
+  --color-success-bg: var(--color-status-success-bg);
+  --color-success-border: var(--color-status-success-border);
+  --color-warning: var(--color-status-warning);
+  --color-warning-bg: var(--color-status-warning-bg);
+  --color-warning-border: var(--color-status-warning-border);
+  --color-danger: var(--color-status-danger);
+  --color-danger-bg: var(--color-status-danger-bg);
+  --color-danger-border: var(--color-status-danger-border);
+  --color-info: var(--color-status-info);
+  --color-info-bg: var(--color-status-info-bg);
+  --color-info-border: var(--color-status-info-border);
+
+  /* Overlays */
+  --color-scrim-subtle: var(--color-overlay-subtle);
+  --color-scrim: var(--color-overlay);
+  --color-scrim-strong: var(--color-overlay-strong);
+
+  /* Typography */
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+
+  /* Shadows */
+  --shadow-ui-surface: var(--shadow-surface);
+  --shadow-ui-overlay: var(--shadow-overlay);
+  --shadow-ui-accent: var(--shadow-accent);
+
+  /* App structure */
+  --spacing-app-header: var(--layout-header-height);
+  --spacing-app-sidebar: var(--layout-sidebar-width);
+  --spacing-app-sidebar-collapsed: var(--layout-sidebar-width-collapsed);
+  --spacing-app-sidebar-expanded: var(--layout-sidebar-width-expanded);
+}
+
+/* Tailwind custom utilities for token namespaces without a stable built-in scale. */
+@utility bg-accent-gradient {
+  background-image: var(--gradient-accent-subtle);
+}
+
+@utility bg-overlay-gradient {
+  background-image: var(--gradient-overlay-bottom);
+}
+
+@utility duration-fast {
+  transition-duration: var(--motion-duration-fast);
+}
+
+@utility duration-standard {
+  transition-duration: var(--motion-duration);
+}
+
+@utility duration-slow {
+  transition-duration: var(--motion-duration-slow);
+}
+
+@utility ease-standard {
+  transition-timing-function: var(--motion-ease);
+}
+
+@utility ease-standard-in {
+  transition-timing-function: var(--motion-ease-in);
+}
+
+@utility ease-standard-out {
+  transition-timing-function: var(--motion-ease-out);
+}
+
+/* Semantic interface contracts. Markup names the role; these rules own the presentation. */
+@layer components {
+  .action {
+    display: inline-flex;
+    min-height: 2.5rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: var(--motion-duration) var(--motion-ease);
+    transition-property: color, background-color, border-color, opacity, box-shadow;
+    outline: none;
+  }
+
+  .action:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-focus-ring) 100%, transparent);
+    outline-offset: 3px;
+  }
+
+  .action:disabled,
+  .action[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .action[aria-busy='true'] {
+    cursor: wait;
+    font-size: 0;
+    line-height: 0;
+  }
+
+  .action[aria-busy='true'] > * {
+    visibility: hidden;
+  }
+
+  .action[aria-busy='true']::before {
+    width: 1rem;
+    height: 1rem;
+    content: '';
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 9999px;
+    animation: action-loading 0.7s linear infinite;
+  }
+
+  .action-primary {
+    background: var(--color-accent);
+    color: var(--color-text-on-accent);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.18);
+  }
+
+  .action-primary:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .action-primary:active {
+    background: var(--color-accent-active);
+  }
+
+  .action-secondary {
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-surface);
+    color: var(--color-text);
+  }
+
+  .action-secondary:hover {
+    border-color: var(--color-accent-border);
+    background: var(--color-bg-surface-subtle);
+    color: var(--color-text-accent);
+  }
+
+  .action-secondary:active {
+    background: var(--color-bg-active);
+  }
+
+  .action-ghost {
+    color: var(--color-text-muted);
+  }
+
+  .action-ghost:hover {
+    background: var(--color-bg-surface-subtle);
+    color: var(--color-text);
+  }
+
+  .action-ghost:active {
+    background: var(--color-bg-active);
+  }
+
+  .action-danger {
+    background: var(--color-status-danger);
+    color: var(--color-text-inverse);
+  }
+
+  .action-danger:hover,
+  .action-danger:active {
+    background: color-mix(in srgb, var(--color-status-danger) 90%, black);
+  }
+
+  .action-danger-outline {
+    border: 1px solid var(--color-status-danger-border);
+    background: var(--color-bg-surface);
+    color: var(--color-status-danger);
+  }
+
+  .action-danger-outline:hover,
+  .action-danger-outline:active {
+    background: var(--color-status-danger-bg);
+  }
+
+  .action-icon {
+    width: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0;
+  }
+
+  .action-compact {
+    min-height: 2rem;
+    padding-inline: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .action-large {
+    min-height: 3rem;
+    padding-inline: 1.25rem;
+  }
+
+  .field-control {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: var(--color-bg-surface);
+    padding: 0.75rem 1rem;
+    color: var(--color-text);
+    font-size: 0.875rem;
+    transition: var(--motion-duration) var(--motion-ease);
+    transition-property: border-color, box-shadow, opacity;
+  }
+
+  .field-control::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .field-control:focus {
+    border-color: var(--color-accent-border);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-focus-ring);
+  }
+
+  .field-control[aria-invalid='true'] {
+    border-color: var(--color-status-danger-border);
+    box-shadow: 0 0 0 2px var(--color-status-danger);
+  }
+
+  .field-control:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .field-label {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .field-description {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .field-error,
+  .form-error {
+    color: var(--color-status-danger);
+    font-size: 0.75rem;
+  }
+
+  .type-page {
+    color: var(--color-text);
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+
+  .type-body {
+    color: var(--color-text);
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .type-muted {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+  }
+
+  .type-caption {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+  }
+
+  .type-eyebrow {
+    color: var(--color-text-subtle);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .heading-page { @apply text-balance text-3xl font-semibold tracking-tight text-content sm:text-4xl; }
+  .heading-page-compact { @apply text-balance text-2xl font-semibold tracking-tight text-content sm:text-3xl; }
+  .heading-marketing { @apply text-4xl font-semibold leading-tight text-content sm:text-5xl; }
+  .heading-hero { @apply text-5xl font-semibold leading-[1.02] tracking-tight text-content sm:text-7xl; }
+  .heading-article { @apply text-3xl font-semibold tracking-tight text-content sm:text-5xl; }
+  .heading-detail { @apply text-4xl font-semibold text-content; }
+  .heading-form-page { @apply text-2xl font-semibold tracking-tight text-content; }
+  .heading-strong-page { @apply text-3xl font-bold text-content; }
+  .heading-visually-hidden { @apply sr-only; }
+  .heading-large-section { @apply text-3xl font-semibold tracking-tight text-content sm:text-4xl; }
+  .heading-large-section-compact { @apply text-2xl font-semibold tracking-tight text-content sm:text-3xl; }
+  .heading-tiny { @apply text-xs font-semibold uppercase tracking-[.16em] text-content-muted; }
+  .heading-tiny-accent { @apply text-xs font-semibold uppercase tracking-[.16em] text-content-accent; }
+  .heading-micro-accent { @apply text-[10px] font-semibold uppercase tracking-[.16em] text-content-accent; }
+  .heading-dense-card { @apply text-[.9rem] font-bold; }
+  .heading-dense-card-inline { @apply text-[.95rem] font-bold; }
+  .heading-feature-card { @apply text-[1.35rem] font-bold max-[700px]:text-[1.1rem]; }
+  .heading-strong-section { @apply text-2xl font-bold text-content; }
+  .heading-danger { @apply text-sm font-semibold text-danger; }
+  .heading-section { @apply text-2xl font-semibold tracking-tight text-content; }
+  .heading-subsection { @apply text-xl font-semibold text-content; }
+  .heading-card { @apply text-lg font-semibold leading-tight text-content; }
+  .heading-callout { @apply text-base font-semibold text-content; }
+  .heading-compact { @apply text-sm font-semibold text-content; }
+
+  .text-body { @apply text-base leading-6 text-content; }
+  .text-lead { @apply text-sm leading-6 text-content-muted sm:text-[15px]; }
+  .text-intro { @apply text-base leading-7 text-content-muted; }
+  .text-muted { @apply text-sm text-content-muted; }
+  .text-subtle { @apply text-sm text-content-subtle; }
+  .text-caption { @apply text-xs text-content-muted; }
+  .text-eyebrow { @apply text-[11px] font-semibold uppercase tracking-[.18em] text-content-subtle; }
+  .text-field-heading { @apply text-xs font-semibold uppercase tracking-[.14em] text-content-muted; }
+  .text-accent-label { @apply text-xs font-semibold uppercase tracking-[.16em] text-content-accent; }
+  .text-warning-label { @apply text-xs font-semibold uppercase tracking-[.16em] text-warning; }
+  .text-muted-body { @apply text-sm leading-6 text-content-muted; }
+  .text-muted-compact { @apply text-sm leading-5 text-content-muted; }
+  .text-strong { @apply text-sm font-semibold text-content; }
+  .text-emphasis { @apply text-base font-semibold text-content; }
+  .text-accent { @apply text-sm text-content-accent; }
+  .text-success { @apply text-sm text-success; }
+  .text-success-caption { @apply text-xs text-success; }
+  .text-danger { @apply text-sm text-danger; }
+  .text-danger-caption { @apply text-xs text-danger; }
+  .text-micro-accent { @apply text-[10px] font-semibold uppercase tracking-[.16em] text-content-accent; }
+  .text-status { font-size: 0.875rem; }
+  .text-featured-label { font-size: 0.7rem !important; color: var(--color-text-accent); }
+  .text-featured-description { @apply text-sm text-content-muted max-[700px]:text-[.76rem]; }
+
+  .state-loading,
+  .state-error,
+  .state-empty {
+    padding: 2rem 1.5rem;
+  }
+
+  .state-loading {
+    color: var(--color-text-muted);
+  }
+
+  .state-error {
+    color: var(--color-status-danger);
+    font-size: 0.875rem;
+  }
+
+  .state-empty {
+    text-align: center;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    min-height: 1.75rem;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: var(--color-bg-surface-subtle);
+    padding: 0.25rem 0.625rem;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .status-badge-success {
+    border-color: var(--color-status-success-border);
+    background: var(--color-status-success-bg);
+    color: var(--color-status-success);
+  }
+
+  .status-badge-warning {
+    border-color: var(--color-status-warning-border);
+    background: var(--color-status-warning-bg);
+    color: var(--color-status-warning);
+  }
+
+  .status-badge-danger {
+    border-color: var(--color-status-danger-border);
+    background: var(--color-status-danger-bg);
+    color: var(--color-status-danger);
+  }
+
+  .status-badge-info {
+    border-color: var(--color-status-info-border);
+    background: var(--color-status-info-bg);
+    color: var(--color-status-info);
+  }
+
+  .card {
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    background: var(--color-bg-surface-elevated);
+    box-shadow: var(--shadow-surface);
+  }
+
+  .panel {
+    border: 1px solid var(--color-border);
+    border-radius: 1.5rem;
+    background: var(--color-bg-surface-elevated);
+    overflow: hidden;
+  }
+
+  .panel-list {
+    border-top: 1px solid var(--color-divider);
+  }
+
+  .back-link {
+    display: inline-flex;
+    min-height: 2.25rem;
+    align-items: center;
+    gap: 0.375rem;
+    border-radius: 0.5rem;
+    padding-inline: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .back-link:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-text);
+  }
+
+  .tag-link {
+    display: inline-flex;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 0.25rem 0.625rem;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: var(--motion-duration) var(--motion-ease);
+  }
+
+  .tag-link:hover {
+    border-color: var(--color-accent-border);
+    background: var(--color-accent-subtle);
+    color: var(--color-text-accent);
+  }
+}
+
+@keyframes action-loading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-family-sans);
+  color: var(--color-text);
+  background: var(--color-bg-canvas);
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--color-text);
+}
+
+a {
+  text-decoration: none;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+img {
+  display: block;
+}
+
+::selection {
+  color: var(--color-selection-text);
+  background: var(--color-selection-bg);
+}
+
+button {
+  font: inherit;
+}
+
+input {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--scrollbar-color-thumb);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-color-thumb-hover);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-accent);
+}
+
+@layer utilities {
+  .content-prose {
+    color: var(--color-text);
+    line-height: 1.85;
+  }
+
+  .content-prose h1,
+  .content-prose h2,
+  .content-prose h3,
+  .content-prose h4 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
+    line-height: 1.25;
+  }
+
+  .content-prose h1 {
+    font-size: 2rem;
+  }
+
+  .content-prose h2 {
+    font-size: 1.45rem;
+  }
+
+  .content-prose h3 {
+    font-size: 1.15rem;
+  }
+
+  .content-prose p {
+    margin: 1rem 0;
+  }
+
+  .content-prose a {
+    color: var(--color-text-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .content-prose ul,
+  .content-prose ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .content-prose li {
+    margin: 0.35rem 0;
+  }
+
+  .content-prose blockquote {
+    margin: 1.25rem 0;
+    border-left: 3px solid var(--color-accent-border);
+    padding: 0.75rem 1rem;
+    color: var(--color-text-muted);
+    background: var(--color-accent-subtle);
+  }
+
+  .content-prose pre {
+    overflow-x: auto;
+    margin: 1.25rem 0;
+    border: 1px solid var(--color-border);
+    border-radius: 0.9rem;
+    padding: 1rem;
+    background: var(--color-bg-surface-inset);
+    font-size: 0.85rem;
+  }
+
+  .content-prose code {
+    border-radius: 0.35rem;
+    background: var(--color-bg-surface-inset);
+    padding: 0.15rem 0.35rem;
+    font-size: 0.9em;
+  }
+
+  .content-prose pre code {
+    padding: 0;
+    background: transparent;
+  }
+
+  .content-prose table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .content-prose th,
+  .content-prose td {
+    border: 1px solid var(--color-border);
+    padding: 0.65rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .content-prose th {
+    background: var(--color-bg-surface);
+    font-weight: 700;
+  }
+
+  .content-prose img {
+    max-width: 100%;
+    border-radius: 0.9rem;
+  }
+}

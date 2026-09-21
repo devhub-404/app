@@ -1,0 +1,21 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import NewsPageContent from '../components/news-page-content.component.astro';
+import { translate as translateI18n } from '@/features/news/i18n';
+import type { NewsListingState } from '../components/news-listing.component.tsx';
+
+interface Props {
+  pageSize: number;
+  initialState: NewsListingState;
+}
+
+const { pageSize, initialState } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+  <SectionHeader
+    title={t('newsdetail.devhubNewsAlternative2')}
+    description={t('news.newsEditorialUnderstandChangedDecideDeservesAttention')}
+  />
+  <NewsPageContent {pageSize} {initialState} />

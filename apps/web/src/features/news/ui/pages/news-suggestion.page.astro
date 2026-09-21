@@ -1,0 +1,22 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import NewsSuggestionForm from '../components/suggestion/news-suggestion-form.component.tsx';
+import { routes } from '@/shared/navigation/routes';
+import { translate } from '@/features/news/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <SectionHeader
+    title={translate(locale, 'newssuggestionpage.heading')}
+    description={translate(locale, 'newssuggestionpage.description')}
+  />
+  <div class="py-6 sm:py-8">
+    <Container size="sm">
+      <div class="grid gap-5">
+        <BackLink href={routes.news} label={translate(locale, 'newssuggestionpage.back')} />
+        <NewsSuggestionForm client:load locale={locale} />
+      </div>
+    </Container>
+  </div>

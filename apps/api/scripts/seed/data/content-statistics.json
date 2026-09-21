@@ -1,0 +1,121 @@
+[
+  {
+    "targetType": "article",
+    "contentId": "a0000000-0000-4000-8000-000000000001",
+    "voteCount": 2,
+    "viewCount": 18,
+    "commentCount": 2
+  },
+  {
+    "targetType": "news",
+    "contentId": "b0000000-0000-4000-8000-000000000001",
+    "voteCount": 0,
+    "viewCount": 12,
+    "commentCount": 1
+  },
+  {
+    "targetType": "resource",
+    "contentId": "c0000000-0000-4000-8000-000000000001",
+    "voteCount": 1,
+    "viewCount": 9,
+    "commentCount": 0
+  },
+  {
+    "targetType": "answer",
+    "contentId": "e1000000-0000-4000-8000-000000000001",
+    "voteCount": 1,
+    "viewCount": 4,
+    "commentCount": 0
+  },
+  {
+    "targetType": "project",
+    "contentId": "f0000000-0000-4000-8000-000000000001",
+    "voteCount": 0,
+    "viewCount": 6,
+    "commentCount": 0
+  },
+  {
+    "targetType": "event",
+    "contentId": "a5000000-0000-4000-8000-000000000001",
+    "voteCount": 0,
+    "viewCount": 5,
+    "commentCount": 0
+  },
+  {
+    "targetType": "job",
+    "contentId": "90000000-0000-4000-8000-000000000001",
+    "voteCount": 0,
+    "viewCount": 8,
+    "commentCount": 0
+  },
+  {
+    "targetType": "article",
+    "contentId": "a0000000-0000-4000-8000-000000000006",
+    "voteCount": 81,
+    "viewCount": 1900,
+    "commentCount": 28
+  },
+  {
+    "targetType": "article",
+    "contentId": "a0000000-0000-4000-8000-000000000007",
+    "voteCount": 214,
+    "viewCount": 3100,
+    "commentCount": 58
+  },
+  {
+    "targetType": "article",
+    "contentId": "a0000000-0000-4000-8000-000000000008",
+    "voteCount": 177,
+    "viewCount": 2300,
+    "commentCount": 37
+  },
+  {
+    "targetType": "article",
+    "contentId": "a0000000-0000-4000-8000-000000000009",
+    "voteCount": 143,
+    "viewCount": 2700,
+    "commentCount": 41
+  },
+  {
+    "targetType": "article",
+    "contentId": "a0000000-0000-4000-8000-000000000010",
+    "voteCount": 96,
+    "viewCount": 1800,
+    "commentCount": 24
+  },
+  {
+    "targetType": "article",
+    "contentId": "a0000000-0000-4000-8000-000000000011",
+    "voteCount": 64,
+    "viewCount": 1500,
+    "commentCount": 19
+  },
+  {
+    "targetType": "news",
+    "contentId": "b0000000-0000-4000-8000-000000000006",
+    "voteCount": 0,
+    "viewCount": 16,
+    "commentCount": 0
+  },
+  {
+    "targetType": "news",
+    "contentId": "b0000000-0000-4000-8000-000000000007",
+    "voteCount": 0,
+    "viewCount": 14,
+    "commentCount": 0
+  },
+  {
+    "targetType": "news",
+    "contentId": "b0000000-0000-4000-8000-000000000008",
+    "voteCount": 0,
+    "viewCount": 11,
+    "commentCount": 0
+  },
+  {
+    "targetType": "news",
+    "contentId": "b0000000-0000-4000-8000-000000000009",
+    "voteCount": 0,
+    "viewCount": 9,
+    "commentCount": 0
+  }
+]

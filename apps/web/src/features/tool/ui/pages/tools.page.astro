@@ -1,0 +1,49 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import ToolsCatalog from '../components/tools-catalog.component.tsx';
+import { tools } from '../../domain/tool-catalog.domain.ts';
+import ContributionCallout from '@/shared/ui/components/surfaces/contribution-callout.component.astro';
+import { env } from '@/shared/runtime/env';
+import { translate as translateI18n } from '../../i18n';
+import ToolCatalogHero from '../components/tool-catalog-hero.component.astro';
+import { parseSearchQuery } from '@/shared/ui/schemas/search.schema.ts';
+const locale = Astro.locals.locale;
+const { q: initialQuery, tags: initialTags } = parseSearchQuery(Astro.url.searchParams);
+---
+
+  <SectionHeader
+    eyebrow={translateI18n(locale, 'toolsindex.executionLocation')}
+    title={translateI18n(locale, 'tooldetail.tools')}
+    description={translateI18n(locale, 'toolsindex.utilitiesSmallSolveTasksRecurringWithoutSignOutBrowser')}
+  />
+  <Container size="full" class="py-6 sm:py-8">
+    <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div class="min-w-0">
+        <div class="space-y-8">
+          <ToolCatalogHero toolCount={tools.length} />
+          <div id="tool-list">
+            <ToolsCatalog
+              locale={Astro.locals.locale}
+              client:load
+              items={tools}
+              initialQuery={initialQuery}
+              initialTags={initialTags}
+            />
+          </div>
+        </div>
+      </div>
+      <aside class="space-y-4 lg:sticky lg:top-6">
+        <ContributionCallout
+          eyebrow={translateI18n(Astro.locals.locale, 'toolsindex.contribute')}
+          title={translateI18n(Astro.locals.locale, 'toolsindex.proposeTool')}
+          description={translateI18n(
+            Astro.locals.locale,
+            'toolsindex.suggestNewToolLocationOrImproveExistingPullRequest',
+          )}
+          actionLabel={translateI18n(Astro.locals.locale, 'tool.openRepository')}
+          actionHref={`https://github.com/${env.github.repoOwner}/${env.github.repoName}`}
+        />
+      </aside>
+    </div>
+  </Container>

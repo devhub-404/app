@@ -1,0 +1,47 @@
+export const catalog = {
+  'home.intent.learn': 'Aprender',
+  'home.intent.learnDescription': 'Entiende conceptos, decisiones y prácticas.',
+  'home.intent.solve': 'Resolver',
+  'home.intent.solveDescription': 'Encuentra respuestas para problemas concretos.',
+  'home.intent.use': 'Usar',
+  'home.intent.useDescription': 'Accede a herramientas y referencias para ejecutar.',
+  'home.intent.build': 'Construir',
+  'home.intent.buildDescription': 'Mira proyectos y comparte lo que creaste.',
+  'home.intent.join': 'Participar',
+  'home.intent.joinDescription': 'Descubre eventos, empleos y conversaciones.',
+  'home.surface.jobsEvents': 'Oportunidades para avanzar y participar.',
+  'home.principle.find': 'Encuentra',
+  'home.principle.contribute': 'Contribuye',
+  'home.principle.correct': 'Corrige',
+  'home.contributors': 'Contribuidores',
+  'home.contributorsTitle': 'Quién fortalece DevHub',
+  'home.contributorsDescription': 'Personas reales mantienen vivo el proyecto en GitHub.',
+  'home.sponsor': 'Apoyar en GitHub',
+  'home.contributorsError': 'No se pudieron cargar los contribuidores.',
+  'home.noContributors': 'Aún no se encontraron contribuidores.',
+  'home.contributions': 'contribuciones',
+  'home.contributorAvatar': 'Avatar de',
+  'home.principle.findDescription':
+    'La búsqueda, las etiquetas y el contenido relacionado reducen el costo de llegar a algo relevante.',
+  'home.faq.adsAnswer':
+    'No vendemos posicionamiento. El proyecto se sostiene con GitHub Sponsors y patrocinadores reconocidos sin influencia sobre el contenido ni el ranking.',
+  'home.surface.resources': 'Referencias externas para llegar a la fuente original, no solo a un resumen.',
+  'home.surface.tools': 'Utilidades prácticas para convertir intención en ejecución.',
+  'home.principle.contributeDescription':
+    'Publica en el formato adecuado: Artículo, Pregunta, Recurso, Proyecto u otro tipo de contribución.',
+  'home.faq.ads': '¿Hay anuncios?',
+  'home.surface.news': 'Actualizaciones temporales para entender qué cambió en el ecosistema.',
+  'home.faq.socialAnswer':
+    'No. Los perfiles dan contexto a la autoría y las contribuciones, pero no existe reputación global, grafo de seguidores ni ranking de desarrolladores.',
+  'home.surface.questions': 'Preguntas concretas, respuestas útiles e hilos estables después de resolverse.',
+  'home.surface.explore': 'Busca en toda la base y filtra por el tipo de próximo paso que necesitas.',
+  'home.faq.orderAnswer':
+    'Búsqueda usa relevancia textual. Popular usa votos positivos. Tendencias usa votos recientes. Reciente usa fecha.',
+  'home.principle.correctDescription':
+    'Los reportes registran problemas; el contexto, las fuentes y las decisiones hacen que la base pueda corregirse.',
+  'home.faq.order': '¿Cómo se ordena el contenido?',
+  'home.surface.projects': 'Lo que los desarrolladores construyen, aprenden y ponen en circulación.',
+  'home.surface.jobs': 'Oportunidades profesionales con remuneración y candidatura claramente descritas.',
+  'home.faq.social': '¿DevHub es una red social?',
+  'home.surface.articles': 'Explicaciones, análisis, guías y experiencias con autoría explícita.',
+} as const;

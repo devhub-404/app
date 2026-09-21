@@ -1,0 +1,35 @@
+---
+import ContributionCallout from '@/shared/ui/components/surfaces/contribution-callout.component.astro';
+import ProjectsListing from './projects-listing.component.tsx';
+import type { ProjectsListingState } from './projects-listing.component.tsx';
+import { translate as translateI18n } from '@/features/project/i18n';
+import { parseListingSearch } from '@/shared/ui/schemas/search.schema.ts';
+import { projectSearchSchema } from '@/features/project/ui/schemas/search.schema.ts';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const search = projectSearchSchema.parse({ ...parseListingSearch(Astro.url.searchParams), sort: Astro.url.searchParams.get('sort') });
+const pageSize = 12;
+---
+
+<div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+  <div class="grid min-w-0 gap-5">
+    <ProjectsListing
+      client:load
+      initialItems={[]}
+      initialTotal={0}
+      initialError={false}
+      pageSize={pageSize}
+      initialState={{ query: search.query, tags: search.tags, sort: search.sort, page: search.page } satisfies ProjectsListingState}
+    />
+  </div>
+  <aside class="self-start lg:sticky lg:top-6">
+    <ContributionCallout
+      eyebrow={t('projects.contribute')}
+      title={t('projects.presentProject')}
+      description={t('projects.showYouBuiltContextLinksKnowBetter')}
+      actionLabel={t('projectactions.addProject')}
+      actionHref="/projects/new"
+    />
+  </aside>
+</div>

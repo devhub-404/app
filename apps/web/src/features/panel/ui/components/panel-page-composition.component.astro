@@ -1,0 +1,79 @@
+---
+import PanelNavigation from '@/features/panel/ui/components/panel-navigation.component.astro';
+
+import { translate as translateI18n } from '@/features/panel/i18n';
+type PanelSection =
+  | 'overview'
+  | 'articles'
+  | 'news'
+  | 'news-suggestions'
+  | 'resources'
+  | 'resource-suggestions'
+  | 'events'
+  | 'event-suggestions'
+  | 'comments'
+  | 'moderation'
+  | 'reports'
+  | 'hidden-content'
+  | 'users'
+  | 'inventory'
+  | 'standing'
+  | 'restrictions'
+  | 'sanctions'
+  | 'deletion'
+  | 'roles'
+  | 'tags'
+  | 'aliases'
+  | 'governance'
+  | 'administrative-audit'
+  | 'operational-status'
+  | 'questions'
+  | 'answers'
+  | 'projects'
+  | 'jobs'
+  | 'job-suggestions'
+  | 'feedback';
+
+interface Props {
+  active: PanelSection;
+  heading: string;
+  subheading: string;
+}
+
+const { active, heading, subheading } = Astro.props;
+const locale = Astro.locals.locale;
+---
+
+<slot name="toast" />
+<div class="w-full px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+  <div class="grid gap-4 md:grid-cols-[236px_minmax(0,1fr)] md:items-start lg:grid-cols-[264px_minmax(0,1fr)] lg:gap-5">
+    <aside class="min-w-0 md:sticky md:top-[calc(var(--layout-header-height)+1rem)]">
+      <div
+        class="rounded-2xl border border-line bg-surface-subtle p-2.5 md:max-h-[calc(100vh-var(--layout-header-height)-2rem)] md:overflow-y-auto md:p-3"
+      >
+        <PanelNavigation active={active} />
+      </div>
+    </aside>
+    <div class="grid min-w-0 gap-5 sm:gap-6">
+      <header class="grid gap-3 border-b border-line pb-5 sm:pb-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+        <div class="grid gap-2">
+          <p class="text-eyebrow">
+            {translateI18n(locale, 'panellayout.management')}
+          </p>
+          <h1 class="heading-page-compact">{heading}</h1>
+          <p class="text-muted-body max-w-2xl">{subheading}</p>
+        </div>
+        {
+          Astro.slots.has('headerActions') && (
+            <div class="flex flex-wrap items-center gap-2">
+              <slot name="headerActions" />
+            </div>
+          )
+        }
+      </header>
+      <section class="grid gap-5 sm:gap-6" aria-label={heading}>
+        <slot />
+      </section>
+    </div>
+  </div>
+</div>

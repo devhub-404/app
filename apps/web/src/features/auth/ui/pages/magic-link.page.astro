@@ -1,0 +1,10 @@
+---
+import AuthPageComposition from '@/features/auth/ui/components/auth-page-composition.component.astro';
+import MagicLinkCallback from '@/features/auth/ui/components/magic-link-callback.component.tsx';
+import { translate } from '@/features/auth/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <AuthPageComposition title={translate(locale, 'page.magicTitle')} subtitle={translate(locale, 'page.magicSubtitle')}>
+    <MagicLinkCallback locale={locale} client:load />
+  </AuthPageComposition>

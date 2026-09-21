@@ -1,0 +1,12 @@
+---
+import { TermsPage } from '@/features/home/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/home/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+---
+
+<AppLayout title={t('terms.metaTitle')} description={t('terms.metaDescription')} keywords={t('terms.metaKeywords')}>
+  <TermsPage />
+</AppLayout>

@@ -1,0 +1,31 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Section from '@/shared/ui/layouts/components/section.component.astro';
+import ArticleListing from '@/features/article/ui/components/article-listing.component.astro';
+import ArticleEditorial from '@/features/article/ui/components/article-editorial.component.tsx';
+import { parseArticleListingUrl } from '@/features/article/ui/utils/article-listing-query.util.ts';
+import { translate as translateI18n } from '@/features/article/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const pageSize = 8;
+const listingState = parseArticleListingUrl(Astro.url);
+---
+
+  <div>
+    <SectionHeader
+      title={t('articlesindex.devhubArticles')}
+      description={t('articlesindex.articlesTechnicalGuidesDeepDevelopers')}
+    />
+
+    <Container size="full" class="pb-12">
+      <div class="grid gap-8">
+        <ArticleEditorial client:visible locale={locale} />
+
+        <Section>
+          <ArticleListing state={listingState} pageSize={pageSize} />
+        </Section>
+      </div>
+    </Container>
+  </div>

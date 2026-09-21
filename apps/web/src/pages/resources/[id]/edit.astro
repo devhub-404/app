@@ -1,0 +1,11 @@
+---
+import { ResourcesEditPage } from '@/features/resource/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/resource/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'resourcesedit.devhubEditResource')} description={translate(locale, 'resourcesedit.updateMetadataManageLifecycleResource')} keywords="devhub,resource,editorial">
+  <ResourcesEditPage />
+</AppLayout>

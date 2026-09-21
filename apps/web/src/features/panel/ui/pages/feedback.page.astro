@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import { translate as translateI18n } from '@/shared/i18n/app';
+import FeedbackAdminList from '@/features/panel/ui/components/feedback-admin-list.component.tsx';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="feedback"
+    heading={translateI18n(locale, 'feedback.feedback')}
+    subheading={translateI18n(locale, 'feedback.viewTrackIntakeOperationalFeedback')}
+  >
+    <FeedbackAdminList locale={locale} client:load />
+  </PanelPageComposition>

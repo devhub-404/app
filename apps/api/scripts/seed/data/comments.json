@@ -1,0 +1,18 @@
+[
+  {
+    "id": "88000000-0000-4000-8000-000000000001",
+    "contentId": "a0000000-0000-4000-8000-000000000001",
+    "targetType": "article",
+    "userId": "22222222-2222-4222-8222-222222222222",
+    "body": "A parte sobre idempotência é especialmente útil para integrar com serviços externos.",
+    "createdAt": "2026-08-22T14:00:00.000Z"
+  },
+  {
+    "id": "88000000-0000-4000-8000-000000000003",
+    "contentId": "a0000000-0000-4000-8000-000000000002",
+    "targetType": "article",
+    "userId": "33333333-3333-4333-8333-333333333333",
+    "body": "Medir o plano real antes de adicionar índices evita otimizações especulativas.",
+    "createdAt": "2026-08-22T15:00:00.000Z"
+  }
+]

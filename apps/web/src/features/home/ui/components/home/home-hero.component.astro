@@ -1,0 +1,40 @@
+---
+import { routes } from '@/shared/navigation/routes';
+import { translate, type TranslationKey } from '@/features/home/i18n';
+import Brand from '@/shared/ui/shell/Brand.astro';
+
+const t = (key: TranslationKey) => translate(Astro.locals.locale, key);
+---
+
+<section class="px-6 pb-18 pt-10 sm:pb-28 sm:pt-18">
+  <div class="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+    <div>
+      <div
+        class="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-content-accent"
+      >
+        <Brand class="text-xs" /><span aria-hidden="true">·</span><span>{t('home.eyebrow')}</span>
+      </div>
+      <h1 class="heading-hero mt-5 max-w-3xl">
+        {t('home.heroTitle')}
+      </h1>
+      <p class="text-intro mt-6 max-w-2xl">{t('home.heroDescription')}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href={routes.search} class="action action-primary">{t('home.findAction')}</a>
+        <a href={routes.contribute} class="action action-secondary">{t('home.contributeAction')}</a>
+      </div>
+    </div>
+    <aside
+      class="rounded-[22px] border border-line bg-surface-elevated p-6 shadow-sm sm:p-8"
+      aria-labelledby="home-promise"
+    >
+      <p class="text-accent-label">{t('home.promiseEyebrow')}</p>
+      <h2 id="home-promise" class="heading-large-section-compact mt-3">
+        {t('home.promiseTitle')}
+      </h2>
+      <p class="text-muted-body mt-4">{t('home.promiseDescription')}</p>
+      <div class="mt-7 border-t border-line pt-5">
+        <p class="text-strong">{t('home.tagline')}</p>
+      </div>
+    </aside>
+  </div>
+</section>

@@ -1,0 +1,16 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import ResourceAdminDetail from '@/features/panel/ui/components/resource-admin-detail.component.tsx';
+
+import { translate as translateI18n } from '@/features/panel/i18n';
+const { id } = Astro.params;
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="resources"
+    heading={translateI18n(locale, 'panelresourcedetail.resource')}
+    subheading={translateI18n(locale, 'panelresourcedetail.reviewDetailsResource')}
+  >
+    <ResourceAdminDetail locale={locale} client:load id={id ?? ''} />
+  </PanelPageComposition>

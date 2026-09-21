@@ -1,0 +1,14 @@
+---
+import AuthPageComposition from '@/features/auth/ui/components/auth-page-composition.component.astro';
+import AccountRecovery from '@/features/auth/ui/components/account-recovery.component.tsx';
+import { translate } from '@/features/auth/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+  <AuthPageComposition
+    title={translate(locale, 'page.recoveryTitle')}
+    subtitle={translate(locale, 'page.recoverySubtitle')}
+  >
+    <AccountRecovery locale={locale} client:load />
+  </AuthPageComposition>

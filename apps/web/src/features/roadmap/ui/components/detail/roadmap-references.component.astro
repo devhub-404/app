@@ -1,0 +1,35 @@
+---
+import { Icon } from 'astro-icon/components';
+
+type Props = {
+  references: Array<{ label: string; url: string }>;
+  label: string;
+};
+
+const { references, label } = Astro.props;
+---
+
+{
+  references.length > 0 && (
+    <section class="mt-10 border-t border-line pt-6">
+      <h2 class="heading-tiny text-xs">
+        {label}
+      </h2>
+      <ul class="mt-4 grid gap-3">
+        {references.map((reference) => (
+          <li>
+            <a
+              href={reference.url}
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center gap-2 font-semibold text-content-accent hover:underline"
+            >
+              <span>{reference.label}</span>
+              <Icon name="lucide:external-link" size={14} aria-hidden="true" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

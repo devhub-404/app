@@ -1,0 +1,35 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import Base64Converter from '../components/base64-converter.component.tsx';
+import JsonFormatter from '../components/json-formatter.component.tsx';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import type { ToolDefinition } from '../../domain/tool-catalog.domain.ts';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '../../i18n';
+interface Props {
+  tool: ToolDefinition;
+}
+
+const { tool } = Astro.props;
+const locale = Astro.locals.locale;
+const title = translateI18n(locale, tool.titleKey);
+const description = translateI18n(locale, tool.descriptionKey);
+---
+
+  <div>
+    <SectionHeader eyebrow={translateI18n(locale, 'tooldetail.tool')} title={title} description={description}
+      ><BackLink slot="actions" href={routes.tools} label={translateI18n(locale, 'tooldetail.tools')} /></SectionHeader
+    >
+    <div class="py-6 sm:py-8">
+      <Container size="sm">
+        {
+          tool.kind === 'base64' ? (
+            <Base64Converter locale={locale} client:load tool={tool} />
+          ) : (
+            <JsonFormatter locale={locale} client:load tool={tool} />
+          )
+        }
+      </Container>
+    </div>
+  </div>

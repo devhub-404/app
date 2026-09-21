@@ -1,0 +1,123 @@
+---
+import { Icon } from 'astro-icon/components';
+import MobileNavigationDrawer, {
+  type MobileNavigationGroup,
+} from '@/shared/ui/components/drawers/mobile-navigation-drawer.component.tsx';
+import { routes } from '@/shared/navigation/routes';
+import { translate, type TranslationKey } from '@/shared/i18n/app';
+
+const locale = Astro.locals.locale;
+const t = (key: TranslationKey) => translate(locale, key);
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+const navItem = 'flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 font-semibold';
+const inactiveItem = 'text-content-muted hover:bg-hover hover:text-content';
+const drawerGroups: MobileNavigationGroup[] = [
+  {
+    label: t('shell.main'),
+    items: [
+      { label: t('shell.home'), href: routes.home, icon: 'home' },
+      { label: t('shell.feed'), href: routes.feed, icon: 'inbox' },
+    ],
+  },
+  {
+    label: t('shell.categoryLearn'),
+    items: [
+      { label: t('shell.articles'), href: routes.articles, icon: 'file-text' },
+      { label: t('shell.codex'), href: routes.codex, icon: 'book-open' },
+      { label: t('shell.cheatsheets'), href: routes.cheatsheets, icon: 'clipboard-list' },
+      { label: t('shell.paths'), href: routes.roadmaps, icon: 'map' },
+    ],
+  },
+  {
+    label: t('shell.categorySolve'),
+    items: [{ label: t('shell.questions'), href: routes.questions, icon: 'messages-square' }],
+  },
+  {
+    label: t('shell.categoryUse'),
+    items: [
+      { label: t('shell.resources'), href: routes.resources, icon: 'library' },
+      { label: t('shell.tools'), href: routes.tools, icon: 'wrench' },
+    ],
+  },
+  {
+    label: t('shell.categoryBuild'),
+    items: [{ label: t('shell.projects'), href: routes.projects, icon: 'boxes' }],
+  },
+  {
+    label: t('shell.categoryExplore'),
+    items: [
+      { label: t('shell.events'), href: routes.events, icon: 'calendar-days' },
+      { label: t('shell.jobs'), href: routes.jobs, icon: 'briefcase-business' },
+      { label: t('shell.news'), href: routes.news, icon: 'newspaper' },
+    ],
+  },
+];
+---
+
+<nav
+  transition:persist="app-mobile-navigation"
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-canvas/95 px-2 pt-2 shadow-ui-overlay backdrop-blur lg:hidden"
+  style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom));"
+  aria-label={t('shell.mobileNavigation')}
+>
+  <div class="mx-auto grid max-w-lg grid-cols-5 gap-1">
+    <a
+      href={routes.home}
+      aria-current={isActive(routes.home) ? 'page' : undefined}
+      data-shell-nav-link
+      data-shell-nav-href={routes.home}
+      data-active={isActive(routes.home) ? 'true' : 'false'}
+      class={`action action-ghost ${navItem} ${inactiveItem} data-[active=true]:bg-selected data-[active=true]:text-content`}
+    >
+      <Icon name="lucide:house" size={19} aria-hidden="true" />
+      <span class="text-[0.68rem]">{t('shell.home')}</span>
+    </a>
+
+    <a
+      href={routes.feed}
+      aria-current={isActive(routes.feed) ? 'page' : undefined}
+      data-shell-nav-link
+      data-shell-nav-href={routes.feed}
+      data-active={isActive(routes.feed) ? 'true' : 'false'}
+      class={`action action-ghost ${navItem} ${inactiveItem} data-[active=true]:bg-selected data-[active=true]:text-content`}
+    >
+      <Icon name="lucide:inbox" size={19} aria-hidden="true" />
+      <span class="text-[0.68rem]">{t('shell.feed')}</span>
+    </a>
+
+    <a
+      href={routes.contribute}
+      aria-current={isActive(routes.contribute) ? 'page' : undefined}
+      data-shell-nav-link
+      data-shell-nav-href={routes.contribute}
+      data-active={isActive(routes.contribute) ? 'true' : 'false'}
+      class={`action action-primary ${navItem} min-h-12 px-1 py-1`}
+    >
+      <Icon name="lucide:plus" size={19} aria-hidden="true" />
+    </a>
+
+    <a
+      href={routes.account.notifications}
+      aria-current={isActive(routes.account.notifications) ? 'page' : undefined}
+      data-shell-nav-link
+      data-shell-nav-href={routes.account.notifications}
+      data-active={isActive(routes.account.notifications) ? 'true' : 'false'}
+      class={`action action-ghost ${navItem} ${inactiveItem} data-[active=true]:bg-selected data-[active=true]:text-content`}
+      aria-label={t('shell.notifications')}
+    >
+      <Icon name="lucide:bell" size={19} aria-hidden="true" />
+      <span class="text-[0.68rem]">{t('shell.notifications')}</span>
+    </a>
+
+    <MobileNavigationDrawer
+      client:load
+      label={t('shell.menu')}
+      openLabel={t('shell.openNavigation')}
+      title={t('shell.mobileNavigation')}
+      titleId="mobile-navigation-title"
+      groups={drawerGroups}
+      activeHref={pathname}
+    />
+  </div>
+</nav>

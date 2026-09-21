@@ -1,0 +1,29 @@
+---
+import { translate, type TranslationKey } from '@/features/home/i18n';
+const t = (key: TranslationKey) => translate(Astro.locals.locale, key);
+---
+
+<section class="border-t border-line bg-surface-subtle px-6 py-16 sm:py-20">
+  <div class="mx-auto w-full max-w-6xl">
+    <div class="max-w-2xl">
+      <p class="text-accent-label">{t('home.integrityEyebrow')}</p>
+      <h2 class="heading-large-section mt-3">{t('home.integrityTitle')}</h2>
+      <p class="text-muted-body mt-4">{t('home.integrityDescription')}</p>
+    </div>
+    <div class="mt-9 grid gap-3 md:grid-cols-3">
+      {
+        [1, 2, 3].map((number) => (
+          <div class="rounded-[16px] border border-line bg-surface p-6">
+            <p class="text-accent">0{number}</p>
+            <h3 class="heading-card mt-7 text-lg">
+              {t(`home.integrity.${number}.title` as TranslationKey)}
+            </h3>
+            <p class="text-muted-body mt-3">
+              {t(`home.integrity.${number}.description` as TranslationKey)}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

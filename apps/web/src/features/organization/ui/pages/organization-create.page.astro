@@ -1,0 +1,15 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import OrganizationCreateForm from '../components/organization-create-form.component.tsx';
+import { translate as translateI18n } from '@/features/organization/i18n';
+---
+
+<SectionHeader
+    size="sm"
+    eyebrow={translateI18n(Astro.locals.locale, 'accountorganizations.organizations')}
+    title={translateI18n(Astro.locals.locale, 'organizationcreate.newOrganization')}
+    description={translateI18n(Astro.locals.locale, 'organizationcreate.createIdentityCollectiveYouWillBeFirstOwner')}
+  /><div class="py-6">
+    <Container><OrganizationCreateForm locale={Astro.locals.locale} client:load /></Container>
+  </div>

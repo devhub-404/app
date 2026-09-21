@@ -1,0 +1,126 @@
+---
+import TagSelector from '@/shared/ui/components/forms/tag-selector.component.tsx';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import Section from '@/shared/ui/layouts/components/section.component.astro';
+import SearchResults from '@/features/home/ui/components/search-results.component.tsx';
+import { Icon } from 'astro-icon/components';
+import type { DiscoveryType } from '@/features/discovery/public';
+import { translate as translateI18n, type TranslationKey } from '@/features/home/i18n';
+import { translate as translateShared } from '@/shared/i18n/app';
+import { parseHomeSearch } from '@/features/home/ui/schemas/search.schema.ts';
+
+const locale = Astro.locals.locale;
+const t = (key: TranslationKey) => translateI18n(locale, key);
+const search = parseHomeSearch(Astro.url.searchParams);
+const query = search.q;
+const tags = search.tags;
+const supportedTypes: readonly DiscoveryType[] = ['article', 'news', 'resource', 'question', 'project', 'job', 'event'];
+const types = search.types as DiscoveryType[];
+const mode = search.mode;
+const groups: Array<{ key: TranslationKey; type: DiscoveryType }> = [
+  { key: 'home.format.articles', type: 'article' },
+  { key: 'home.format.news', type: 'news' },
+  { key: 'home.format.resources', type: 'resource' },
+  { key: 'home.format.questions', type: 'question' },
+  { key: 'home.format.projects', type: 'project' },
+  { key: 'home.format.jobs', type: 'job' },
+  { key: 'home.format.events', type: 'event' },
+];
+const modeOptions: Array<{ value: 'search' | 'trending' | 'popular' | 'recent'; key: TranslationKey }> = [
+  { value: 'search', key: 'search.mode.search' },
+  { value: 'trending', key: 'search.mode.trending' },
+  { value: 'popular', key: 'search.mode.popular' },
+  { value: 'recent', key: 'search.mode.recent' },
+];
+const hrefWith = (updates: Record<string, string | undefined>) => {
+  const url = new URL(Astro.url);
+  for (const [key, value] of Object.entries(updates)) {
+    if (!value) url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+  }
+  return `${url.pathname}${url.search}`;
+};
+---
+
+<Container size="full" class="pb-16">
+  <Section>
+    <form
+      method="get"
+      class="grid gap-3 rounded-3xl border border-line bg-surface-elevated p-5 sm:grid-cols-[minmax(0,1fr)_minmax(10rem,16rem)_auto]"
+    >
+      <label>
+        <span class="sr-only">{t('search.placeholder')}</span>
+        <input name="q" value={query} placeholder={t('search.placeholder')}  class="field-control"/>
+      </label>
+      <TagSelector
+        client:load
+        locale={locale}
+        name="tags"
+        defaultValue={tags}
+        label={t('search.tagPlaceholder')}
+        placeholder={t('search.tagPlaceholder')}
+      />
+      {types.length !== supportedTypes.length && <input type="hidden" name="types" value={types.join(',')} />}
+      {mode !== 'search' && <input type="hidden" name="mode" value={mode} />}
+      <button type="submit" class="action action-primary"
+        ><Icon name="lucide:search" size={16} aria-hidden="true" />
+        {t('search.submit')}
+      </button>
+    </form>
+
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+      <span class="mr-1 text-xs font-semibold uppercase tracking-[.14em] text-content-muted">{t('search.types')}</span>
+      {
+        groups.map((group) => {
+          const active = types.includes(group.type);
+          const next = active ? types.filter((value) => value !== group.type) : [...types, group.type];
+          return (
+            <a
+              href={hrefWith({ types: next.length === supportedTypes.length ? undefined : next.join(',') })}
+              class:list={[
+                'rounded-full border px-3 py-1.5 text-xs font-semibold',
+                active ? 'border-action-border bg-action-subtle text-content-accent' : 'border-line text-content-muted',
+              ]}
+            >
+              {t(group.key)}
+            </a>
+          );
+        })
+      }
+    </div>
+
+    <div class="mt-3 flex flex-wrap items-center gap-2">
+      <span class="mr-1 text-xs font-semibold uppercase tracking-[.14em] text-content-muted">{t('search.sort')}</span>
+      {
+        modeOptions.map((option) => (
+          <a
+            href={hrefWith({ mode: option.value === 'search' ? undefined : option.value })}
+            class:list={[
+              'rounded-full border px-3 py-1.5 text-xs font-semibold',
+              mode === option.value
+                ? 'border-action-border bg-action-subtle text-content-accent'
+                : 'border-line text-content-muted',
+            ]}
+          >
+            {t(option.key)}
+          </a>
+        ))
+      }
+    </div>
+
+    <SearchResults
+      client:load
+      groupSpecs={groups.map((group) => ({ label: t(group.key), type: group.type }))}
+      {query}
+      {tags}
+      {types}
+      {mode}
+      resultsLabel={t('search.results')}
+      emptyLabel={t('search.empty')}
+      errorLabel={t('search.error')}
+      gridLabel={translateShared(locale, 'filters.grid')}
+      listLabel={translateShared(locale, 'filters.list')}
+      viewLabel={translateShared(locale, 'filters.view')}
+    />
+  </Section>
+</Container>

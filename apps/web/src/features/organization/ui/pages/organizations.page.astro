@@ -1,0 +1,20 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import OrganizationDirectory from '../components/organization-directory.component.tsx';
+import { translate as translateI18n } from '@/features/organization/i18n';
+---
+
+<SectionHeader
+    size="sm"
+    containerSize="full"
+    border={false}
+    eyebrow={translateI18n(Astro.locals.locale, 'organizations.ecosystem')}
+    title={translateI18n(Astro.locals.locale, 'accountorganizations.organizations')}
+    description={translateI18n(
+      Astro.locals.locale,
+      'organizations.companiesCommunitiesProjectsOpenSourceFoundationsGroupsInstitutionsConnectedDevhub',
+    )}
+  /><div class="py-6">
+    <Container size="full"><OrganizationDirectory locale={Astro.locals.locale} client:load /></Container>
+  </div>

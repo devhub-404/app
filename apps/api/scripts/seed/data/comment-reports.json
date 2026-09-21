@@ -1,0 +1,10 @@
+[
+  {
+    "id": "66000000-0000-4000-8000-000000000001",
+    "commentId": "88000000-0000-4000-8000-000000000001",
+    "reporterAccountId": "44444444-4444-4444-8444-444444444444",
+    "reason": "other",
+    "description": "Registro pendente para testar a fila de moderação.",
+    "status": "pending"
+  }
+]

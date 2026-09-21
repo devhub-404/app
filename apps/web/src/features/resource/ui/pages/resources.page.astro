@@ -1,0 +1,28 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import ResourcesPageContent from '../components/resources-page-content.component.astro';
+import { translate as translateI18n } from '@/features/resource/i18n';
+import type { ResourceItem } from '@/features/resource/types/resource.type.ts';
+
+interface Props {
+  resources: ResourceItem[];
+  total: number;
+  failed: boolean;
+  pageSize: number;
+  query: string;
+  tags: string[];
+  page: number;
+}
+
+const props = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+  <SectionHeader
+    eyebrow={t('resourcesindex.curationExternal')}
+    title={t('resourcesedit.resources')}
+    description={t('resourcesindex.sourcesToolsReferencesCountArriveOriginal')}
+  />
+  <Container size="full" class="p-8"><ResourcesPageContent {...props} /></Container>

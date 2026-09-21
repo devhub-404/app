@@ -1,0 +1,23 @@
+---
+import Brand from '@/shared/ui/shell/Brand.astro';
+import { UserMenu } from '@/features/account/public';
+import { SearchMenu } from '@/features/home/public';
+import { routes } from '@/shared/navigation/routes';
+import { translate, type TranslationKey } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+const t = (key: TranslationKey) => translate(locale, key);
+---
+
+<header transition:persist="app-header" class="sticky top-0 z-50 border-b border-line bg-canvas/95 backdrop-blur">
+  <div class="mx-auto flex h-app-header items-center gap-3 px-4 lg:px-6">
+    <a
+      href={routes.home}
+      aria-label={t('shell.homeAria')}
+      class="flex min-w-0 shrink-0 items-center gap-2 rounded-xl focus-visible:outline-offset-4"><Brand /></a
+    >
+    <div class="min-w-0 flex-1"><SearchMenu client:load /></div>
+    <div class="flex shrink-0 items-center gap-2">
+      <UserMenu location="header" client:load />
+    </div>
+  </div>
+</header>

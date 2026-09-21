@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import PlatformStatus from '@/features/panel/ui/components/platform-status.component.tsx';
+import { translate as translateI18n } from '@/features/panel/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="operational-status"
+    heading={translateI18n(locale, 'platformstatus.title')}
+    subheading={translateI18n(locale, 'platformstatus.description')}
+  >
+    <PlatformStatus locale={locale} client:load />
+  </PanelPageComposition>

@@ -1,0 +1,118 @@
+---
+import { ArrowUpRight, BookOpenCheck, ShieldAlert, Tags, UsersRound, Workflow } from 'lucide-solid';
+import { canAccessPanelItem } from '@/features/panel/ui/navigation/panel-access';
+import { panelSections } from '@/features/panel/ui/navigation/panel-navigation';
+import { translate as translateI18n } from '@/features/panel/i18n';
+import ListPanel from '@/shared/ui/components/surfaces/list-panel.component.tsx';
+
+const locale = Astro.locals.locale;
+const role = Astro.locals.account?.role;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const visibleSections = panelSections
+  .map((section) => ({ ...section, items: section.items.filter((item) => canAccessPanelItem(item, role)) }))
+  .filter((section) => section.items.length > 0);
+
+const sectionDescription = (id: string) =>
+  ({
+    content: t('adminoverview.content'),
+    moderation: t('adminoverview.reportsCasesContentHidden'),
+    accounts: t('adminoverview.inventoryStandingRestrictionsSanctionsDeletionRoles'),
+    taxonomy: t('adminoverview.tagsAliasesGovernanceLexical'),
+    operations: t('adminoverview.auditAdministrativeStatusOperational'),
+  })[id] ?? t('adminoverview.areaManagementPlatform');
+
+const itemDescription = (itemId: string, sectionId: string) =>
+  ({
+    articles: t('adminoverview.triagePublicationsStatusesVisibility'),
+    news: t('adminoverview.reviewSourcesSuggestionsPublicationsEditorial'),
+    resources: t('adminoverview.trackCatalogSuggestionsCurated'),
+    events: t('adminoverview.organizeEventsInformationPublic'),
+    questions: t('adminoverview.questions'),
+    answers: t('adminoverview.viewAnswersSignals'),
+    projects: t('adminoverview.trackProjectsShared'),
+    jobs: t('adminoverview.jobs'),
+    comments: t('adminoverview.investigateCommentsContextDiscussion'),
+    reports: t('adminoverview.prioritizeReportsRequireAnalysis'),
+    'hidden-content': t('adminoverview.viewContentRemovedExperiencePublic'),
+    users: t('adminoverview.reviewRecordsStatusPermissionsAccounts'),
+    inventory: t('adminoverview.trackInventoryAccountsPlatform'),
+    standing: t('adminoverview.viewHistoryStatusAccounts'),
+    restrictions: t('adminoverview.applyOrReviewRestrictionsCapability'),
+    sanctions: t('adminoverview.trackSanctionsActive'),
+    deletion: t('adminoverview.processRequestsDeletion'),
+    roles: t('adminoverview.manageAssignmentsRole'),
+    tags: t('adminoverview.keepTagsSynonymsRelationsSemantic'),
+    aliases: t('adminoverview.aliases'),
+    governance: t('adminoverview.trackDecisionsLexicalProposals'),
+    'administrative-audit': t('adminoverview.viewTrailsActionsAdministrative'),
+    'operational-status': t('adminoverview.trackSignalsOperation'),
+  })[itemId] ?? sectionDescription(sectionId);
+
+const sectionIcon = (id: string) =>
+  ({
+    content: BookOpenCheck,
+    moderation: ShieldAlert,
+    accounts: UsersRound,
+    taxonomy: Tags,
+    operations: Workflow,
+  })[id] ?? Workflow;
+---
+
+<div class="grid gap-8">
+  <ListPanel>
+    <div class="border-b border-line bg-surface-subtle px-5 py-3 sm:px-6">
+      <p class="text-eyebrow">{t('adminoverview.centerOperation')}</p>
+    </div>
+    <div class="grid gap-2 p-5 sm:p-6">
+      <h2 class="heading-card text-lg">{t('adminoverview.requiresAttention')}</h2>
+      <p class="text-muted-body max-w-2xl">
+        {t('adminoverview.chooseWorkstreamWorkPanelFocusesTriageDecisionsTraceabilityWithoutReplace')}
+      </p>
+    </div>
+  </ListPanel>
+  {
+    visibleSections.length ? (
+      visibleSections.map((section) => {
+        const Icon = sectionIcon(section.id);
+        return (
+          <section aria-labelledby={`panel-section-${section.id}`} class="grid gap-3">
+            <div class="flex items-center gap-2">
+              <Icon class="size-4 text-content-accent" aria-hidden="true" />
+              <div>
+                <h2 id={`panel-section-${section.id}`} class="heading-callout text-sm">
+                  {t(section.labelKey)}
+                </h2>
+                <p class="text-caption">{sectionDescription(section.id)}</p>
+              </div>
+            </div>
+            <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {section.items.map((item) => (
+                <a
+                  href={item.href}
+                  class="group grid gap-3 rounded-2xl border border-line bg-surface-elevated p-4 shadow-sm transition duration-standard ease-standard hover:-translate-y-0.5 hover:border-action-border hover:shadow-md"
+                >
+                  <div class="grid gap-1">
+                    <p class="text-strong group-hover:text-content-accent">
+                      {t(item.labelKey)}
+                    </p>
+                    <p class="text-muted-body">{itemDescription(item.id, section.id)}</p>
+                  </div>
+                  <span class="inline-flex items-center gap-1 text-xs font-semibold text-content-accent">
+                    {t('adminoverview.open')} <ArrowUpRight class="size-3.5" aria-hidden="true" />
+                  </span>
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })
+    ) : (
+      <div class="rounded-3xl border border-line bg-surface-elevated px-6 py-10 text-center shadow-sm">
+        <p class="text-strong">{t('adminoverview.noAreaAvailable')}</p>
+        <p class="text-muted mt-2">
+          {t('adminoverview.permissionsNotIncludeSurfacesManagement')}
+        </p>
+      </div>
+    )
+  }
+</div>

@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import AccountPreferencesForm from '@/features/account/ui/components/account-preferences-form.component.tsx';
+import { translate, type TranslationKey } from '@/features/account/i18n';
+const t = (key: TranslationKey) => translate(Astro.locals.locale, key);
+---
+
+  <AccountPageComposition
+    active="preferences"
+    heading={t('account.preferences')}
+    subheading={t('preferences.description')}
+  >
+    <AccountPreferencesForm locale={Astro.locals.locale} client:load />
+  </AccountPageComposition>

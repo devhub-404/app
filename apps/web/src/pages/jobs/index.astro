@@ -1,0 +1,16 @@
+---
+import { JobsPage } from '@/features/job/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/job/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<AppLayout
+  title={t('jobsindex.devhubJobs')}
+  description={t('jobsindex.opportunitiesTechnicalTemporaryCompensationExplicit')}
+  keywords="devhub,jobs,freelance"
+>
+  <JobsPage />
+</AppLayout>

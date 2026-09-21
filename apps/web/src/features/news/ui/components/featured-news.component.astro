@@ -1,0 +1,59 @@
+---
+import { Eye, Newspaper } from 'lucide-solid';
+import type { NewsItem } from '@/features/news/types/news.dto.type.ts';
+import { formatPublicDate } from '@/shared/utils/format-public-date.util.ts';
+import ShareButton from '@/shared/ui/components/actions/share-button.component.tsx';
+import { translate as translateI18n } from '@/features/news/i18n';
+import { routes } from '@/shared/navigation/routes';
+
+interface Props {
+  news: NewsItem;
+}
+const { news } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const href = `/news/${encodeURIComponent(news.slug)}`;
+const views = new Intl.NumberFormat(locale, { notation: 'compact', maximumFractionDigits: 1 }).format(news.views);
+---
+
+<article class="grid min-h-72 grid-cols-[42%_minmax(0,1fr)] overflow-hidden max-[760px]:grid-cols-1">
+  <a href={href} class="relative min-h-56 overflow-hidden bg-accent-gradient" aria-label={news.title}>
+    {
+      news.coverImageUrl && (
+        <img src={news.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+      )
+    }
+  </a>
+  <div class="flex flex-col p-5 sm:p-6">
+    <p class="text-accent-label flex items-center gap-2">
+      <Newspaper size={15} />{t('news.featured')}
+    </p>
+    <h2 class="heading-strong-section mt-2"><a href={href} class="hover:text-content-accent">{news.title}</a></h2>
+    <p class="text-muted-body mt-2 line-clamp-4">{news.description}</p>
+    <div class="mt-3 flex flex-wrap gap-2">
+      {
+        news.tags.slice(0, 5).map((tag) => (
+          <a
+            href={routes.searchByTag(tag.slug)}
+            class="rounded-full border border-line px-2.5 py-1 text-xs text-content-muted hover:border-action-border hover:text-content-accent"
+          >
+            #{tag.name}
+          </a>
+        ))
+      }
+    </div>
+    <div class="mt-auto flex flex-wrap items-center gap-3 border-t border-line pt-4 text-xs text-content-muted">
+      <span>{formatPublicDate(news.publishedAt ?? news.updatedAt, locale)}</span>
+      <span class="inline-flex items-center gap-1"><Eye size={15} />{views}</span>
+      <span class="ml-auto"
+        ><ShareButton
+          client:idle
+          title={news.title}
+          url={href}
+          label={t('newsdetail.shareNews')}
+          copiedLabel={t('newsdetail.linkCopied')}
+        /></span
+      >
+    </div>
+  </div>
+</article>

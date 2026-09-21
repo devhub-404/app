@@ -1,0 +1,14 @@
+---
+import QuestionPageContent from '../components/question-page-content.component.astro';
+import type { Question } from '@/features/q-and-a/types/q-and-a.type.ts';
+
+interface Props {
+  id: string;
+  initialItem?: Question | null;
+  initialError?: boolean;
+}
+
+const { id, initialItem, initialError } = Astro.props;
+---
+
+  <QuestionPageContent {id} {initialItem} {initialError} />

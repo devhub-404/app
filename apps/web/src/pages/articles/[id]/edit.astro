@@ -1,0 +1,11 @@
+---
+import { ArticleEditPage } from '@/features/article/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/article/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'articleedit.devhubEditArticle')} description={translate(locale, 'articleedit.updateArticle')} keywords="devhub,articles,edit">
+  <ArticleEditPage />
+</AppLayout>

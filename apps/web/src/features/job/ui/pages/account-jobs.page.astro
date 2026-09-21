@@ -1,0 +1,16 @@
+---
+import AccountPageComposition from '@/features/account/public/layout';
+import JobManagement from '../components/job-management.component.tsx';
+import { translate as translateI18n } from '@/features/job/i18n';
+import { routes } from '@/shared/navigation/routes';
+---
+
+  <AccountPageComposition
+    active="jobs"
+    heading={translateI18n(Astro.locals.locale, 'accountjobs.myJobs')}
+    subheading={translateI18n(Astro.locals.locale, 'accountjobs.closeOpportunitiesFilledOrRenewPublicationsExpired')}
+  >
+    <a slot="headerActions" href={routes.jobNew} class="action action-primary"
+      >{translateI18n(Astro.locals.locale, 'jobactions.publishJob')}</a>
+    <JobManagement locale={Astro.locals.locale} client:load />
+  </AccountPageComposition>

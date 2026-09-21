@@ -1,0 +1,38 @@
+{
+  "name": "@devhub-404/app",
+  "private": true,
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "node tools/runtime/dev.mjs",
+    "dev:setup": "pnpm infra:dev:up && pnpm db:migrate:dev && pnpm db:seed:dev",
+    "infra:dev:up": "docker compose -f docker-compose.dev.yml up -d --wait && docker compose -f docker-compose.dev.yml --profile init run --rm --no-deps minio-init",
+    "infra:dev:down": "docker compose -f docker-compose.dev.yml down",
+    "infra:dev:logs": "docker compose -f docker-compose.dev.yml logs -f",
+    "db:migrate:dev": "pnpm --filter @devhub-404/api db:migrate:dev",
+    "db:reset:dev": "pnpm --filter @devhub-404/api db:reset:dev",
+    "db:seed:dev": "pnpm --filter @devhub-404/api db:seed:dev",
+    "db:seed:dev:reset": "pnpm --filter @devhub-404/api db:seed:dev:reset",
+    "start": "node tools/runtime/start.mjs",
+    "start:purge": "pnpm --filter @devhub-404/worker-purge start",
+    "build": "pnpm --recursive build",
+    "lint": "pnpm --filter @devhub-404/api lint",
+    "check": "pnpm lint && pnpm --recursive check",
+    "typecheck": "pnpm --recursive typecheck",
+    "test:unit": "pnpm --parallel --filter @devhub-404/api --filter @devhub-404/web test:unit",
+    "test:unit:watch": "pnpm --parallel --filter @devhub-404/api --filter @devhub-404/web test:unit:watch",
+    "test:integration:auth": "pnpm --filter @devhub-404/api test:integration:auth",
+    "test:e2e:prepare": "pnpm --filter @devhub-404/api test:integration:prepare",
+    "test:e2e": "pnpm test:e2e:prepare && pnpm --filter @devhub-404/web test:e2e",
+    "test": "pnpm test:unit && pnpm test:integration:auth",
+    "types": "pnpm --parallel --filter @devhub-404/web --filter @devhub-404/api types",
+    "openapi": "pnpm --filter @devhub-404/api openapi:generate && pnpm --filter @devhub-404/api-contract generate",
+    "openapi:check": "pnpm --filter @devhub-404/api openapi:check && pnpm --filter @devhub-404/api-contract check",
+    "deploy:web": "pnpm --filter @devhub-404/web deploy",
+    "deploy:api": "pnpm --filter @devhub-404/api deploy",
+    "deploy:purge": "pnpm --filter @devhub-404/worker-purge deploy",
+    "deploy:all": "pnpm deploy:api && pnpm deploy:web && pnpm deploy:purge"
+  }
+}

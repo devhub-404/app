@@ -1,0 +1,156 @@
+---
+import { Icon } from 'astro-icon/components';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import ShareButton from '@/shared/ui/components/actions/share-button.component.tsx';
+import { ReportButton } from '@/features/report/public';
+import { routes } from '@/shared/navigation/routes';
+import type { NewsDetails } from '@/features/news/types/news.dto.type.ts';
+import { translate as translateI18n } from '@/features/news/i18n';
+import { formatLocalizedDate } from '@/shared/i18n/core';
+import { renderContentToHtml } from '@/shared/ui/editor/content';
+import { CommentsSection } from '@/features/comment/public';
+import TagLink from '@/shared/ui/components/navigation/tag-link.component.tsx';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1], args?: unknown[]) => translateI18n(locale, key, args);
+interface Props {
+  news: NewsDetails | null;
+}
+
+const { news } = Astro.props;
+const html = news ? renderContentToHtml(news.content) : '';
+const date = (value: string | null | undefined) =>
+  value ? formatLocalizedDate(value, locale, { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+const time = (value: string | null | undefined) =>
+  value ? formatLocalizedDate(value, locale, { hour: '2-digit', minute: '2-digit' }) : '—';
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="full">
+      <div class="py-5 sm:py-6">
+        <BackLink href={routes.news} label={t('newsdetail.news')} />
+      </div>
+
+      {
+        news ? (
+          <article class="grid gap-8">
+            <header class="grid gap-4 border-b border-line pb-6">
+              <div class="flex flex-wrap gap-2">
+                {news.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+              <h1 class="heading-page max-w-5xl">
+                {news.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {news.description}
+              </p>
+              <p class="text-muted">
+                {t('newsdetail.publishedDate')} {date(news.publishedAt ?? news.updatedAt)} ·{' '}
+                {time(news.publishedAt ?? news.updatedAt)} {t('newsdetail.updatedTime')} {time(news.updatedAt)}
+              </p>
+              {news.status === 'archived' && (
+                <p class="text-body rounded-xl border border-warning-border bg-warning-bg p-3">
+                  <strong>{t('newsdetail.recordArchived')}</strong>{' '}
+                  {t('newsdetail.thisNewsRemainsAvailableReadingHistorical')}
+                </p>
+              )}
+            </header>
+
+            <div class="grid items-start gap-6 lg:gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
+              <div class="grid min-w-0 gap-6">
+                {news.coverImageUrl ? (
+                  <img
+                    src={news.coverImageUrl}
+                    alt={`Capa da News: ${news.title}`}
+                    class="aspect-[16/7] w-full rounded-2xl border border-line object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] w-full items-center justify-center rounded-2xl border border-line bg-accent-gradient">
+                    <Icon name="lucide:newspaper" size={56} class="text-content-accent" />
+                  </div>
+                )}
+                <section class="grid gap-5 border-t border-line pt-6">
+                  <h2 class="heading-tiny text-xs">
+                    {t('newsdetail.content')}
+                  </h2>
+                  <div class="content-prose max-w-none" set:html={html} />
+                </section>
+              </div>
+
+              <aside class="space-y-4 lg:sticky lg:top-6">
+                <section class="grid gap-4 rounded-2xl border border-line bg-surface-elevated p-4">
+                  <h2 class="heading-tiny text-xs">
+                    {t('newsdetail.actions')}
+                  </h2>
+                  <div class="flex flex-wrap gap-2">
+                    <ShareButton
+                      title={news.title}
+                      url={routes.newsDetail(news.slug)}
+                      label={t('newsdetail.shareNews')}
+                      copiedLabel={t('newsdetail.linkCopied')}
+                      client:idle
+                    />
+                    <ReportButton target="resource" id={news.id} locale={locale} client:idle />
+                  </div>
+                </section>
+                <section class="grid gap-4 rounded-2xl border border-line bg-surface-elevated p-4">
+                  <h2 class="heading-tiny text-xs">
+                    {t('newsdetail.metrics')}
+                  </h2>
+                  <dl class="grid gap-3 text-sm">
+                    <div class="flex items-center justify-between">
+                      <dt class="inline-flex items-center gap-2 text-content-muted">
+                        <Icon name="lucide:eye" size={14} /> {t('newsdetail.views')}
+                      </dt>
+                      <dd class="font-semibold text-content">{news.views}</dd>
+                    </div>
+                  </dl>
+                </section>
+                <section class="grid gap-4 rounded-2xl border border-line bg-surface-elevated p-4">
+                  <h2 class="heading-tiny text-xs">
+                    {t('newsdetail.devhubNews')}
+                  </h2>
+                  <p class="text-muted-body">{t('newsdetail.informationEditorialInstitutional')}</p>
+                  <dl class="grid gap-4 text-sm">
+                    <div class="grid gap-1">
+                      <>
+                        <dt class="text-content-muted">{t('newsdetail.publishedAt')}</dt>
+                        <dd class="font-medium text-content">
+                          {date(news.publishedAt ?? news.updatedAt)} · {time(news.publishedAt ?? news.updatedAt)}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="grid gap-1">
+                      <>
+                        <dt class="text-content-muted">{t('newsdetail.updatedAt')}</dt>
+                        <dd class="font-medium text-content">
+                          {date(news.updatedAt)} · {time(news.updatedAt)}
+                        </dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <div>
+              <CommentsSection
+                id="news-comments"
+                targetType="news"
+                contentId={news.id}
+                locale={locale}
+                client:visible
+              />
+            </div>
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {t('newsdetail.couldNotLoadNews')}
+          </section>
+        )
+      }
+    </Container>
+  </div>

@@ -1,0 +1,10 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import EditArticleForm from '@/features/article/ui/components/forms/solid/edit-article-form.component.tsx';
+const locale = Astro.locals.locale;
+const { id } = Astro.params;
+---
+
+  <div class="py-6 sm:py-8">
+    <Container size="full"><EditArticleForm locale={locale} client:load id={id ?? ''} /></Container>
+  </div>

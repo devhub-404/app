@@ -1,0 +1,11 @@
+---
+import { MagicLinkPage } from '@/features/auth/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/auth/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={`DevHub - ${translate(locale, 'page.magicTitle')}`} description={translate(locale, 'page.magicSubtitle')} keywords="devhub,auth">
+  <MagicLinkPage />
+</AppLayout>

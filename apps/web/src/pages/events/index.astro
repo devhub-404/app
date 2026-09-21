@@ -1,0 +1,16 @@
+---
+import { EventsPage } from '@/features/event/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/event/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<AppLayout
+  title={t('eventsindex.devhubEvents')}
+  description={t('eventsindex.eventsTechnicalHappeningAreaDevelopment')}
+  keywords="devhub,events,development"
+>
+  <EventsPage />
+</AppLayout>

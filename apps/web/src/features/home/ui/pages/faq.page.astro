@@ -1,0 +1,61 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import FaqAccordion from '@/features/home/ui/components/faq-accordion.component.astro';
+import { translate as translateI18n } from '@/features/home/i18n';
+type FaqGroup = { title: string; items: Array<[question: string, answer: string]> };
+const locale = Astro.locals.locale;
+const translate = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const groups: FaqGroup[] = [
+  {
+    title: translate('faq.group.devhub'),
+    items: [
+      [translate('faq.q.what'), translate('faq.a.what')],
+      [translate('faq.q.account'), translate('faq.a.account')],
+      [translate('faq.q.social'), translate('faq.a.social')],
+    ],
+  },
+  {
+    title: translate('faq.group.content'),
+    items: [
+      [translate('faq.q.article'), translate('faq.a.article')],
+      [translate('faq.q.difference'), translate('faq.a.difference')],
+      [translate('faq.q.qa'), translate('faq.a.qa')],
+      [translate('faq.q.resources'), translate('faq.a.resources')],
+    ],
+  },
+  {
+    title: translate('faq.group.discovery'),
+    items: [
+      [translate('faq.q.search'), translate('faq.a.search')],
+      [translate('faq.q.vote'), translate('faq.a.vote')],
+      [translate('faq.q.trending'), translate('faq.a.trending')],
+      [translate('faq.q.truth'), translate('faq.a.truth')],
+      [translate('faq.q.notifications'), translate('faq.a.notifications')],
+    ],
+  },
+  {
+    title: translate('faq.group.community'),
+    items: [
+      [translate('faq.q.report'), translate('faq.a.report')],
+      [translate('faq.q.jobs'), translate('faq.a.jobs')],
+      [translate('faq.q.incorrect'), translate('faq.a.incorrect')],
+    ],
+  },
+];
+---
+
+  <MarketingSurface>
+    <div>
+      <section class="px-6 pb-20 pt-10">
+        <div class="mx-auto max-w-5xl">
+          <span class="inline-flex rounded-full border border-line bg-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-[.2em] text-content-muted">{translateI18n(locale, 'faq.faq')}</span><h1 class="heading-marketing mt-5">
+            {translateI18n(locale, 'faq.questionsFrequent')}
+          </h1><p class="text-intro mt-4 max-w-3xl">
+            {translateI18n(locale, 'faq.answersDirectParticipatePublishFindKnowledgeWithoutSellCertaintyWhere')}
+          </p><div class="mt-10">
+            <FaqAccordion groups={groups} />
+          </div>
+        </div>
+      </section>
+    </div>
+  </MarketingSurface>

@@ -1,0 +1,38 @@
+---
+import { translate as translateI18n } from '@/shared/i18n/app';
+interface Props {
+  class?: string;
+  collapseName?: boolean;
+}
+
+const { class: className, collapseName = false } = Astro.props;
+---
+
+<span class:list={['inline-flex items-center gap-2 leading-none', className]}>
+  <svg
+    viewBox="0 0 64 64"
+    aria-hidden="true"
+    class="size-5 shrink-0 text-content-accent"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="32"
+      cy="32"
+      r="20"
+      stroke="currentColor"
+      stroke-width="7"
+      stroke-dasharray="23 9"
+      transform="rotate(-45 32 32)"></circle>
+    <circle cx="32" cy="32" r="5.5" fill="currentColor"></circle>
+  </svg>
+  <span
+    class:list={[
+      'whitespace-nowrap font-semibold tracking-tight text-content',
+      collapseName && 'group-data-[collapsed=true]:hidden',
+    ]}
+  >
+    {translateI18n(Astro.locals.locale, 'brand.devhub')}
+    <span class="text-content-accent">404</span>
+  </span>
+</span>

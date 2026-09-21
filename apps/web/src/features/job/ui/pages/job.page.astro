@@ -1,0 +1,24 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import JobDetail from '../components/job-detail.component.tsx';
+import type { Job } from '@/features/job/types/job.type.ts';
+import { translate as translateI18n } from '@/features/job/i18n';
+import { routes } from '@/shared/navigation/routes';
+
+interface Props {
+  id: string;
+  initialJob?: Job | null;
+  initialError?: boolean;
+}
+const { id, initialJob, initialError } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container>
+      <div class="py-5 sm:py-6"><BackLink href={routes.jobs} label={t('jobmanagement.jobs')} /></div>
+      <JobDetail client:load {id} locale={locale} {initialJob} {initialError} />
+    </Container>
+  </div>

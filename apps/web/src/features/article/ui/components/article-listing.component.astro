@@ -1,0 +1,20 @@
+---
+import ArticlesListing, { type ArticlesListingState } from './articles-listing.component.tsx';
+import { type ArticleListingFilters } from '../utils/article-listing-query.util.ts';
+
+interface Props {
+  state: ArticleListingFilters;
+  pageSize: number;
+}
+const { state, pageSize } = Astro.props;
+---
+
+<ArticlesListing
+  client:load
+  initialItems={[]}
+  initialTotal={0}
+  initialError={false}
+  pageSize={pageSize}
+  initialState={state satisfies ArticlesListingState}
+  initialView="grid"
+/>

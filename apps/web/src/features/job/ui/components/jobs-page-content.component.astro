@@ -1,0 +1,46 @@
+---
+import ContributionCallout from '@/shared/ui/components/surfaces/contribution-callout.component.astro';
+import JobsListing from './jobs-listing.component.tsx';
+import type { JobsListingState } from './jobs-listing.component.tsx';
+import { translate as translateI18n } from '@/features/job/i18n';
+import { parseListingSearch } from '@/shared/ui/schemas/search.schema.ts';
+import { jobSearchSchema } from '@/features/job/ui/schemas/search.schema.ts';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const baseSearch = parseListingSearch(Astro.url.searchParams);
+const search = jobSearchSchema.parse({ ...baseSearch, employmentType: Astro.url.searchParams.get('employmentType'), workplaceType: Astro.url.searchParams.get('workplace'), location: Astro.url.searchParams.get('location'), minComp: Astro.url.searchParams.get('minComp'), sort: Astro.url.searchParams.get('sort') });
+const page = search.page;
+const pageSize = 12;
+---
+
+<div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+  <div class="grid min-w-0 gap-5">
+    <JobsListing
+      client:load
+      initialItems={[]}
+      initialTotal={0}
+      initialError={false}
+      pageSize={pageSize}
+      initialState={{
+        query: search.query,
+        tags: search.tags,
+        employmentType: search.employmentType,
+        workplaceType: search.workplaceType,
+        location: search.location,
+        minComp: search.minComp,
+        sort: search.sort,
+        page,
+      } satisfies JobsListingState}
+    />
+  </div>
+  <aside class="self-start lg:sticky lg:top-6">
+    <ContributionCallout
+      eyebrow={t('jobs.contribute')}
+      title={t('jobs.publishOpportunity')}
+      description={t('jobs.shareOpportunityProfessionalCompensationContextClear')}
+      actionLabel={t('jobactions.publishJob')}
+      actionHref="/jobs/new"
+    />
+  </aside>
+</div>

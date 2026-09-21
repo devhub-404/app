@@ -1,0 +1,14 @@
+---
+import AppLayout from '@/app/ui/AppLayout.astro';
+import DesignSystemCatalog from '@/shared/ui/components/design-system-catalog.component.tsx';
+---
+
+<AppLayout
+  title="DevHub design system"
+  description="Catálogo de componentes compartilhados do DevHub"
+  keywords="DevHub, design system, UI"
+>
+  <Fragment slot="body">
+    <DesignSystemCatalog client:load />
+  </Fragment>
+</AppLayout>

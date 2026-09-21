@@ -1,0 +1,1381 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import { formatDate } from '@utilify/core';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import ArticleActions from '@/features/article/ui/components/article-actions.component.tsx';
+import ArticleToc from '@/features/article/ui/components/article-toc.component.tsx';
+import { CommentsSection } from '@/features/comment/public';
+import type { ArticleDetails } from '@/features/article/types/article.type.ts';
+import { translate as translateI18n } from '@/features/article/i18n';
+import { routes } from '@/shared/navigation/routes';
+import { renderContentToHtml } from '@/shared/ui/editor/content';
+import TagLink from '@/shared/ui/components/navigation/tag-link.component.tsx';
+import { Icon } from 'astro-icon/components';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1], args?: unknown[]) => translateI18n(locale, key, args);
+interface Props {
+  article: ArticleDetails | null;
+  failed: boolean;
+}
+
+const { article, failed } = Astro.props;
+const html = article ? renderContentToHtml(article.content) : '';
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>
+
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>
+
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>
+
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>
+
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>
+
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>
+
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>
+
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container size="lg">
+      <nav class="py-4 sm:py-5" aria-label={t('articledetail.articles')}>
+        <BackLink href={routes.articles} label={t('articledetail.articles')} />
+      </nav>
+
+      {
+        article ? (
+          <article class="space-y-8">
+            <header class="space-y-5">
+              <p class="text-accent-label">{t('articledetail.articleReadingGuided')}</p>
+              <h1 class="heading-article">
+                {article.title}
+              </h1>
+              <p class="text-intro max-w-3xl">
+                {article.description}
+              </p>
+
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-content-muted">
+                {article.author?.avatarUrl && (
+                  <img src={article.author.avatarUrl} alt="" class="size-9 rounded-full object-cover" />
+                )}
+                {article.author ? (
+                  <>
+                    {t('articledetail.by')}
+                    <a
+                      href={routes.profile(article.author.username)}
+                      class="font-semibold text-content hover:text-content-accent"
+                    >
+                      {article.author.displayName || article.author.username}
+                    </a>
+                  </>
+                ) : (
+                  <span>{t('articledetail.authorUnavailable')}</span>
+                )}
+                <span>·</span>
+                <span>
+                  {article.readingTimeMinutes} {t('articledetail.minReading')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.published')}
+                  {formatDate(new Date(article.publishedAt ?? article.updatedAt), 'DMY')}
+                </span>
+                <span>·</span>
+                <span>
+                  {t('articledetail.updated')} {formatDate(new Date(article.updatedAt), 'DMY')}
+                </span>
+              </div>
+
+              <div class="flex flex-wrap gap-2">
+                {article.tags.map((tag) => (
+                  <TagLink slug={tag.slug} label={tag.name} />
+                ))}
+              </div>
+            </header>
+
+            <div class="grid items-start gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="min-w-0 space-y-6">
+                {article.coverImageUrl ? (
+                  <img
+                    src={article.coverImageUrl}
+                    alt={`${t('articleform.coverArticle')}: ${article.title}`}
+                    class="aspect-[16/7] max-h-[28rem] w-full rounded-3xl object-cover"
+                  />
+                ) : (
+                  <div class="flex aspect-[16/7] max-h-[28rem] w-full items-center justify-center rounded-3xl bg-accent-gradient">
+                    <Icon name="lucide:book-open" size={56} class="text-content-accent" />
+                  </div>
+                )}
+
+                <ArticleActions
+                  articleId={article.id}
+                  slug={article.slug}
+                  title={article.title}
+                  authorAccountId={article.authorAccountId}
+                  votes={article.votes}
+                  locale={locale}
+                  client:load
+                />
+
+                <ArticleToc mode="mobile" locale={locale} client:idle />
+
+                <div id="article-content" class="content-prose w-full max-w-4xl" set:html={html} />
+              </div>
+
+              <aside class="hidden space-y-4 lg:sticky lg:top-6 lg:block">
+                <ArticleToc mode="desktop" locale={locale} client:idle />
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.aboutAuthor')}
+                  </h2>
+                  {article.author ? (
+                    <div class="mt-4 space-y-3">
+                      <div class="flex items-center gap-3">
+                        {article.author.avatarUrl && (
+                          <img src={article.author.avatarUrl} alt="" class="size-10 rounded-full object-cover" />
+                        )}
+                        <div>
+                          <p class="text-strong">{article.author.displayName || article.author.username}</p>
+                          <p class="text-caption">@{article.author.username}</p>
+                        </div>
+                      </div>
+                      <a href={routes.profile(article.author.username)} class="action action-secondary w-full">
+                        {t('articledetail.viewProfile')}
+                      </a>
+                    </div>
+                  ) : (
+                    <p class="text-muted mt-4">
+                      {t('articledetail.authorUnavailable')}
+                    </p>
+                  )}
+                </section>
+
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('articledetail.metrics')}
+                  </h2>
+                  <dl class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.reading')}</dt>
+                        <dd>
+                          {article.readingTimeMinutes} {t('articledetail.min')}
+                        </dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.views')}</dt>
+                        <dd>{article.views}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.votes')}</dt>
+                        <dd>{article.votes}</dd>
+                      </>
+                    </div>
+                    <div class="flex justify-between">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('articledetail.comments')}</dt>
+                        <dd>{article.commentCount}</dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+              </aside>
+            </div>
+
+            <CommentsSection
+              id="article-comments"
+              targetType="article"
+              contentId={article.id}
+              locale={locale}
+              client:visible
+            />
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('articledetail.couldNotLoadArticle') : t('articledetail.couldNotLoadArticle')}
+          </section>
+        )
+      }
+    </Container>
+  </div>

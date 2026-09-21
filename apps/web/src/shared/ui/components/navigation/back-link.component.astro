@@ -1,0 +1,16 @@
+---
+import { Icon } from 'astro-icon/components';
+interface Props {
+  href: string;
+  label: string;
+}
+const { href, label } = Astro.props;
+---
+
+<a
+  href={href}
+  class="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-2 text-sm font-medium text-content-muted hover:bg-hover hover:text-content"
+>
+  <Icon name="lucide:arrow-left" size={15} />
+  <span>{label}</span>
+</a>

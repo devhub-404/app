@@ -1,0 +1,103 @@
+import { formatPublicDate } from '@/shared/utils/format-public-date.util.ts';
+import type { ArticleItem } from '@/features/article/types/article.type.ts';
+import { routes } from '@/shared/navigation/routes';
+import { useI18n } from '@/features/article/i18n';
+import ArticleCardActions from './article-card-actions.component.tsx';
+import { Clock, Eye, MessageCircle } from 'lucide-solid';
+type Props = { article: ArticleItem; view: 'grid' | 'list' };
+
+export default function ArticleListingCard(props: Props) {
+  const { t, locale } = useI18n();
+  const article = () => props.article;
+  const href = () => routes.article(article().slug);
+  const horizontal = () => props.view === 'list';
+  const authorName = () => article().author?.displayName || article().author?.username || '?';
+  const coverImageUrl = () => article().coverImageUrl ?? undefined;
+
+  return (
+    <article
+      class={
+        horizontal()
+          ? 'group grid h-full grid-cols-[32%_minmax(0,1fr)] overflow-hidden rounded-2xl border border-line bg-surface-elevated shadow-sm transition hover:-translate-y-0.5 hover:border-action-border hover:shadow-md max-[700px]:grid-cols-[38%_minmax(0,1fr)]'
+          : 'group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface-elevated shadow-sm transition hover:-translate-y-0.5 hover:border-action-border hover:shadow-md'
+      }
+    >
+      <div
+        class={
+          horizontal()
+            ? 'relative min-h-32 shrink-0 overflow-hidden bg-surface-subtle'
+            : 'relative aspect-[16/9] shrink-0 overflow-hidden bg-surface-subtle'
+        }
+      >
+        <a href={href()} aria-label={article().title} class="absolute inset-0 block overflow-hidden">
+          {coverImageUrl() ? (
+            <img src={coverImageUrl()} alt="" loading="lazy" class="absolute inset-0 size-full object-cover" />
+          ) : (
+            <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+          )}
+          <span class="absolute top-2 right-2 z-[2] flex items-center gap-1 rounded-lg border border-line bg-surface-overlay px-2 py-1 text-xs text-content">
+            <Clock class="size-3.5" aria-hidden="true" />
+            {article().readingTimeMinutes} min
+          </span>
+        </a>
+      </div>
+
+      <div class="min-w-0 px-[.72rem] pt-[.65rem] pb-[.7rem] max-[700px]:p-[.65rem]">
+        <h2 class="heading-dense-card m-0 truncate">
+          <a href={href()} class="hover:text-content-accent">
+            {article().title}
+          </a>
+        </h2>
+        <p class="text-muted mt-[.35rem] line-clamp-3 h-[3.25rem] max-[700px]:h-auto">
+          {article().description}
+        </p>
+        <div class="mt-[.45rem] flex flex-wrap gap-[.3rem]">
+          {article().tags.map((tag) => (
+            <a
+              href={routes.searchByTag(tag.slug)}
+              class="rounded-full border border-line px-2 py-0.5 text-[.65rem] text-content-muted hover:text-content-accent"
+            >
+              #{tag.name}
+            </a>
+          ))}
+        </div>
+        <div class="mt-[.6rem] flex flex-wrap items-center gap-[.45rem] border-t border-line pt-[.55rem] text-[.72rem] text-content-muted max-[700px]:text-[.65rem]">
+          <span
+            class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+            aria-hidden="true"
+          >
+            {authorName().slice(0, 1)}
+          </span>
+          <span class="min-w-0 flex-1 truncate">
+            {article().author ? (
+              <a class="hover:text-content-accent" href={routes.profile(article().author!.username)}>
+                {authorName()}
+              </a>
+            ) : (
+              t('articledetail.authorUnavailable')
+            )}
+            <small class="block text-[.62rem]">
+              {formatPublicDate(article().publishedAt ?? article().updatedAt, locale())}
+            </small>
+          </span>
+          <span
+            title={t('articledetail.views')}
+            class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+          >
+            <Eye class="size-3.5" aria-hidden="true" />
+            {article().views}
+          </span>
+          <a
+            href={`${href()}#article-comments`}
+            aria-label={t('articledetail.comments')}
+            class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+          >
+            <MessageCircle class="size-3.5" aria-hidden="true" />
+            {article().commentCount}
+          </a>
+          <ArticleCardActions articleId={article().id} slug={article().slug} title={article().title} />
+        </div>
+      </div>
+    </article>
+  );
+}

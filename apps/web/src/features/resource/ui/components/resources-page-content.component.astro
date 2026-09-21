@@ -1,0 +1,38 @@
+---
+import Section from '@/shared/ui/layouts/components/section.component.astro';
+import ResourcesListing from './resources-listing.component.tsx';
+import type { ResourcesListingState } from './resources-listing.component.tsx';
+import ResourcesSidebar from './resources-sidebar.component.astro';
+import type { ResourceItem } from '@/features/resource/types/resource.type.ts';
+
+interface Props {
+  resources: ResourceItem[];
+  total: number;
+  failed: boolean;
+  pageSize: number;
+  query: string;
+  tags: string[];
+  page: number;
+}
+
+const { resources, total, failed, pageSize, query, tags, page } = Astro.props;
+const locale = Astro.locals.locale;
+---
+
+<div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+  <div class="min-w-0">
+    <Section>
+      <ResourcesListing
+        client:load
+        initialItems={resources}
+        initialTotal={total}
+        initialError={failed}
+        pageSize={pageSize}
+        initialState={{ query, tags, page } satisfies ResourcesListingState}
+      />
+    </Section>
+  </div>
+  <aside class="grid gap-4 lg:sticky lg:top-6 lg:self-start">
+    <ResourcesSidebar locale={locale} />
+  </aside>
+</div>

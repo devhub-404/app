@@ -1,0 +1,18 @@
+export const catalog = {
+  'brand.devhub': 'DevHub',
+  'footer.devhub404Home': 'DevHub 404 — home',
+  'footer.discord': 'Discord',
+  'globallayout.devhubArticles': 'DevHub — Articles',
+  'globallayout.devhubNews': 'DevHub — News',
+  'globallayout.author': 'DevHub Team',
+  'content.read': 'Read content →',
+  'filters.search': 'Search',
+  'filters.tags': 'Tags',
+  'filters.grid': 'Grid',
+  'filters.list': 'List',
+  'filters.apply': 'Apply filters',
+  'filters.clear': 'Clear filters',
+  'filters.searchPlaceholder': 'Title, category, or tag',
+  'filters.view': 'View',
+  'filters.noResults': 'No content matches the filters.',
+} as const;

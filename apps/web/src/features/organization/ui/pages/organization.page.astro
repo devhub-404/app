@@ -1,0 +1,16 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import OrganizationDetail from '../components/organization-detail.component.tsx';
+import type { Organization } from '@/features/organization/types/organization.type.ts';
+
+interface Props {
+  initialOrganization?: Organization | null;
+}
+
+const { initialOrganization } = Astro.props;
+const slug = Astro.params['slug'] ?? '';
+---
+
+<div class="py-6">
+    <Container size="full"><OrganizationDetail locale={Astro.locals.locale} client:load slug={slug} {initialOrganization} /></Container>
+  </div>

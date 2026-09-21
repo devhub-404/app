@@ -1,0 +1,52 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+const sections = [
+  ['terms.useTitle', 'terms.useDescription'],
+  ['terms.accountTitle', 'terms.accountDescription'],
+  ['terms.serviceTitle', 'terms.serviceDescription'],
+  ['terms.contentTitle', 'terms.contentDescription'],
+  ['terms.licenseTitle', 'terms.licenseDescription'],
+  ['terms.formatsTitle', 'terms.formatsDescription'],
+  ['terms.contributionsTitle', 'terms.contributionsDescription'],
+  ['terms.conductTitle', 'terms.conductDescription'],
+  ['terms.externalTitle', 'terms.externalDescription'],
+  ['terms.moderationTitle', 'terms.moderationDescription'],
+  ['terms.signalsTitle', 'terms.signalsDescription'],
+  ['terms.sponsorsTitle', 'terms.sponsorsDescription'],
+  ['terms.terminationTitle', 'terms.terminationDescription'],
+] as const;
+---
+
+  <MarketingSurface>
+    <div>
+      <section class="px-6 pb-20 pt-10">
+        <div class="mx-auto max-w-4xl">
+          <span class="inline-flex rounded-full border border-line bg-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-[.2em] text-content-muted">{t('terms.eyebrow')}</span>
+          <h1 class="heading-marketing mt-5">{t('terms.title')}</h1>
+          <p class="text-intro mt-5">{t('terms.intro')}</p>
+          <div class="mt-10 space-y-5">
+            {
+              sections.map(([title, description]) => (
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-callout">
+                    {t(title)}
+                  </h2>
+                  <p class="text-muted-body mt-2">
+                    {t(description)}
+                  </p>
+                </section>
+              ))
+            }
+          </div>
+          <section class="mt-8 rounded-2xl border border-line bg-surface-subtle p-5">
+            <h2 class="heading-callout">{t('terms.responsibleTitle')}</h2>
+            <p class="text-muted-body mt-2">{t('terms.responsibleDescription')}</p>
+            <p class="text-muted-body mt-2">{t('terms.contactDescription')}</p>
+          </section>
+        </div>
+      </section>
+    </div>
+  </MarketingSurface>

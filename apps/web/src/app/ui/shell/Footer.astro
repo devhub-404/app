@@ -1,0 +1,91 @@
+---
+import Text from '@/shared/ui/components/typography/text.component.tsx';
+import { routes } from '@/shared/navigation/routes';
+import { env } from '@/shared/runtime/env';
+import Brand from '@/shared/ui/shell/Brand.astro';
+import { translate, type TranslationKey } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+const t = (key: TranslationKey) => translate(locale, key);
+const groups = [
+  {
+    title: t('shell.footerKnowledge'),
+    links: [
+      [t('shell.home'), routes.home],
+      [t('shell.search'), routes.search],
+      [t('shell.articles'), routes.articles],
+      [t('shell.news'), routes.news],
+      [t('shell.resources'), routes.resources],
+      [t('shell.questions'), routes.questions],
+    ],
+  },
+  {
+    title: t('shell.footerCareer'),
+    links: [
+      [t('shell.projects'), routes.projects],
+      [t('shell.jobs'), routes.jobs],
+      [t('shell.tools'), routes.tools],
+    ],
+  },
+  {
+    title: t('shell.footerDevHub'),
+    links: [
+      [t('shell.footerAbout'), routes.about],
+      [t('shell.footerFaq'), routes.faq],
+      [t('shell.footerContribute'), routes.contribute],
+      [t('shell.footerSponsors'), routes.sponsors],
+      [t('shell.footerContact'), routes.contact],
+    ],
+  },
+  {
+    title: t('shell.footerLegal'),
+    links: [
+      [t('shell.footerTerms'), routes.terms],
+      [t('shell.footerPrivacy'), routes.privacy],
+      [t('shell.footerGuidelines'), routes.guidelines],
+      [t('shell.footerRssArticles'), routes.rss.articles],
+      [t('shell.footerRssNews'), routes.rss.news],
+    ],
+  },
+];
+---
+
+<footer transition:persist="app-footer" class="relative z-10 border-t border-line px-6 py-10">
+  <div class="mx-auto grid w-full max-w-6xl gap-10">
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-[1.2fr_repeat(4,1fr)]">
+      <div class="grid content-start gap-3">
+        <a
+          href={routes.home}
+          aria-label={translate(locale, 'footer.devhub404Home')}
+          class="inline-flex rounded-lg hover:text-content-accent"
+        >
+          <Brand class="text-lg" />
+        </a>
+        <Text variant="mutedBody" class="max-w-xs">{t('shell.footerDescription')}</Text>
+        <a
+          href={env.discordUrl}
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex w-fit rounded-full border border-line px-3 py-2 text-xs font-semibold text-content hover:border-action-border"
+          >{translate(locale, 'footer.discord')}</a
+        >
+      </div>
+      {
+        groups.map((group) => (
+          <nav aria-label={group.title} class="grid content-start gap-3">
+            <Text variant="eyebrow">{group.title}</Text>
+            <div class="flex flex-col gap-2">
+              {group.links.map(([label, href]) => (
+                <a href={href} class="text-sm text-content-muted hover:text-content">
+                  {label}
+                </a>
+              ))}
+            </div>
+          </nav>
+        ))
+      }
+    </div>
+    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5 text-xs text-content-muted">
+      <span>{t('shell.footerTagline')}</span><span>{t('shell.footerClosing')}</span>
+    </div>
+  </div>
+</footer>

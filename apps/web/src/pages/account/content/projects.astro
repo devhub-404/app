@@ -1,0 +1,11 @@
+---
+import { AccountProjectsPage } from '@/features/project/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/project/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'accountprojects.devhubMyProjects')} description={translate(locale, 'accountprojects.manageProjectsAssociatedAccount')} keywords="devhub,account,projects">
+  <AccountProjectsPage />
+</AppLayout>

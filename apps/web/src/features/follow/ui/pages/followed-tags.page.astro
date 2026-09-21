@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/public/layout';
+import FollowedTags from '@/features/follow/ui/components/followed-tags.component.tsx';
+import { translate as translateI18n } from '@/features/follow/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="following"
+    heading={translateI18n(locale, 'follow.heading')}
+    subheading={translateI18n(locale, 'follow.description')}
+  >
+    <FollowedTags locale={locale} client:load />
+  </AccountPageComposition>

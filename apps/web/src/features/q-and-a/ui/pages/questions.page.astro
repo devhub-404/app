@@ -1,0 +1,16 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import QuestionsPageContent from '../components/questions-page-content.component.astro';
+import { translate as translateI18n } from '@/features/q-and-a/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+  <SectionHeader
+    eyebrow={t('questionsindex.questionsAnswers')}
+    title={t('newquestion.q')}
+    description={t('questionsindex.whenKnowledgeExistingNotResolvesCaseWriteQuestionClearCommunity')}
+  />
+  <Container size="full" class="py-8 sm:py-10"><QuestionsPageContent /></Container>

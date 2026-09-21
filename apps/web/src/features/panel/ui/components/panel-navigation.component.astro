@@ -1,0 +1,125 @@
+---
+import {
+  Activity,
+  BookOpenCheck,
+  BriefcaseBusiness,
+  CalendarDays,
+  Inbox,
+  CircleQuestionMark,
+  EyeOff,
+  FileText,
+  FolderKanban,
+  LayoutDashboard,
+  MessageCircle,
+  Newspaper,
+  ShieldAlert,
+  Flag,
+  Tags,
+  UsersRound,
+} from 'lucide-solid';
+import { canAccessPanelCapability } from '@/features/panel/access/panel.access.ts';
+import { panelSections } from '@/features/panel/ui/navigation/panel-navigation';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '@/features/panel/i18n';
+
+type Props = { active: string };
+const { active } = Astro.props;
+const role = Astro.locals.account?.role ?? null;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+
+const itemIcons = {
+  articles: FileText,
+  news: Newspaper,
+  'news-suggestions': Inbox,
+  resources: BookOpenCheck,
+  'resource-suggestions': Inbox,
+  events: CalendarDays,
+  'event-suggestions': Inbox,
+  questions: CircleQuestionMark,
+  answers: MessageCircle,
+  projects: FolderKanban,
+  jobs: BriefcaseBusiness,
+  'job-suggestions': Inbox,
+  feedback: MessageCircle,
+  comments: MessageCircle,
+  reports: Flag,
+  'hidden-content': EyeOff,
+  inventory: UsersRound,
+  standing: UsersRound,
+  restrictions: ShieldAlert,
+  sanctions: ShieldAlert,
+  deletion: UsersRound,
+  roles: UsersRound,
+  tags: Tags,
+  aliases: Tags,
+  governance: Tags,
+  'administrative-audit': Activity,
+  'operational-status': Activity,
+} as const;
+
+const sectionMeta = {
+  content: { description: t('panelnavigation.contentSuggestions'), icon: BookOpenCheck },
+  moderation: { description: t('panelnavigation.signalsDecisions'), icon: ShieldAlert },
+  accounts: { description: t('panelnavigation.peoplePermissions'), icon: UsersRound },
+  taxonomy: { description: t('panelNavigation.taxonomyDescription'), icon: Tags },
+  operations: { description: t('panelnavigation.auditOperation'), icon: Activity },
+};
+const visibleSections = panelSections
+  .map((section) => ({ ...section, items: section.items.filter((item) => canAccessPanelCapability(role, item.id)) }))
+  .filter((section) => section.items.length > 0);
+---
+
+<nav class="min-w-0" aria-label={t('panelnavigation.navigationManagement')}>
+  <p class="text-eyebrow mb-2 hidden px-2 md:block">
+    {t('panelnavigation.spacesManagement')}
+  </p>
+  <div class="flex gap-1.5 overflow-x-auto pb-1 md:grid md:gap-4 md:overflow-visible md:pb-0">
+    <a
+      href={routes.panel.root}
+      aria-current={active === 'overview' ? 'page' : undefined}
+      class:list={[
+        'flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl px-3 py-2.5 text-sm font-medium',
+        active === 'overview' ? 'bg-selected text-content' : 'text-content-muted hover:bg-hover hover:text-content',
+      ]}
+    >
+      <LayoutDashboard class="size-4" aria-hidden="true" />
+      {t('panelnavigation.overviewGeneral')}
+    </a>
+
+    {
+      visibleSections.map((section) => {
+        const meta = sectionMeta[section.id];
+        const SectionIcon = meta.icon;
+        return (
+          <section class="grid min-w-0 gap-1.5" aria-labelledby={`panel-navigation-${section.id}`}>
+            <div class="flex items-center gap-2 px-2 py-1.5">
+              <SectionIcon class="size-3.5 shrink-0 text-content-accent" aria-hidden="true" />
+              <div class="min-w-0">
+                <h2 id={`panel-navigation-${section.id}`} class="heading-micro-accent">
+                  {t(section.labelKey)}
+                </h2>
+                <p class="text-subtle hidden lg:block">
+                  {meta.description}
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-1 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0">
+              {section.items.map((item) => {
+                const isActive = item.id === active;
+                const ItemIcon = itemIcons[item.id as keyof typeof itemIcons] ?? Activity;
+                const className = `flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium ${isActive ? 'bg-selected text-content' : 'text-content-muted hover:bg-hover hover:text-content'}`;
+                return (
+                  <a href={item.href} aria-current={isActive ? 'page' : undefined} class={className}>
+                    <ItemIcon class="size-3.5 shrink-0" aria-hidden="true" />
+                    <span class="whitespace-nowrap">{t(item.labelKey)}</span>
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+</nav>

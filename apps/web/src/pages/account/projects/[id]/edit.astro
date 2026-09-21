@@ -1,0 +1,11 @@
+---
+import { EditProjectPage } from '@/features/project/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/project/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'editproject.devhub404EditProject')} description={translate(locale, 'editproject.editProjectAssociatedAccount')} keywords="devhub,account,project">
+  <EditProjectPage />
+</AppLayout>

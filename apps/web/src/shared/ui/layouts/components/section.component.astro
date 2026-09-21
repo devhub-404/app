@@ -1,0 +1,36 @@
+---
+import Heading from '@/shared/ui/components/typography/heading.component.tsx';
+import Text from '@/shared/ui/components/typography/text.component.tsx';
+
+interface Props {
+  title?: string;
+  description?: string;
+  class?: string;
+}
+
+const { title, description, class: className = '' } = Astro.props;
+const hasHeader = Boolean(title || description || Astro.slots.has('actions'));
+---
+
+<section class:list={['grid gap-4', className]}>
+  {
+    hasHeader && (
+      <header class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div class="min-w-0">
+          {title && (
+            <Heading level={2} variant="subsection">
+              {title}
+            </Heading>
+          )}
+          {description && <Text variant="mutedBody">{description}</Text>}
+        </div>
+        {Astro.slots.has('actions') && (
+          <div class="shrink-0">
+            <slot name="actions" />
+          </div>
+        )}
+      </header>
+    )
+  }
+  <slot />
+</section>

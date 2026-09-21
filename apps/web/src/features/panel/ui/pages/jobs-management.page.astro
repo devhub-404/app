@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import { translate as translateI18n } from '@/shared/i18n/app';
+import JobsAdminList from '@/features/panel/ui/components/jobs-admin-list.component.tsx';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="jobs"
+    heading={translateI18n(locale, 'jobs.jobs')}
+    subheading={translateI18n(locale, 'jobs.inventoryViewAdministrativeWithoutAcquireAuthorityEditorial')}
+  >
+    <JobsAdminList locale={locale} role={Astro.locals.account?.role ?? null} client:load />
+  </PanelPageComposition>

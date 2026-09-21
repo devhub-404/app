@@ -1,0 +1,15 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import TagTaxonomy from '@/features/panel/ui/components/tag-taxonomy.component.tsx';
+import { translate as translateI18n } from '@/features/panel/i18n';
+const locale = Astro.locals.locale;
+const role = Astro.locals.account?.role ?? null;
+---
+
+  <PanelPageComposition
+    active="tags"
+    heading={translateI18n(locale, 'resourcependingadminlist.tags')}
+    subheading={translateI18n(locale, 'paneltags.maintainVocabularyTechnicalCanonicalAliasesMergesTermsProtected')}
+  >
+    <TagTaxonomy locale={locale} role={role} client:load />
+  </PanelPageComposition>

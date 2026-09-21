@@ -1,0 +1,14 @@
+---
+import AuthPageComposition from '@/features/auth/ui/components/auth-page-composition.component.astro';
+import SignupForm from '@/features/auth/ui/components/form/signup-form.component.tsx';
+import { translate } from '@/features/auth/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+  <AuthPageComposition
+    title={translate(locale, 'page.signUpTitle')}
+    subtitle={translate(locale, 'page.signUpSubtitle')}
+  >
+    <SignupForm locale={locale} client:load />
+  </AuthPageComposition>

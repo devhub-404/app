@@ -1,0 +1,13 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import CodexEntryPageContent from '../components/codex-entry-page-content.component.astro';
+
+interface Props {
+  entry: CollectionEntry<'codex'>;
+  entries: CollectionEntry<'codex'>[];
+}
+
+const { entry, entries } = Astro.props;
+---
+
+  <CodexEntryPageContent entry={entry} entries={entries} />

@@ -1,0 +1,50 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "devhub-404-web",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-09-19",
+  "workers_dev": false,
+  "preview_urls": false,
+  "placement": {
+    "region": "aws:us-east-1"
+  },
+  "services": [
+    {
+      "binding": "API",
+      "service": "devhub-404-api"
+    },
+    {
+      "binding": "ASSISTANT",
+      "service": "devhub-assistant"
+    }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "APP_ENV": "production",
+    "WEB_URL": "https://devhub404.org",
+    "API_URL": "https://devhub404.org",
+    "HSTS_ENABLED": "true",
+    "PUBLIC_GITHUB_REPO_OWNER": "devhub-404",
+    "PUBLIC_GITHUB_REPO_NAME": "devhub-404",
+    "PUBLIC_GITHUB_SPONSOR_URL": "https://github.com/sponsors/devhub-404",
+    "PUBLIC_DISCORD_URL": "https://discord.gg/EUQ9MvucXD"
+  },
+  "secrets": {
+    "required": []
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.1
+    }
+  },
+  "upload_source_maps": true
+}

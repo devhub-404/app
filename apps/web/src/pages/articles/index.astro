@@ -1,0 +1,16 @@
+---
+import { ArticlesPage } from '@/features/article/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/article/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<AppLayout
+  title={t('articlesindex.devhubArticles')}
+  description={t('articlesindex.articlesTechnicalGuidesDeepDevelopers')}
+  keywords="devhub,articles,guides,engineering"
+>
+  <ArticlesPage />
+</AppLayout>

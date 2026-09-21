@@ -1,0 +1,16 @@
+---
+import { NotFoundPage } from '@/features/home/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/shared/i18n/app';
+
+Astro.response.status = 404;
+const locale = Astro.locals.locale;
+---
+
+<AppLayout
+  title={translateI18n(locale, 'notfound.pageNotFound')}
+  description={translateI18n(locale, 'notfound.pageMissingDevhubCanStillHelp')}
+  keywords="devhub,404,page-not-found,knowledge"
+>
+  <NotFoundPage />
+</AppLayout>

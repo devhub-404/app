@@ -1,0 +1,31 @@
+---
+import { translate as translateI18n } from '@/features/news/i18n';
+import type { listNews } from '@/features/news/actions/news.action.ts';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+interface Props {
+  resultPromise: Promise<Awaited<ReturnType<typeof listNews>> | null>;
+}
+
+const { resultPromise } = Astro.props;
+const result = await resultPromise;
+const popular = result ? [...result.items].sort((a, b) => b.views - a.views).slice(0, 4) : [];
+---
+
+<div class="flex items-center justify-between">
+  <h2 class="heading-callout">{t('news.mostRead')}</h2>
+  <a href="#news" class="text-xs text-content-accent">{t('news.viewAll')}</a>
+</div>
+<ol class="grid">
+  {
+    popular.map((news, index) => (
+      <li class="grid grid-cols-[2rem_1fr] items-center gap-3 border-t border-line py-3 text-xs">
+        <b class="grid size-8 place-items-center rounded-full bg-action-deep text-content-inverse">{index + 1}</b>
+        <a href={`/news/${encodeURIComponent(news.slug)}`} class="hover:text-content-accent">
+          {news.title}
+        </a>
+      </li>
+    ))
+  }
+</ol>

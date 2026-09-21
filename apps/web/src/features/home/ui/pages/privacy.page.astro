@@ -1,0 +1,61 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+const sections = [
+  ['privacy.scopeTitle', 'privacy.scopeDescription'],
+  ['privacy.oauthTitle', 'privacy.oauthDescription'],
+  ['privacy.accountTitle', 'privacy.accountDescription'],
+  ['privacy.profileTitle', 'privacy.profileDescription'],
+  ['privacy.contentTitle', 'privacy.contentDescription'],
+  ['privacy.personalStateTitle', 'privacy.personalStateDescription'],
+  ['privacy.securityTitle', 'privacy.securityDescription'],
+  ['privacy.browserTitle', 'privacy.browserDescription'],
+  ['privacy.sharingTitle', 'privacy.sharingDescription'],
+  ['privacy.retentionTitle', 'privacy.retentionDescription'],
+  ['privacy.deletionTitle', 'privacy.deletionDescription'],
+  ['privacy.rightsTitle', 'privacy.rightsDescription'],
+] as const;
+---
+
+  <MarketingSurface>
+    <div>
+      <section class="px-6 pb-20 pt-10">
+        <div class="mx-auto max-w-4xl">
+          <span class="inline-flex rounded-full border border-line bg-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-[.2em] text-content-muted">{t('privacy.eyebrow')}</span>
+          <h1 class="heading-marketing mt-5">{t('privacy.title')}</h1>
+          <p class="text-intro mt-5">{t('privacy.intro')}</p>
+          <div class="mt-10 space-y-5">
+            {
+              sections.map(([title, description]) => (
+                <section class="rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-callout">
+                    {t(title)}
+                  </h2>
+                  <p class="text-muted-body mt-2">
+                    {t(description)}
+                  </p>
+                </section>
+              ))
+            }
+          </div>
+          <p class="text-muted mt-8">
+            {t('privacy.disclaimer')}
+            {t('privacy.contactPrefix')}{' '}<a
+              href="/contact"
+              class="font-semibold text-content hover:text-content-accent">{t('privacy.contactLabel')}</a
+            >.
+          </p>
+          <section class="mt-6 rounded-2xl border border-line bg-surface-subtle p-5">
+            <h2 class="heading-callout">{t('privacy.requestsTitle')}</h2>
+            <p class="text-muted-body mt-2">{t('privacy.requestsDescription')}</p>
+          </section>
+          <section class="mt-6 rounded-2xl border border-line bg-surface-subtle p-5">
+            <h2 class="heading-callout">{t('privacy.responsibleTitle')}</h2>
+            <p class="text-muted-body mt-2">{t('privacy.responsibleDescription')}</p>
+          </section>
+        </div>
+      </section>
+    </div>
+  </MarketingSurface>

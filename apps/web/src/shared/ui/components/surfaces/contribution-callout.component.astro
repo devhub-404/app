@@ -1,0 +1,39 @@
+---
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  actionLabel?: string;
+  actionHref?: string;
+  external?: boolean;
+}
+const { eyebrow, title, description, actionLabel, actionHref, external = false } = Astro.props;
+const hasAction = Boolean(actionLabel && actionHref);
+const hasSlot = Astro.slots.has('default');
+---
+
+<section class="grid gap-2 rounded-2xl border border-warning-border bg-warning-bg p-5">
+  <p class="text-warning-label">{eyebrow}</p>
+  <h2 class="heading-callout">{title}</h2>
+  <p class="text-muted-compact">{description}</p>
+  {
+    hasAction && (
+      <a
+        href={actionHref}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noreferrer' : undefined}
+        class="inline-flex w-full items-center justify-center rounded-xl bg-action px-4 py-3 text-sm font-semibold text-content-on-accent transition duration-standard ease-standard hover:bg-action-hover"
+      >
+        {actionLabel}
+      </a>
+    )
+  }
+  {
+    hasSlot && (
+      <div>
+        <slot />
+      </div>
+    )
+  }
+</section>

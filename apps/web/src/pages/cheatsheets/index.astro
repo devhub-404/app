@@ -1,0 +1,15 @@
+---
+import { CheatsheetsPage } from '@/features/cheatsheet/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/cheatsheet/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout
+  title={translateI18n(locale, 'cheatsheets.devhubCheatsheets')}
+  description={translateI18n(locale, 'cheatsheets.referencesQuickPracticalDevelopment')}
+  keywords="devhub,cheatsheets,reference,development"
+>
+  <CheatsheetsPage />
+</AppLayout>

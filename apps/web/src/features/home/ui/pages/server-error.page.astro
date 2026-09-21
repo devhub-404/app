@@ -1,0 +1,15 @@
+---
+import { translate } from '@/shared/i18n/app';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+---
+
+<div class="min-h-[60vh] bg-canvas px-6 py-16 text-content">
+  <div class="mx-auto grid w-full max-w-3xl gap-6 rounded-3xl border border-line bg-surface-elevated p-8 shadow-ui-surface sm:p-12">
+    <p class="text-accent-label">500 / server error</p>
+    <h1 class="heading-marketing">{t('servererror.title')}</h1>
+    <p class="text-intro max-w-2xl">{t('servererror.description')}</p>
+    <div><a href="/" class="action action-primary">{t('servererror.backHome')}</a></div>
+  </div>
+</div>

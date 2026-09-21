@@ -1,0 +1,15 @@
+export enum JwtTokenType {
+  EMAIL_VERIFICATION = 'email_verification',
+  EMAIL_CHANGE_PRIMARY = 'email_change_primary',
+  EMAIL_CHANGE_BACKUP = 'email_change_backup',
+  MAGIC_LINK = 'magic_link',
+  PASSWORD_RESET = 'password_reset',
+  PASSWORD_CHANGE = 'password_change',
+  POSSESSION_PROOF_EMAIL_CODE = 'possession_proof_email_code',
+  MFA_CHALLENGE = 'mfa_challenge',
+  PASSKEY_STATE = 'passkey_state',
+  OAUTH_STATE = 'oauth_state',
+  ACCOUNT_RECOVERY = 'account_recovery',
+  ACCOUNT_DELETION_RESTORE_ACCESS = 'account_deletion_restore_access',
+  ACCOUNT_REACTIVATION = 'account_reactivation',
+}

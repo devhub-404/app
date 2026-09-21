@@ -1,0 +1,11 @@
+---
+import { AccountDeletionCancelPage } from '@/features/account/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/account/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={`DevHub - ${translate(locale, 'lifecycle.deletionMetaTitle')}`} description={translate(locale, 'lifecycle.deletionMetaDescription')} keywords="devhub,account">
+  <AccountDeletionCancelPage />
+</AppLayout>

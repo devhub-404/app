@@ -1,0 +1,15 @@
+---
+import { FaqPage } from '@/features/home/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/home/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout
+  title={translateI18n(locale, 'faq.devhub404Faq')}
+  description={translateI18n(locale, 'faq.questionsFrequentAboutContentSearchQJobsPrivacyModerationDevhub')}
+  keywords="devhub,faq,help,q&a,jobs,moderation"
+>
+  <FaqPage />
+</AppLayout>

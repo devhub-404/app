@@ -1,0 +1,13 @@
+export { useAuth } from '../ui/hooks/use-auth.hook.ts';
+export type { Actor, ActorRole } from '../access/actor.access.ts';
+export { default as AuthPageComposition } from '../ui/components/auth-page-composition.component.astro';
+export { default as SignInPage } from '../ui/pages/sign-in.page.astro';
+export { default as SignUpPage } from '../ui/pages/sign-up.page.astro';
+export { default as VerifyEmailPage } from '../ui/pages/verify-email.page.astro';
+export { default as ResetPasswordPage } from '../ui/pages/reset-password.page.astro';
+export { default as ForgotPasswordPage } from '../ui/pages/forgot-password.page.astro';
+export { default as AccountRecoveryPage } from '../ui/pages/account-recovery.page.astro';
+export { default as MagicLinkPage } from '../ui/pages/magic-link.page.astro';
+export { default as OAuthCallbackPage } from '../ui/pages/o-auth-callback.page.astro';
+export { default as OAuthLinkCallbackPage } from '../ui/pages/o-auth-link-callback.page.astro';
+export { isClientAccessAllowed } from '../access/client-actor.access.ts';

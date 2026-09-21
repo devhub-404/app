@@ -1,0 +1,68 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import RoadmapSections from '../components/detail/roadmap-sections.component.astro';
+import { translate as translateI18n } from '../../i18n';
+import { routes } from '@/shared/navigation/routes';
+import { getTechnologyLogo } from '@/shared/content/technology-logos';
+const locale = Astro.locals.locale;
+interface Props {
+  entry: CollectionEntry<'roadmaps'>;
+  entries: CollectionEntry<'roadmaps'>[];
+}
+
+const { entry, entries } = Astro.props;
+const technologyLogo = getTechnologyLogo(entry.data.slug);
+const related = entries
+  .filter(
+    (item) => item.id !== entry.id && item.data.metadata.tags.some((tag) => entry.data.metadata.tags.includes(tag)),
+  )
+  .slice(0, 3)
+  .map((item) => ({ id: item.data.slug, title: item.data.title }));
+const tags = entry.data.metadata.tags;
+const roadmapTopics = entry.data.sections.flatMap((section, sectionIndex) =>
+  section.topics.map((topic, topicIndex) => ({ section, sectionIndex, topic, topicIndex })),
+);
+const requestedTopicId = Astro.url.searchParams.get('topic');
+const selectedTopicId = roadmapTopics.some(({ topic }) => topic.id === requestedTopicId)
+  ? (requestedTopicId ?? undefined)
+  : undefined;
+const topicEntries = await getCollection('roadmapTopics');
+const activeTopic = roadmapTopics.find(({ topic }) => topic.id === selectedTopicId) ?? roadmapTopics[0];
+const activeTopicEntry = activeTopic
+  ? topicEntries.find(
+      (topicEntry) =>
+        topicEntry.id ===
+          `${entry.data.slug}/${entry.data.locale}/sections/${activeTopic.section.id}/${activeTopic.topic.id}` ||
+        (topicEntry.id.startsWith(`${entry.data.slug}/${entry.data.locale}/sections/`) &&
+          topicEntry.id.endsWith(`/${activeTopic.topic.id}`)),
+    )
+  : undefined;
+---
+
+  <div class="mx-auto w-full">
+    <section class="px-6 py-8 sm:px-8">
+      <RoadmapSections
+        roadmapTitle={entry.data.title}
+        roadmapDescription={entry.data.description}
+        technologyLogo={technologyLogo}
+        roadmapTags={tags}
+        backHref={routes.roadmaps}
+        roadmapHref={routes.roadmap(entry.data.slug)}
+        related={related}
+        sections={entry.data.sections}
+        selectedTopicId={selectedTopicId}
+        activeTopic={activeTopic}
+        activeTopicEntry={activeTopicEntry}
+        label={translateI18n(locale, 'roadmaps.learningPath')}
+        breadcrumbLabel={translateI18n(locale, 'roadmaps.roadmaps')}
+        howToUseLabel={translateI18n(locale, 'roadmaps.howToUse')}
+        howToUseDescription={translateI18n(locale, 'roadmaps.advanceProgressively')}
+        otherRoadmapsLabel={translateI18n(locale, 'roadmaps.otherRoadmaps')}
+        referencesLabel={translateI18n(locale, 'roadmaps.references')}
+        lessonLabel={translateI18n(locale, 'roadmaps.lesson')}
+        readingTimeLabel={translateI18n(locale, 'roadmaps.minutesRead')}
+        previousLabel={translateI18n(locale, 'roadmaps.previousTopic')}
+        nextLabel={translateI18n(locale, 'roadmaps.nextTopic')}
+      />
+    </section>
+  </div>

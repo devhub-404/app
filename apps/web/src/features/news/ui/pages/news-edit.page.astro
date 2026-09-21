@@ -1,0 +1,17 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import EditNewsForm from '@/features/news/ui/components/forms/solid/edit-news-form.component.tsx';
+import { translate as translateI18n } from '@/features/news/i18n';
+const locale = Astro.locals.locale;
+const { id } = Astro.params;
+---
+
+  <SectionHeader
+    eyebrow={translateI18n(locale, 'newsedit.editorial')}
+    title={translateI18n(locale, 'newsform.editNews')}
+    description={translateI18n(locale, 'newsedit.reviewContextSourceTagsPublicationKeepingHistoryEditorial')}
+  />
+  <div class="py-6 sm:py-8">
+    <Container size="full"><EditNewsForm locale={locale} client:load id={id ?? ''} /></Container>
+  </div>

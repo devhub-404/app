@@ -1,0 +1,40 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import { translate, type TranslationKey } from '@/features/auth/i18n';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+}
+
+const locale = Astro.locals.locale;
+const t = (key: TranslationKey) => translate(locale, key);
+const { title, subtitle } = Astro.props;
+---
+
+<Container>
+  <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div class="py-8 sm:py-12 lg:py-16">
+      <section
+        class="rounded-2xl border border-line bg-surface p-5 shadow-ui-surface sm:p-8"
+        aria-labelledby="auth-heading"
+      >
+        <div class="mx-auto grid w-full max-w-md gap-7">
+          <div id="auth-top-action"></div>
+          <div class="grid gap-2">
+            <p class="text-eyebrow">{t('layout.eyebrow')}</p>
+            <h1 id="auth-heading" class="heading-page">{title}</h1>
+            {subtitle ? <p class="text-muted-body">{subtitle}</p> : null}
+          </div>
+          <slot />
+        </div>
+      </section>
+    </div>
+    <aside class="grid gap-2 rounded-2xl border border-line bg-surface-subtle p-6" aria-label={t('layout.asideLabel')}>
+      <p class="text-eyebrow">{t('layout.security')}</p>
+      <h2 class="heading-subsection text-xl">{t('layout.title')}</h2>
+      <p class="text-muted-body">{t('layout.body')}</p>
+      <p class="text-muted-body border-t border-line pt-5">{t('layout.recovery')}</p>
+    </aside>
+  </div>
+</Container>

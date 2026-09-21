@@ -1,0 +1,99 @@
+[
+  {
+    "id": "b0000000-0000-4000-8000-000000000001",
+    "title": "DevHub abre o novo fluxo de revisão de conhecimento",
+    "description": "O DevHub apresenta um fluxo editorial com autoria, atualização e contexto de moderação mais claros.",
+    "slug": "novo-fluxo-revisao-conhecimento",
+    "content": "# DevHub abre o novo fluxo de revisão de conhecimento\n\nAs superfícies editoriais passam a apresentar com mais clareza autoria, atualização e contexto de moderação.",
+    "contentVersion": 1,
+    "status": "published",
+    "occurredAt": "2026-08-20T10:00:00.000Z",
+    "publishedAt": "2026-08-21T12:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000002",
+    "title": "PostgreSQL apresenta melhorias para consultas analíticas",
+    "description": "Atualização do PostgreSQL destaca desempenho e ferramentas de diagnóstico para consultas analíticas.",
+    "slug": "postgresql-melhorias-consultas-analiticas",
+    "content": "# PostgreSQL apresenta melhorias para consultas analíticas\n\nA comunidade do PostgreSQL publicou uma atualização sobre desempenho e ferramentas de diagnóstico.",
+    "contentVersion": 1,
+    "status": "published",
+    "occurredAt": "2026-08-19T09:00:00.000Z",
+    "publishedAt": "2026-08-20T12:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000003",
+    "title": "Guia de segurança para serviços expostos",
+    "description": "Referência sobre fronteiras de rede, credenciais e resposta a incidentes em serviços expostos.",
+    "slug": "guia-seguranca-servicos-expostos",
+    "content": "# Guia de segurança para serviços expostos\n\nUma referência editorial sobre fronteiras de rede, credenciais e resposta a incidentes.",
+    "contentVersion": 1,
+    "status": "archived",
+    "occurredAt": "2026-08-12T09:00:00.000Z",
+    "publishedAt": "2026-08-13T12:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000004",
+    "title": "Chamada para relatos da comunidade",
+    "description": "Convite para compartilhar experiências sobre a manutenção de sistemas modulares.",
+    "slug": "chamada-relatos-comunidade",
+    "content": "# Chamada para relatos da comunidade\n\nA equipe está reunindo experiências sobre manutenção de sistemas modulares.",
+    "contentVersion": 1,
+    "status": "draft"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000005",
+    "title": "Agenda técnica do segundo semestre",
+    "description": "Seleção editorial de acontecimentos técnicos relevantes para acompanhar no segundo semestre.",
+    "slug": "agenda-tecnica-segundo-semestre",
+    "content": "# Agenda técnica do segundo semestre\n\nUma seleção editorial de acontecimentos relevantes para acompanhar.",
+    "contentVersion": 1,
+    "status": "published",
+    "occurredAt": "2026-08-10T09:00:00.000Z",
+    "publishedAt": "2026-08-11T12:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000006",
+    "title": "Comunidade discute padrões para serviços resilientes",
+    "description": "Relatos recentes mostram como equipes estão tratando retry, timeout e degradação controlada.",
+    "slug": "padroes-servicos-resilientes",
+    "content": "# Comunidade discute padrões para serviços resilientes\n\nExperiências recentes ajudam a comparar decisões sobre retry, timeout e degradação controlada.",
+    "contentVersion": 1,
+    "status": "published",
+    "occurredAt": "2026-08-08T09:00:00.000Z",
+    "publishedAt": "2026-08-09T12:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000007",
+    "title": "Novas ferramentas para observar pipelines",
+    "description": "Uma seleção de práticas e ferramentas para acompanhar entregas sem perder contexto operacional.",
+    "slug": "novas-ferramentas-observar-pipelines",
+    "content": "# Novas ferramentas para observar pipelines\n\nO ecossistema ganhou opções para correlacionar execução, artefatos e incidentes durante a entrega.",
+    "contentVersion": 1,
+    "status": "published",
+    "occurredAt": "2026-08-06T09:00:00.000Z",
+    "publishedAt": "2026-08-07T12:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000008",
+    "title": "Agenda de encontros sobre arquitetura",
+    "description": "Eventos e discussões abertas sobre fronteiras, evolução e manutenção de sistemas.",
+    "slug": "encontros-sobre-arquitetura",
+    "content": "# Agenda de encontros sobre arquitetura\n\nUma agenda editorial de conversas sobre fronteiras, evolução e manutenção de sistemas.",
+    "contentVersion": 1,
+    "status": "published",
+    "occurredAt": "2026-08-04T09:00:00.000Z",
+    "publishedAt": "2026-08-05T12:00:00.000Z"
+  },
+  {
+    "id": "b0000000-0000-4000-8000-000000000009",
+    "title": "Relatório: qualidade de software em foco",
+    "description": "Levantamento editorial reúne sinais sobre testes, manutenção e segurança em times de produto.",
+    "slug": "qualidade-software-em-foco",
+    "content": "# Relatório: qualidade de software em foco\n\nO levantamento reúne sinais sobre testes, manutenção e segurança observados em times de produto.",
+    "contentVersion": 1,
+    "status": "published",
+    "occurredAt": "2026-08-02T09:00:00.000Z",
+    "publishedAt": "2026-08-03T12:00:00.000Z"
+  }
+]

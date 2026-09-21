@@ -1,0 +1,11 @@
+---
+import { NewQuestionPage } from '@/features/q-and-a/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/q-and-a/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'newquestion.devhubNewQuestion')} description={translate(locale, 'newquestion.createQuestionTechnicalObjective')} keywords="devhub,q&a">
+  <NewQuestionPage />
+</AppLayout>

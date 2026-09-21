@@ -1,0 +1,107 @@
+---
+import Heading from '@/shared/ui/components/typography/heading.component.tsx';
+import { Icon } from 'astro-icon/components';
+import { routes } from '@/shared/navigation/routes';
+import { env } from '@/shared/runtime/env';
+import { translate, type TranslationKey } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+const t = (key: TranslationKey) => translate(locale, key);
+
+const pathname = Astro.url.pathname;
+const navigationGroups = [
+  {
+    label: t('shell.main'),
+    items: [
+      { label: t('shell.home'), href: routes.home, icon: 'lucide:house' },
+      { label: t('shell.feed'), href: routes.feed, icon: 'lucide:inbox' },
+    ],
+  },
+  {
+    label: t('shell.categoryLearn'),
+    items: [
+      { label: t('shell.articles'), href: routes.articles, icon: 'lucide:file-text' },
+      { label: t('shell.codex'), href: routes.codex, icon: 'lucide:book-open' },
+      { label: t('shell.cheatsheets'), href: routes.cheatsheets, icon: 'lucide:clipboard-list' },
+      { label: t('shell.paths'), href: routes.roadmaps, icon: 'lucide:map' },
+    ],
+  },
+  {
+    label: t('shell.categorySolve'),
+    items: [{ label: t('shell.questions'), href: routes.questions, icon: 'lucide:messages-square' }],
+  },
+  {
+    label: t('shell.categoryUse'),
+    items: [
+      { label: t('shell.resources'), href: routes.resources, icon: 'lucide:library' },
+      { label: t('shell.tools'), href: routes.tools, icon: 'lucide:wrench' },
+    ],
+  },
+  {
+    label: t('shell.categoryBuild'),
+    items: [{ label: t('shell.projects'), href: routes.projects, icon: 'lucide:boxes' }],
+  },
+  {
+    label: t('shell.categoryExplore'),
+    items: [
+      { label: t('shell.events'), href: routes.events, icon: 'lucide:calendar-days' },
+      { label: t('shell.jobs'), href: routes.jobs, icon: 'lucide:briefcase-business' },
+      { label: t('shell.news'), href: routes.news, icon: 'lucide:newspaper' },
+    ],
+  },
+];
+
+const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+---
+
+<aside
+  id="app-sidebar"
+  transition:persist="app-sidebar"
+  class="group fixed bottom-0 right-0 top-app-header z-[60] hidden h-[calc(100vh-var(--layout-header-height))] w-app-sidebar-expanded max-w-[85vw] shrink-0 translate-x-full border-l border-line bg-surface-subtle px-3 py-4 text-content shadow-ui-overlay transition-transform duration-200 data-[open=true]:flex data-[open=true]:translate-x-0 lg:sticky lg:right-auto lg:z-auto lg:flex lg:translate-x-0 lg:max-w-none lg:border-l-0 lg:border-r lg:shadow-none data-[collapsed=true]:w-app-sidebar-collapsed"
+  data-collapsed="false"
+>
+  <div class="flex min-h-0 w-full flex-col gap-3">
+    <nav class="min-h-0 flex-1 space-y-4 overflow-y-auto pr-1" aria-label={t('shell.globalNavigation')}>
+      {
+        navigationGroups.map((group) => (
+          <section class="space-y-1.5" aria-labelledby={`sidebar-${group.label}`}>
+            <Heading
+              level={2}
+              variant="tinyAccent"
+              id={`sidebar-${group.label}`}
+              class="px-3 group-data-[collapsed=true]:hidden"
+            >
+              {group.label}
+            </Heading>
+            {group.items.map((item) => (
+              <a
+                href={item.href}
+                title={item.label}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                data-shell-nav-link
+                data-shell-nav-href={item.href}
+                data-active={isActive(item.href) ? 'true' : 'false'}
+                class="relative flex min-h-9 items-center gap-3 rounded-xl px-3 text-sm font-medium text-content-muted outline-offset-2 hover:bg-hover hover:text-content before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:rounded-full before:bg-action before:opacity-0 data-[active=true]:bg-selected data-[active=true]:text-content data-[active=true]:before:opacity-100 group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2"
+              >
+                <Icon name={item.icon} size={17} class="shrink-0" />
+                <span class="truncate group-data-[collapsed=true]:hidden">{item.label}</span>
+              </a>
+            ))}
+          </section>
+        ))
+      }
+    </nav>
+
+    <div class="space-y-1.5">
+      <a
+        href={env.discordUrl}
+        target="_blank"
+        rel="noreferrer"
+        title={t('shell.discord')}
+        class="flex min-h-9 items-center gap-3 rounded-xl border border-line px-3 text-sm font-medium text-content-muted hover:border-action-border hover:bg-hover hover:text-content group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2"
+      >
+        <Icon name="lucide:message-circle" size={17} />
+        <span class="group-data-[collapsed=true]:hidden">{t('shell.discord')}</span>
+      </a>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,21 @@
+---
+import { EventPage, getEventQuery, type Event } from '@/features/event/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/event/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+
+const result = await getEventQuery(Astro.params['slug'] ?? '', Astro.locals.api);
+const event: Event | null = result.item;
+if (result.response?.status === 404 || (!result.error && !event)) return Astro.redirect('/404');
+if (result.error) throw new Error(result.error.code ?? 'EVENT_REQUEST_FAILED');
+---
+
+<AppLayout
+  title={`DevHub - ${event?.title ?? t('eventdetail.event')}`}
+  description={event?.description ?? t('eventdetail.technicalEvent')}
+  keywords="devhub,events"
+>
+  <EventPage {event} />
+</AppLayout>

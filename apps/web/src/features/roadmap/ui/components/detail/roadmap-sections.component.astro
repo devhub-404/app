@@ -1,0 +1,209 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import RoadmapTopicNavigator from './roadmap-topic-navigator.component.astro';
+import RoadmapReferences from './roadmap-references.component.astro';
+
+type RoadmapTopic = {
+  id: string;
+  title: string;
+  references: Array<{ label: string; url: string }>;
+};
+
+type RoadmapSection = {
+  id: string;
+  title: string;
+  topics: RoadmapTopic[];
+};
+
+type TopicEntry = {
+  section: RoadmapSection;
+  sectionIndex: number;
+  topic: RoadmapTopic;
+  topicIndex: number;
+};
+
+type Props = {
+  roadmapTitle: string;
+  roadmapDescription: string;
+  technologyLogo?: string;
+  roadmapTags: string[];
+  backHref: string;
+  roadmapHref: string;
+  related: Array<{ id: string; title: string }>;
+  sections: RoadmapSection[];
+  selectedTopicId?: string;
+  activeTopic?: TopicEntry;
+  activeTopicEntry?: CollectionEntry<'roadmapTopics'>;
+  label: string;
+  breadcrumbLabel: string;
+  howToUseLabel: string;
+  howToUseDescription: string;
+  otherRoadmapsLabel: string;
+  referencesLabel: string;
+  lessonLabel: string;
+  readingTimeLabel: string;
+  previousLabel: string;
+  nextLabel: string;
+};
+
+const props = Astro.props;
+const topics: TopicEntry[] = props.sections.flatMap((section, sectionIndex) =>
+  section.topics.map((topic, topicIndex) => ({ section, sectionIndex, topic, topicIndex })),
+);
+const selectedTopicId = props.selectedTopicId;
+const activeTopic = props.activeTopic ?? topics[0];
+const activeContentEntry = props.activeTopicEntry;
+const renderedContent = activeContentEntry ? await render(activeContentEntry) : undefined;
+const TopicContent = renderedContent?.Content;
+const readingMinutes = activeContentEntry
+  ? Math.max(1, Math.ceil((activeContentEntry.body ?? '').trim().split(/\s+/).filter(Boolean).length / 200))
+  : 0;
+const activeTopicPosition = activeTopic ? topics.findIndex(({ topic }) => topic.id === activeTopic.topic.id) : -1;
+const previousTopic = activeTopicPosition > 0 ? topics[activeTopicPosition - 1] : undefined;
+const nextTopic =
+  activeTopicPosition >= 0 && activeTopicPosition < topics.length - 1 ? topics[activeTopicPosition + 1] : undefined;
+const topicHref = (topicId: string) => `${props.roadmapHref}?topic=${encodeURIComponent(topicId)}`;
+const sectionTopic = activeTopic?.section.topics[0];
+const sectionHref = sectionTopic ? topicHref(sectionTopic.id) : props.roadmapHref;
+const showContentOnMobile = Boolean(selectedTopicId);
+---
+
+<section
+  aria-labelledby="roadmap-sections-title"
+  class="grid items-start gap-8 lg:grid-cols-[20rem_minmax(0,1fr)_16rem]"
+>
+  <h1 id="roadmap-sections-title" class="heading-visually-hidden sr-only">{props.label}</h1>
+
+  <nav
+    aria-label={props.label}
+    class:list={[
+      'max-h-[calc(100vh-3rem)] overflow-y-auto rounded-2xl border border-line bg-surface-elevated p-5 lg:sticky lg:top-6',
+      showContentOnMobile && 'hidden lg:block',
+    ]}
+  >
+    <header class="border-b border-line pb-5">
+      <div class="flex items-center gap-3">
+        {
+          props.technologyLogo && (
+            <div class="grid size-11 shrink-0 place-items-center rounded-xl bg-surface-subtle p-2">
+              <img src={props.technologyLogo} alt="" class="size-full object-contain" width="64" height="64" />
+            </div>
+          )
+        }
+        <h2 class="heading-section">{props.roadmapTitle}</h2>
+      </div>
+      <p class="text-muted-body mt-2">{props.roadmapDescription}</p>
+    </header>
+
+    <RoadmapTopicNavigator
+      roadmapHref={props.roadmapHref}
+      sections={props.sections}
+      selectedTopicId={selectedTopicId}
+    />
+  </nav>
+
+  <article class:list={['min-w-0', showContentOnMobile ? 'block' : 'hidden lg:block']}>
+    <nav aria-label={props.breadcrumbLabel} class="mb-6 flex flex-wrap items-center gap-2 text-xs text-content-muted">
+      <a href={props.backHref} class="hover:text-content-accent">{props.label}</a>
+      <Icon name="lucide:chevron-right" size={14} aria-hidden="true" />
+      <a href={props.roadmapHref} class="hover:text-content-accent">{props.roadmapTitle}</a>
+      <Icon name="lucide:chevron-right" size={14} aria-hidden="true" />
+      <a href={sectionHref} class="hover:text-content-accent">{activeTopic?.section.title}</a>
+      <Icon name="lucide:chevron-right" size={14} aria-hidden="true" />
+      <span aria-current="page">
+        {activeTopic && `${props.lessonLabel} ${activeTopic.sectionIndex + 1}.${activeTopic.topicIndex + 1}`}
+      </span>
+    </nav>
+
+    {
+      activeTopic && (
+        <div class="mb-6 flex flex-wrap gap-2 text-xs text-content-muted">
+          <span class="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5">
+            <Icon name="lucide:book-open" size={14} aria-hidden="true" />
+            {props.lessonLabel} {activeTopic.sectionIndex + 1}.{activeTopic.topicIndex + 1}
+          </span>
+          {readingMinutes > 0 && (
+            <span class="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5">
+              <Icon name="lucide:clock-3" size={14} aria-hidden="true" />
+              {readingMinutes} {props.readingTimeLabel}
+            </span>
+          )}
+        </div>
+      )
+    }
+
+    <div class="content-prose" aria-live="polite">
+      {TopicContent && <TopicContent />}
+    </div>
+    {activeTopic && <RoadmapReferences references={activeTopic.topic.references} label={props.referencesLabel} />}
+
+    <nav aria-label={props.label} class="mt-10 flex items-center justify-between gap-4 border-t border-line pt-6">
+      {
+        previousTopic ? (
+          <a
+            href={topicHref(previousTopic.topic.id)}
+            data-astro-prefetch
+            class="inline-flex items-center gap-2 rounded-xl border border-line px-4 py-2.5 text-sm font-semibold text-content-muted hover:border-action-border hover:text-content"
+          >
+            <Icon name="lucide:chevron-left" size={16} aria-hidden="true" />
+            {props.previousLabel}
+          </a>
+        ) : (
+          <span class="inline-flex items-center gap-2 rounded-xl border border-line px-4 py-2.5 text-sm font-semibold text-content-disabled">
+            <Icon name="lucide:chevron-left" size={16} aria-hidden="true" />
+            {props.previousLabel}
+          </span>
+        )
+      }
+      {
+        nextTopic ? (
+          <a
+            href={topicHref(nextTopic.topic.id)}
+            data-astro-prefetch
+            class="inline-flex items-center gap-2 rounded-xl border border-action-border bg-action px-4 py-2.5 text-sm font-semibold text-action-contrast hover:brightness-105"
+          >
+            {props.nextLabel}
+            <Icon name="lucide:chevron-right" size={16} aria-hidden="true" />
+          </a>
+        ) : (
+          <span class="inline-flex items-center gap-2 rounded-xl border border-action-border bg-action/40 px-4 py-2.5 text-sm font-semibold text-content-disabled">
+            {props.nextLabel}
+            <Icon name="lucide:chevron-right" size={16} aria-hidden="true" />
+          </span>
+        )
+      }
+    </nav>
+  </article>
+
+  <aside class:list={['space-y-5 lg:sticky lg:top-6', showContentOnMobile ? 'block' : 'hidden lg:block']}>
+    <section class="rounded-2xl border border-line bg-surface-elevated p-5">
+      <p class="text-eyebrow">{props.howToUseLabel}</p>
+      <p class="text-muted-body mt-3">{props.howToUseDescription}</p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {
+          props.roadmapTags.map((tag) => (
+            <span class="rounded-full bg-surface-subtle px-2.5 py-1 text-xs text-content-muted">{tag}</span>
+          ))
+        }
+      </div>
+    </section>
+    {
+      props.related.length > 0 && (
+        <section class="rounded-2xl border border-line bg-surface-elevated p-5">
+          <p class="text-eyebrow">{props.otherRoadmapsLabel}</p>
+          <div class="mt-4 space-y-3">
+            {props.related.map((item) => (
+              <a
+                href={`/roadmaps/${item.id}`}
+                class="block text-sm font-semibold text-content hover:text-content-accent"
+              >
+                {item.title}
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </aside>
+</section>

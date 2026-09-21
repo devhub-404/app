@@ -1,0 +1,1 @@
+ALTER TABLE "sessions" RENAME COLUMN "authenticated_at" TO "last_proof_of_possession_at";

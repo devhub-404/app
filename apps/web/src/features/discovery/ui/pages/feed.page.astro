@@ -1,0 +1,21 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import FeedPageContent from '../components/feed-page-content.component.astro';
+import { translate as translateI18n } from '@/features/discovery/i18n';
+
+interface Props {
+  mode: 'recent' | 'trending';
+  tags: string[];
+}
+
+const { mode, tags } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+  <SectionHeader
+    eyebrow={t('feedcontent.feed')}
+    title={t('feedcontent.feed')}
+    description={t('feedcontent.allMattersYouOnlyPlace')}
+  />
+  <FeedPageContent {mode} {tags} />

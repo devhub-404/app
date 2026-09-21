@@ -1,0 +1,15 @@
+---
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+---
+
+<section class="px-6 pb-16 pt-10 sm:pb-24 sm:pt-16">
+  <div class="mx-auto max-w-6xl">
+    <p class="text-accent-label">{t('contribute.eyebrow')}</p>
+    <h1 class="heading-hero mt-5 max-w-4xl">
+      {t('contribute.heroTitle')}
+    </h1>
+    <p class="text-intro mt-6 max-w-3xl">{t('contribute.heroDescription')}</p>
+  </div>
+</section>

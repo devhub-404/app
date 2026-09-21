@@ -1,0 +1,27 @@
+---
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import NewEvent from '../components/new-event.component.tsx';
+import { translate as translateI18n } from '@/features/event/i18n';
+const locale = Astro.locals.locale;
+const direct = Astro.locals.account?.role === 'curator' || Astro.locals.account?.role === 'admin';
+---
+
+  <SectionHeader
+    eyebrow={translateI18n(locale, 'eventdetail.events')}
+    title={direct ? translateI18n(locale, 'newevent.createEvent') : translateI18n(locale, 'eventnew.suggestEvent')}
+    description={direct
+      ? translateI18n(locale, 'newevent.createEditorialDescription')
+      : translateI18n(locale, 'eventnew.sendDataOfficialEventAdministratorWillReviewPublication')}
+  >
+    <Fragment slot="actions"
+      ><BackLink href={routes.events} label={translateI18n(locale, 'eventdetail.events')} /></Fragment
+    >
+  </SectionHeader>
+  <div class="py-6 sm:py-8">
+    <Container size="sm">
+      <NewEvent direct={direct} locale={locale} client:load />
+    </Container>
+  </div>

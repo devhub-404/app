@@ -1,0 +1,35 @@
+---
+import ContributionCallout from '@/shared/ui/components/surfaces/contribution-callout.component.astro';
+import QuestionsListing from './questions-listing.component.tsx';
+import type { QuestionsListingState } from './questions-listing.component.tsx';
+import { translate as translateI18n } from '@/features/q-and-a/i18n';
+import { parseListingSearch } from '@/shared/ui/schemas/search.schema.ts';
+import { questionSearchSchema } from '@/features/q-and-a/ui/schemas/search.schema.ts';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const search = questionSearchSchema.parse({ ...parseListingSearch(Astro.url.searchParams), status: Astro.url.searchParams.get('status'), sort: Astro.url.searchParams.get('sort') });
+const pageSize = 15;
+---
+
+<div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+  <div class="grid min-w-0 gap-5">
+    <QuestionsListing
+      client:load
+      initialItems={[]}
+      initialTotal={0}
+      initialError={false}
+      pageSize={pageSize}
+      initialState={{ query: search.query, tags: search.tags, status: search.status, sort: search.sort, page: search.page } satisfies QuestionsListingState}
+    />
+  </div>
+  <aside class="self-start lg:sticky lg:top-6">
+    <ContributionCallout
+      eyebrow={t('questions.contribute')}
+      title={t('questions.askQuestion')}
+      description={t('questions.describeProblemConcreteContextEnoughReceiveAnswersUseful')}
+      actionLabel={t('newquestion.makeQuestion')}
+      actionHref="/questions/new"
+    />
+  </aside>
+</div>

@@ -1,0 +1,27 @@
+---
+import { NewsPage } from '@/features/news/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/news/i18n';
+import { parseListingSearch } from '@/shared/ui/schemas/search.schema.ts';
+import { newsSearchSchema } from '@/features/news/ui/schemas/search.schema.ts';
+
+const params = Astro.url.searchParams;
+const newsSearch = newsSearchSchema.parse({ ...parseListingSearch(params), sort: params.get('sort'), period: params.get('period') });
+const query = newsSearch.query;
+const tags = newsSearch.tags;
+const page = newsSearch.page;
+const sort = newsSearch.sort;
+const period = newsSearch.period;
+const pageSize = 8;
+const initialState = { query, tags, sort, period, page } as const;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<AppLayout
+  title={t('newsdetail.devhubNewsAlternative2')}
+  description={t('newsindex.updatesTemporaryEcosystemDevelopment')}
+  keywords="devhub,news,updates,ecosystem"
+>
+  <NewsPage {pageSize} {initialState} />
+</AppLayout>

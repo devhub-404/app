@@ -1,0 +1,50 @@
+---
+import MarketingSurface from '@/shared/ui/components/surfaces/marketing-surface.component.astro';
+import { env } from '@/shared/runtime/env';
+import { translate } from '@/features/home/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+const cards = [
+  ['support.infrastructure', 'support.infrastructureDescription'],
+  ['support.development', 'support.developmentDescription'],
+  ['support.independence', 'support.independenceDescription'],
+] as const;
+---
+
+  <MarketingSurface>
+    <div>
+      <section class="px-6 pb-20 pt-10">
+        <div class="mx-auto max-w-5xl">
+          <span class="inline-flex rounded-full border border-line bg-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-[.2em] text-content-muted">{t('support.eyebrow')}</span>
+          <h1 class="heading-marketing mt-5 max-w-4xl">{t('support.title')}</h1>
+          <p class="text-intro mt-5 max-w-3xl">{t('support.description')}</p>
+          <div class="mt-10 grid gap-4 md:grid-cols-3">
+            {
+              cards.map(([title, description]) => (
+                <div class="rounded-2xl border border-line bg-surface p-5">
+                  <>
+                    <h2 class="heading-callout">
+                      {t(title)}
+                    </h2>
+                    <p class="text-muted-body mt-2">
+                      {t(description)}
+                    </p>
+                  </>
+                </div>
+              ))
+            }
+          </div>
+          <section class="mt-10 rounded-3xl border border-line bg-surface-subtle p-7">
+            <p class="text-eyebrow">
+              {t('support.boundaryEyebrow')}
+            </p><h2 class="heading-section mt-2">{t('support.boundaryTitle')}</h2><p class="text-muted-body mt-3 max-w-3xl">
+              {t('support.boundaryDescription')}
+            </p><div class="mt-5">
+              <a href={env.github.sponsorUrl} target="_blank" rel="noreferrer" class="action action-primary"
+                >{t('support.action')}</a>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </MarketingSurface>

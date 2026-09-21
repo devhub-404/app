@@ -1,0 +1,37 @@
+---
+import ContributionCallout from '@/shared/ui/components/surfaces/contribution-callout.component.astro';
+import EventsListing from './events-listing.component.tsx';
+import type { EventsListingState } from './events-listing.component.tsx';
+import { translate as translateI18n } from '@/features/event/i18n';
+import { parseListingSearch } from '@/shared/ui/schemas/search.schema.ts';
+import { eventSearchSchema } from '@/features/event/ui/schemas/search.schema.ts';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const baseSearch = parseListingSearch(Astro.url.searchParams);
+const search = eventSearchSchema.parse({ ...baseSearch, temporalState: Astro.url.searchParams.get('temporalState'), format: Astro.url.searchParams.get('format'), sort: Astro.url.searchParams.get('sort') });
+const pageSize = 12;
+---
+
+<div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+  <div class="grid min-w-0 gap-5">
+    <EventsListing
+      client:load
+      initialItems={[]}
+      initialTotal={0}
+      initialError={false}
+      pageSize={pageSize}
+      initialState={{ query: search.query, temporalState: search.temporalState, format: search.format, sort: search.sort, page: search.page } satisfies EventsListingState}
+      initialView="grid"
+    />
+  </div>
+  <aside class="self-start lg:sticky lg:top-6">
+    <ContributionCallout
+      eyebrow={t('events.contribute')}
+      title={t('events.suggestEvent')}
+      description={t('events.helpCommunityDiscoverConferencesMeetupsWorkshopsRelevantDevelopers')}
+      actionLabel={t('events.suggestEventAction')}
+      actionHref="/events/new"
+    />
+  </aside>
+</div>

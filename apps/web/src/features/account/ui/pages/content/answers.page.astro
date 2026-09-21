@@ -1,0 +1,15 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import QAndAContributionsPage from '@/features/account/ui/components/content/q-and-a-contributions-page.component.tsx';
+import { translate as translateApp } from '@/shared/i18n/app';
+
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="answers"
+    heading={translateApp(locale, 'answers.answers')}
+    subheading={translateApp(locale, 'answers.answersCreatedByAccount')}
+  >
+    <QAndAContributionsPage kind="answer" locale={locale} client:load />
+  </AccountPageComposition>

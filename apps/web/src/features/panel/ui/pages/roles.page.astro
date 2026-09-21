@@ -1,0 +1,71 @@
+---
+import { Icon } from 'astro-icon/components';
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '@/features/panel/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const roles = [
+  {
+    name: t('roles.curator'),
+    description: t('rolesadminpanel.curatesEditorialContentSuggestionsLifecycle'),
+    icon: 'lucide:pen-tool',
+  },
+  {
+    name: t('roles.moderator'),
+    description: t('rolesadminpanel.moderatesReportsCommentsContentHiddenWithoutAssumeAuthorship'),
+    icon: 'lucide:shield-check',
+  },
+  {
+    name: t('roles.admin'),
+    description: t('rolesadminpanel.managesAccountsRolesSettingsOperationalNotInheritsOtherResponsibilities'),
+    icon: 'lucide:key-round',
+  },
+];
+---
+
+  <PanelPageComposition
+    active="roles"
+    heading={t('panelroles.roles')}
+    subheading={t('panelroles.managePermissionsRoles')}
+  >
+    <div class="grid gap-5">
+      <section class="grid gap-4 rounded-3xl border border-line bg-surface-elevated p-5 shadow-sm sm:p-6">
+        <div class="grid gap-1">
+          <h2 class="heading-callout text-sm">{t('rolesadminpanel.rolesAvailable')}</h2>
+          <p class="text-muted-body">{t('rolesadminpanel.rolesAreResponsibilitiesNotHierarchy')}</p>
+        </div>
+        <div class="grid gap-3 md:grid-cols-3">
+          {
+            roles.map((role) => (
+              <article class="grid gap-3 rounded-2xl border border-line bg-surface p-4">
+                <div class="flex items-center gap-2">
+                  <span class="grid size-9 place-items-center rounded-xl bg-action-subtle text-content-accent">
+                    <Icon name={role.icon} size={17} />
+                  </span>
+                  <h3 class="heading-callout">
+                    {role.name}
+                  </h3>
+                </div>
+                <p class="text-muted-body">{role.description}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section
+        class="flex flex-col gap-4 rounded-3xl border border-line bg-surface-elevated p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-6"
+      >
+        <div class="grid gap-1">
+          <h2 class="heading-callout text-sm">{t('rolesadminpanel.assignRoles')}</h2>
+          <p class="text-muted-body">{t('rolesadminpanel.rolesCanBeUpdatedDetailEachUser')}</p>
+        </div>
+        <a href={routes.panel.users} class="action action-primary">
+          <Icon name="lucide:users-round" size={16} />
+          {t('rolesadminpanel.openAccounts')}
+        </a>
+      </section>
+    </div>
+  </PanelPageComposition>

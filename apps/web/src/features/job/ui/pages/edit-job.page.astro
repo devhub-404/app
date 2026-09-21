@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/public/layout';
+import EditJob from '../components/edit-job.component.tsx';
+import { translate as translateI18n } from '@/features/job/i18n';
+const id = Astro.params['id'] ?? '';
+---
+
+  <AccountPageComposition
+    active="jobs"
+    heading={translateI18n(Astro.locals.locale, 'editjob.editJob')}
+    subheading={translateI18n(Astro.locals.locale, 'editjob.maintainCompensationContextApplicationUpdated')}
+  >
+    <EditJob locale={Astro.locals.locale} client:load id={id} />
+  </AccountPageComposition>

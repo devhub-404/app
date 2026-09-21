@@ -1,0 +1,41 @@
+---
+import { translate as translateI18n } from '../../i18n';
+
+interface Props {
+  toolCount: number;
+}
+
+const { toolCount } = Astro.props;
+const locale = Astro.locals.locale;
+---
+
+<section
+  class="grid gap-5 rounded-3xl border border-success-border bg-success-bg p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"
+>
+  <div>
+    <p class="text-eyebrow">
+      {translateI18n(locale, 'toolsindex.solveNow')}
+    </p>
+    <h2 class="heading-large-section mt-3 max-w-3xl">
+      {translateI18n(locale, 'toolsindex.toolsSmallTasksImmediate')}
+    </h2>
+    <p class="text-muted mt-3 max-w-2xl">
+      {translateI18n(locale, 'toolsindex.chooseToolExecuteLocallyMaintainDataBrowser')}
+    </p>
+    <div class="mt-6">
+      <a href="#tool-list" class="action action-primary">
+        {translateI18n(locale, 'toolsindex.chooseTool')}
+      </a>
+    </div>
+  </div>
+  <aside
+    class="rounded-2xl border border-line bg-surface p-5"
+    aria-label={translateI18n(locale, 'toolsindex.available')}
+  >
+    <p class="text-eyebrow">
+      {translateI18n(locale, 'toolsindex.available')}
+    </p>
+    <p class="text-strong mt-4">{toolCount}</p>
+    <p class="text-muted mt-1">{translateI18n(locale, 'toolsindex.toolsLocal')}</p>
+  </aside>
+</section>

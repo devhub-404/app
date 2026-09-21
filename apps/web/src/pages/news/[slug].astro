@@ -1,0 +1,25 @@
+---
+import { NewsArticlePage, loadNewsBySlug, type NewsDetails } from '@/features/news/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/news/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1], args?: unknown[]) => translateI18n(locale, key, args);
+
+const slug = Astro.params['slug'] ?? '';
+const result = await loadNewsBySlug(slug, Astro.locals.api);
+if (result.response?.status === 404 || result.error?.code === 'CONTENT_NOT_FOUND' || (!result.error && !result.item)) {
+  return Astro.redirect('/404');
+}
+if (result.error) throw new Error(result.error.code ?? 'NEWS_REQUEST_FAILED');
+const news: NewsDetails | null = result.item;
+if (!news) return Astro.redirect('/404');
+---
+
+<AppLayout
+  title={news?.title ?? t('newsdetail.devhubNewsAlternative2')}
+  description={news?.description ?? t('newsdetail.newsDevelopers')}
+  keywords={news?.tags.map((tag) => tag.name).join(', ') || 'devhub,news'}
+>
+  <NewsArticlePage {news} />
+</AppLayout>

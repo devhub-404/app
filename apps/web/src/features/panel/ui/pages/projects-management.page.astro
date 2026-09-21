@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import { translate as translateI18n } from '@/shared/i18n/app';
+import ProjectsAdminList from '@/features/panel/ui/components/projects-admin-list.component.tsx';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="projects"
+    heading={translateI18n(locale, 'projects.projects')}
+    subheading={translateI18n(locale, 'projects.inventoryModerationAdministrationWithoutEditAuthorshipOther')}
+  >
+    <ProjectsAdminList locale={locale} client:load />
+  </PanelPageComposition>

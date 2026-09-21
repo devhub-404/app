@@ -1,0 +1,18 @@
+export const catalog = {
+  'brand.devhub': 'DevHub',
+  'footer.devhub404Home': 'DevHub 404 — inicio',
+  'footer.discord': 'Discord',
+  'globallayout.devhubArticles': 'DevHub — Artículos',
+  'globallayout.devhubNews': 'DevHub — Noticias',
+  'globallayout.author': 'Equipo DevHub',
+  'content.read': 'Leer contenido →',
+  'filters.search': 'Buscar',
+  'filters.tags': 'Tags',
+  'filters.grid': 'Cuadrícula',
+  'filters.list': 'Lista',
+  'filters.apply': 'Aplicar filtros',
+  'filters.clear': 'Limpiar filtros',
+  'filters.searchPlaceholder': 'Título, categoría o etiqueta',
+  'filters.view': 'Vista',
+  'filters.noResults': 'Ningún contenido coincide con los filtros.',
+} as const;

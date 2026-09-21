@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/public/layout';
+import EditProject from '../components/edit-project.component.tsx';
+import { translate as translateI18n } from '@/features/project/i18n';
+const id = Astro.params['id'] ?? '';
+---
+
+  <AccountPageComposition
+    active="projects"
+    heading={translateI18n(Astro.locals.locale, 'editproject.editProject')}
+    subheading={translateI18n(Astro.locals.locale, 'editproject.updateDataArtifactWithoutCreateSecondOwner')}
+  >
+    <EditProject locale={Astro.locals.locale} client:load id={id} />
+  </AccountPageComposition>

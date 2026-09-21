@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import CommentsAdminList from '@/features/panel/ui/components/comments-admin-list.component.tsx';
+import { translate as translateI18n } from '@/features/panel/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="comments"
+    heading={translateI18n(locale, 'commentsadminlist.comments')}
+    subheading={translateI18n(locale, 'panelcomments.moderateCommentsHiddenVisible')}
+  >
+    <CommentsAdminList locale={locale} client:load />
+  </PanelPageComposition>

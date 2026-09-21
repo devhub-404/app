@@ -1,0 +1,16 @@
+---
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { ServerErrorPage } from '@/features/home/public';
+import { translate } from '@/shared/i18n/app';
+
+Astro.response.status = 500;
+const locale = Astro.locals.locale;
+---
+
+<AppLayout
+  title={translate(locale, 'servererror.pageTitle')}
+  description={translate(locale, 'servererror.description')}
+  keywords="devhub,500,server-error"
+>
+  <ServerErrorPage />
+</AppLayout>

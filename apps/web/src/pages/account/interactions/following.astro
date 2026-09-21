@@ -1,0 +1,11 @@
+---
+import { FollowedTagsPage } from '@/features/follow/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/follow/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'follow.pageTitle')} description={translate(locale, 'follow.description')} keywords="devhub,tags,follow,preferences">
+  <FollowedTagsPage />
+</AppLayout>

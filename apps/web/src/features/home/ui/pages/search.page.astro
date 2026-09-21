@@ -1,0 +1,13 @@
+---
+import SearchPageContent from '../components/search-page-content.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import { translate as translateShared } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <SectionHeader
+    eyebrow={translateShared(locale, 'search.searchGlobal')}
+    title={translateShared(locale, 'search.findAllDevhub')}
+    description={translateShared(locale, 'search.searchArticlesNewsResourcesQProjectsJobsSingleSurface')}
+  />
+  <SearchPageContent />

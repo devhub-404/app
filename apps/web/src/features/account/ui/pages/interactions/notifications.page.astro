@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import AccountNotificationsPage from '@/features/account/ui/components/interactions/account-notifications-page.component.tsx';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="notifications"
+    heading={translateI18n(locale, 'notifications.notifications')}
+    subheading={translateI18n(locale, 'notifications.trackRelevantUpdates')}
+  >
+    <AccountNotificationsPage locale={locale} client:load />
+  </AccountPageComposition>

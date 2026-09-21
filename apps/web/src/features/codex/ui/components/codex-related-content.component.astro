@@ -1,0 +1,260 @@
+---
+import CodexContentCard from './codex-content-card.component.astro';
+import { ArticlesListing, listArticlesQuery, type ArticlesListingState } from '@/features/article/public';
+import { NewsListing, listNews, type NewsListingState } from '@/features/news/public';
+import { ProjectsListing, listProjectsQuery, type ProjectsListingState } from '@/features/project/public';
+import { QuestionsListing, listQuestionsQuery, type QuestionsListingState } from '@/features/q-and-a/public';
+import { ResourcesListing, listResources, type ResourcesListingState } from '@/features/resource/public';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '../../i18n';
+
+type ContentView = 'overview' | 'articles' | 'news' | 'projects' | 'questions' | 'resources';
+type RelatedView = Exclude<ContentView, 'overview'>;
+type ContentItem = { title: string; description?: string; href: string; meta?: string; logo?: string };
+type ContentCard = {
+  key: ContentView | 'roadmap' | 'cheatsheets';
+  title: string;
+  description: string;
+  href: string;
+  actionLabel: string;
+  icon: string;
+  items: ContentItem[];
+};
+
+interface Props {
+  view: ContentView;
+  tags: string[];
+  path: string;
+  slug: string;
+  roadmapItems: ContentItem[];
+  cheatsheetItems: ContentItem[];
+}
+
+const { view, tags, path, slug, roadmapItems, cheatsheetItems } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const api = Astro.locals.api;
+const listingPageSizes = {
+  articles: 8,
+  news: 8,
+  projects: 12,
+  questions: 15,
+  resources: 9,
+} as const;
+const pageSize = <View extends RelatedView>(relatedView: View) =>
+  view === relatedView ? listingPageSizes[relatedView] : 4;
+const emptyList = { items: [], total: 0, error: { code: 'REQUEST_FAILED' } };
+const emptyApiList = { data: undefined, error: { code: 'REQUEST_FAILED' } };
+const [articlesResult, newsResult, projectsResult, questionsResult, resourcesResult] = await Promise.all([
+  view === 'overview' || view === 'articles'
+    ? listArticlesQuery({ tags, page: 1, pageSize: pageSize('articles') }, api).catch(() => emptyList)
+    : emptyList,
+  view === 'overview' || view === 'news'
+    ? listNews({ tags, page: 1, pageSize: pageSize('news') }, api).catch(() => emptyList)
+    : emptyList,
+  view === 'overview' || view === 'projects'
+    ? listProjectsQuery({ tags: tags.join(','), page: 1, pageSize: pageSize('projects') }, api).catch(
+        () => emptyApiList,
+      )
+    : emptyApiList,
+  view === 'overview' || view === 'questions'
+    ? listQuestionsQuery({ tags: tags.join(','), page: 1, pageSize: pageSize('questions') }, api).catch(
+        () => emptyApiList,
+      )
+    : emptyApiList,
+  view === 'overview' || view === 'resources'
+    ? listResources({ tags, page: 1, pageSize: pageSize('resources') }, api).catch(() => emptyList)
+    : emptyList,
+]);
+
+const articleItems = articlesResult.items.map((item) => ({
+  title: item.title,
+  description: item.description,
+  href: routes.article(item.slug),
+  meta: item.author?.displayName,
+}));
+const newsItems = newsResult.items.map((item) => ({
+  title: item.title,
+  description: item.description,
+  href: routes.newsDetail(item.slug),
+}));
+const projectItems = (projectsResult.data?.data?.items ?? []).map((item) => ({
+  title: item.title,
+  description: item.summary,
+  href: routes.project(item.slug),
+}));
+const questionItems = (questionsResult.data?.data?.items ?? []).map((item) => ({
+  title: item.title,
+  description: item.tagSlugs?.join(' · '),
+  href: routes.question(item.id),
+  meta: item.answerCount !== undefined ? `${item.answerCount} ${t('codex.answers')}` : undefined,
+}));
+const resourceItems = resourcesResult.items.map((item) => ({
+  title: item.title,
+  description: item.description,
+  href: item.url,
+}));
+const cards: ContentCard[] = [
+  {
+    key: 'roadmap',
+    title: t('codex.roadmap'),
+    description: t('codex.roadmapDescription'),
+    href: routes.roadmap(slug),
+    actionLabel: t('codex.seeAll'),
+    icon: 'lucide:map',
+    items: roadmapItems,
+  },
+  {
+    key: 'cheatsheets',
+    title: t('codex.cheatsheets'),
+    description: t('codex.cheatsheetsDescription'),
+    href: routes.cheatsheets,
+    actionLabel: t('codex.seeAll'),
+    icon: 'lucide:clipboard-list',
+    items: cheatsheetItems,
+  },
+  {
+    key: 'articles',
+    title: t('codex.articles'),
+    description: t('codex.articlesDescription'),
+    href: `${path}?view=articles`,
+    actionLabel: t('codex.seeAll'),
+    icon: 'lucide:file-text',
+    items: articleItems,
+  },
+  {
+    key: 'news',
+    title: t('codex.news'),
+    description: t('codex.newsDescription'),
+    href: `${path}?view=news`,
+    actionLabel: t('codex.seeAll'),
+    icon: 'lucide:newspaper',
+    items: newsItems,
+  },
+  {
+    key: 'projects',
+    title: t('codex.projects'),
+    description: t('codex.projectsDescription'),
+    href: `${path}?view=projects`,
+    actionLabel: t('codex.seeAll'),
+    icon: 'lucide:boxes',
+    items: projectItems,
+  },
+  {
+    key: 'questions',
+    title: t('codex.questions'),
+    description: t('codex.questionsDescription'),
+    href: `${path}?view=questions`,
+    actionLabel: t('codex.seeAll'),
+    icon: 'lucide:messages-square',
+    items: questionItems,
+  },
+  {
+    key: 'resources',
+    title: t('codex.resources'),
+    description: t('codex.resourcesDescription'),
+    href: `${path}?view=resources`,
+    actionLabel: t('codex.seeAll'),
+    icon: 'lucide:link-2',
+    items: resourceItems,
+  },
+];
+const articlePopularTags = [...new Set(articlesResult.items.flatMap((item) => item.tags))].slice(0, 10);
+const emptyListingState = { query: '', tags, page: 1 };
+---
+
+{
+  view === 'overview' ? (
+    <section class="mt-6 grid items-start gap-4 md:grid-cols-2 xl:grid-cols-3" aria-label={t('codex.overviewLabel')}>
+      {cards
+        .filter((card) => !['roadmap', 'cheatsheets'].includes(card.key) || card.items.length > 0)
+        .map((card) => (
+          <CodexContentCard {...card} emptyMessage={t('codex.noRelatedContent')} />
+        ))}
+    </section>
+  ) : view === 'articles' ? (
+    <section class="mt-6" aria-label={t('codex.articles')}>
+      <ArticlesListing
+        client:load
+        initialItems={articlesResult.items}
+        initialTotal={articlesResult.total}
+        initialError={Boolean(articlesResult.error)}
+        initialResolved={!articlesResult.error}
+        pageSize={listingPageSizes.articles}
+        popularTags={articlePopularTags}
+        initialState={
+          {
+            query: '',
+            tags,
+            sort: 'recent',
+            period: 'all',
+            page: 1,
+          } satisfies ArticlesListingState
+        }
+        initialView="grid"
+        contextual
+      />
+    </section>
+  ) : view === 'news' ? (
+    <section class="mt-6" aria-label={t('codex.news')}>
+      <NewsListing
+        client:load
+        initialItems={newsResult.items}
+        initialTotal={newsResult.total}
+        initialError={Boolean(newsResult.error)}
+        initialResolved={!newsResult.error}
+        pageSize={listingPageSizes.news}
+        initialState={
+          {
+            query: '',
+            tags,
+            sort: 'recent',
+            period: 'all',
+            page: 1,
+          } satisfies NewsListingState
+        }
+        initialView="grid"
+        contextual
+      />
+    </section>
+  ) : view === 'projects' ? (
+    <section class="mt-6" aria-label={t('codex.projects')}>
+      <ProjectsListing
+        client:load
+        initialItems={projectsResult.data?.data?.items ?? []}
+        initialTotal={projectsResult.data?.data?.total ?? 0}
+        initialError={Boolean(projectsResult.error)}
+        initialResolved={!projectsResult.error}
+        pageSize={listingPageSizes.projects}
+        initialState={{ query: '', tags, sort: 'recent', page: 1 } satisfies ProjectsListingState}
+        contextual
+      />
+    </section>
+  ) : view === 'questions' ? (
+    <section class="mt-6" aria-label={t('codex.questions')}>
+      <QuestionsListing
+        client:load
+        initialItems={questionsResult.data?.data?.items ?? []}
+        initialTotal={questionsResult.data?.data?.total ?? 0}
+        initialError={Boolean(questionsResult.error)}
+        initialResolved={!questionsResult.error}
+        pageSize={listingPageSizes.questions}
+        initialState={{ query: '', tags, status: undefined, sort: 'recent', page: 1 } satisfies QuestionsListingState}
+        contextual
+      />
+    </section>
+  ) : (
+    <section class="mt-6" aria-label={t('codex.resources')}>
+      <ResourcesListing
+        client:load
+        initialItems={resourcesResult.items}
+        initialTotal={resourcesResult.total}
+        initialError={Boolean(resourcesResult.error)}
+        initialResolved={!resourcesResult.error}
+        pageSize={listingPageSizes.resources}
+        initialState={emptyListingState satisfies ResourcesListingState}
+        contextual
+      />
+    </section>
+  )
+}

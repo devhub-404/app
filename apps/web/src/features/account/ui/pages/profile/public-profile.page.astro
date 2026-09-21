@@ -1,0 +1,13 @@
+---
+import PublicProfilePageContent from '@/features/account/ui/components/profile/public-profile-page-content.component.astro';
+
+interface Props {
+  username: string;
+  initialProfile?: import('@/features/account/types/profile.type.ts').PublicProfileDTO | null;
+  initialError?: boolean;
+}
+
+const { username, initialProfile, initialError } = Astro.props;
+---
+
+  <PublicProfilePageContent {username} {initialProfile} {initialError} />

@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import EventsAdminList from '@/features/panel/ui/components/events-admin-list.component.tsx';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="events"
+    heading={translateI18n(locale, 'events.events')}
+    subheading={translateI18n(locale, 'events.inventoryTrackingEventsCommunity')}
+  >
+    <EventsAdminList locale={locale} role={Astro.locals.account?.role ?? null} client:load />
+  </PanelPageComposition>

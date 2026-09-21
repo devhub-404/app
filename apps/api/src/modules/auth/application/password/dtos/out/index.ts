@@ -1,0 +1,10 @@
+export { PasswordRegisterStartResponseDTO } from '@/modules/auth/application/password/dtos/out/password-register-start-response.dto';
+export { PasswordRegistrationCompletedDTO } from '@/modules/auth/application/password/dtos/out/password-registration-completed.dto';
+export { PasswordLoginStartResponseDTO } from '@/modules/auth/application/password/dtos/out/password-login-start-response.dto';
+export { PasswordLoginCompleteDTO } from '@/modules/auth/application/password/dtos/out/password-login-complete.dto';
+export { PasswordChangeStartResponseDTO } from '@/modules/auth/application/password/dtos/out/password-change-start-response.dto';
+export { PasswordRecoverPrepareResponseDTO } from '@/modules/auth/application/password/dtos/out/password-recover-prepare-response.dto';
+export { PasswordCredentialCreatedDTO } from '@/modules/auth/application/password/dtos/out/password-credential-created.dto';
+export { PasswordRecoveryCompletedDTO } from '@/modules/auth/application/password/dtos/out/password-recovery-completed.dto';
+export { PasswordChangedDTO } from '@/modules/auth/application/password/dtos/out/password-changed.dto';
+export * from '@/modules/auth/application/password/dtos/out/password-command-result.dto';

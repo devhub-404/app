@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import ActiveSessions from '@/features/account/ui/components/active-sessions.component.tsx';
+import { translate as translateI18n } from '@/features/account/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="sessions"
+    heading={translateI18n(locale, 'sessionssettings.sessionsActive')}
+    subheading={translateI18n(locale, 'sessionssettings.manageWhichDevicesRemainSignedInAccount')}
+  >
+    <ActiveSessions locale={locale} client:load />
+  </AccountPageComposition>

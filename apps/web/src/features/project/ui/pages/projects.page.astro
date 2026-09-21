@@ -1,0 +1,16 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import ProjectsPageContent from '../components/projects-page-content.component.astro';
+import { translate as translateI18n } from '@/features/project/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+  <SectionHeader
+    eyebrow={t('projectsindex.portfolioTechnical')}
+    title={t('projectmanagement.projects')}
+    description={t('projectsindex.softwareJobsDevelopersBuildPresentHowPartOwnJourney')}
+  />
+  <Container size="full" class="py-8 sm:py-10"><ProjectsPageContent /></Container>

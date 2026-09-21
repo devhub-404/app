@@ -1,0 +1,21 @@
+[
+  {
+    "id": "65000000-0000-4000-8000-000000000001",
+    "resourceId": "c0000000-0000-4000-8000-000000000004",
+    "reporterAccountId": "22222222-2222-4222-8222-222222222222",
+    "reason": "outdated",
+    "description": "A referência está arquivada e precisa de revisão.",
+    "status": "pending"
+  },
+  {
+    "id": "65000000-0000-4000-8000-000000000002",
+    "resourceId": "c0000000-0000-4000-8000-000000000003",
+    "reporterAccountId": "44444444-4444-4444-8444-444444444444",
+    "reason": "duplicate",
+    "description": "Registro resolvido para cobrir o fluxo de decisão.",
+    "status": "dismissed",
+    "reviewedByAccountId": "33333333-3333-4333-8333-333333333333",
+    "decisionNote": "A referência continua sendo a fonte canônica.",
+    "reviewedAt": "2026-08-23T13:00:00.000Z"
+  }
+]

@@ -1,0 +1,15 @@
+---
+import { getOrganizationQuery, OrganizationPage } from '@/features/organization/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/organization/i18n';
+
+const locale = Astro.locals.locale;
+const slug = Astro.params['slug'] ?? '';
+const organization = await getOrganizationQuery(slug, { client: Astro.locals.api });
+if (!organization.ok && organization.status === 404) return Astro.redirect('/404');
+if (!organization.ok) throw new Error(organization.code);
+---
+
+<AppLayout title={translate(locale, 'organization.devhubOrganization')} description={translate(locale, 'organization.organizationEcosystemDevhub')} keywords="devhub,organization">
+  <OrganizationPage initialOrganization={organization.ok ? organization.data : null} />
+</AppLayout>

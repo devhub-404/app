@@ -1,0 +1,35 @@
+---
+import { translate, type TranslationKey } from '@/features/home/i18n';
+
+const t = (key: TranslationKey) => translate(Astro.locals.locale, key);
+const steps = [
+  ['home.step.need', 'home.step.needDescription', '01'],
+  ['home.step.find', 'home.step.findDescription', '02'],
+  ['home.step.advance', 'home.step.advanceDescription', '03'],
+] as const;
+---
+
+<section class="border-y border-line bg-surface-subtle px-6 py-16 sm:py-20">
+  <div class="mx-auto w-full max-w-6xl">
+    <div class="max-w-2xl">
+      <p class="text-eyebrow">{t('home.stepsEyebrow')}</p>
+      <h2 class="heading-large-section mt-3">{t('home.stepsTitle')}</h2>
+      <p class="text-muted-body mt-4">{t('home.stepsDescription')}</p>
+    </div>
+    <ol class="mt-9 grid gap-3 md:grid-cols-3">
+      {
+        steps.map(([title, description, number]) => (
+          <li class="rounded-[16px] border border-line bg-surface p-6">
+            <p class="text-accent">{number}</p>
+            <h3 class="heading-subsection mt-7 text-xl">
+              {t(title)}
+            </h3>
+            <p class="text-muted-body mt-3">
+              {t(description)}
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "11100000-0000-4000-8000-000000000001",
+    "url": "https://www.rust-lang.org/governance/",
+    "submittedByAccountId": "22222222-2222-4222-8222-222222222222",
+    "status": "pending"
+  },
+  {
+    "id": "11100000-0000-4000-8000-000000000002",
+    "url": "https://github.blog/engineering/",
+    "submittedByAccountId": "22222222-2222-4222-8222-222222222222",
+    "status": "accepted",
+    "newsId": "b0000000-0000-4000-8000-000000000001",
+    "createdAt": "2026-08-18T12:00:00.000Z",
+    "resolvedAt": "2026-08-19T12:00:00.000Z"
+  }
+]

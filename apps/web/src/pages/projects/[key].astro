@@ -1,0 +1,21 @@
+---
+import { ProjectPage, getProjectQuery, type Project } from '@/features/project/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/project/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1], args?: unknown[]) => translateI18n(locale, key, args);
+
+const result = await getProjectQuery(Astro.params['key'] ?? '', Astro.locals.api);
+const project: Project | null = result.data?.data ?? null;
+if (result.response?.status === 404 || (!result.error && !project)) return Astro.redirect('/404');
+if (result.error) throw new Error(result.error.code ?? 'PROJECT_REQUEST_FAILED');
+---
+
+<AppLayout
+  title={project?.title ?? t('projectdetail.devhubProject')}
+  description={project?.summary ?? t('projectdetail.projectPresentedDeveloper')}
+  keywords="devhub,project"
+>
+      <ProjectPage project={project} failed={false} />
+</AppLayout>

@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import AccountViewsPage from '@/features/account/ui/components/interactions/account-views-page.component.tsx';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="views"
+    heading={translateI18n(locale, 'views.views')}
+    subheading={translateI18n(locale, 'views.understandHowDevhubHandlesViews')}
+  >
+    <AccountViewsPage locale={locale} client:load />
+  </AccountPageComposition>

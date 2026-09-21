@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import { RoadmapPage } from '@/features/roadmap/public';
+import { selectLocalizedEntries } from '@/shared/content/localized-entries';
+import AppLayout from '@/app/ui/AppLayout.astro';
+
+const entries = selectLocalizedEntries(
+  await getCollection('roadmaps', ({ data }) => data.status === 'published'),
+  Astro.locals.locale,
+);
+const entry = entries.find((item) => item.data.slug === (Astro.params['slug'] ?? ''));
+if (!entry) return Astro.redirect('/404');
+---
+
+<AppLayout
+  title={`DevHub - ${entry.data.title}`}
+  description={entry.data.description}
+  keywords={`devhub,roadmap,${entry.data.metadata.tags.join(',')}`}
+>
+  <RoadmapPage entry={entry} entries={entries} />
+</AppLayout>

@@ -1,0 +1,65 @@
+---
+import '@/shared/ui/styles/index.css';
+import { ClientRouter } from 'astro:transitions';
+import { baseURL } from '@/shared/api';
+import { routes } from '@/shared/navigation/routes';
+import { localeToHtmlLang, translate } from '@/shared/i18n/app';
+import type { PageMetadata } from '@/shared/ui/metadata/page-metadata.type.ts';
+
+interface Props extends PageMetadata {}
+
+const props = Astro.props;
+const locale = Astro.locals.locale;
+const preconnectOrigin = (() => {
+  const origin = new URL(baseURL, Astro.url);
+  const hostname = origin.hostname.toLowerCase();
+
+  if (origin.origin === Astro.url.origin) return null;
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') return null;
+
+  return origin.origin;
+})();
+---
+
+<html
+  lang={localeToHtmlLang(locale)}
+  transition:animate="none"
+  data-locale={locale}
+  data-theme="devhub"
+  data-codex-base={props.codexBase}
+  style={props.codexBase ? `--codex-base: ${props.codexBase};` : undefined}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{props.title}</title>
+    <meta name="author" content={props.author ?? translate(locale, 'globallayout.author')} />
+    <meta name="description" content={props.description} />
+    <meta name="keywords" content={props.keywords} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content={props.title} />
+    <meta property="og:description" content={props.description} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={props.title} />
+    <meta name="twitter:description" content={props.description} />
+    <slot name="head" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {preconnectOrigin && <link rel="preconnect" href={preconnectOrigin} crossorigin="anonymous" />}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={translate(locale, 'globallayout.devhubArticles')}
+      href={routes.rss.articles}
+    />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={translate(locale, 'globallayout.devhubNews')}
+      href={routes.rss.news}
+    />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body class="bg-canvas" data-codex-base={props.codexBase}>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,65 @@
+---
+type RoadmapTopic = {
+  id: string;
+  title: string;
+  references: Array<{ label: string; url: string }>;
+};
+
+type RoadmapSection = {
+  id: string;
+  title: string;
+  topics: RoadmapTopic[];
+};
+
+interface Props {
+  roadmapHref: string;
+  sections: RoadmapSection[];
+  selectedTopicId?: string;
+}
+
+const { roadmapHref, sections, selectedTopicId } = Astro.props;
+const selectedSectionId = sections.find((section) => section.topics.some((topic) => topic.id === selectedTopicId))?.id;
+const topicHref = (topicId: string) => `${roadmapHref}?topic=${encodeURIComponent(topicId)}`;
+---
+
+<div class="mt-5 space-y-5">
+  {
+    sections.map((section, sectionIndex) => (
+      <details id={`section-${section.id}`} open={section.id === selectedSectionId} class="group">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-3 text-left marker:content-none">
+          <span class="block text-sm font-semibold text-content">
+            {String(sectionIndex + 1).padStart(2, '0')} {section.title}
+          </span>
+          <span class="flex shrink-0 items-center gap-2 text-xs text-content-muted">
+            <span>{section.topics.length}</span>
+            <span aria-hidden="true" class="transition-transform duration-standard ease-standard group-open:rotate-180">
+              ⌄
+            </span>
+          </span>
+        </summary>
+        <ol class="mt-3 space-y-1 border-l border-line pl-3">
+          {section.topics.map((topic, topicIndex) => (
+            <li>
+              <a
+                href={topicHref(topic.id)}
+                data-astro-prefetch
+                class:list={[
+                  'block w-full rounded-lg px-3 py-2 text-left text-xs transition duration-standard ease-standard',
+                  topic.id === selectedTopicId
+                    ? 'bg-action-subtle font-semibold text-content-accent'
+                    : 'text-content-muted hover:bg-surface-subtle hover:text-content',
+                ]}
+                aria-current={topic.id === selectedTopicId ? 'page' : undefined}
+              >
+                <span class="mr-2 text-xs">
+                  {sectionIndex + 1}.{topicIndex + 1}
+                </span>
+                {topic.title}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </details>
+    ))
+  }
+</div>

@@ -1,0 +1,11 @@
+---
+import { ResourcesNewPage } from '@/features/resource/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/resource/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout title={translate(locale, 'resourcesnew.devhubCreateResource')} description={translate(locale, 'resourcesnew.createResourceEditorialPublishedDirectly')} keywords="devhub,resource,editorial">
+  <ResourcesNewPage />
+</AppLayout>

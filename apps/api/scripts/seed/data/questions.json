@@ -1,0 +1,31 @@
+[
+  {
+    "id": "e0000000-0000-4000-8000-000000000001",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Como saber se um módulo atravessou seu boundary?",
+    "content": "Estou modelando um monólito modular. Quais sinais observáveis indicam que um módulo está atravessando ownership indevidamente?",
+    "status": "open"
+  },
+  {
+    "id": "e0000000-0000-4000-8000-000000000002",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Quando um índice PostgreSQL deixa de compensar?",
+    "content": "Como comparar o custo de manutenção de um índice com o ganho real de uma consulta em produção?",
+    "status": "closed"
+  },
+  {
+    "id": "e0000000-0000-4000-8000-000000000003",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Como testar retry de uma integração externa?",
+    "content": "Quais invariantes ajudam a provar que um retry não duplica o efeito externo?",
+    "status": "open"
+  },
+  {
+    "id": "e0000000-0000-4000-8000-000000000004",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Qual é a melhor forma de preservar um formulário em erro?",
+    "content": "Quero distinguir erro de validação, falha de rede e conflito sem perder o que a pessoa já digitou.",
+    "status": "open",
+    "hiddenAt": "2026-08-22T12:00:00.000Z"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "name": "@devhub-404/worker-purge",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "build": "tsc --noEmit",
+    "check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "start": "wrangler dev --local",
+    "deploy": "pnpm build && wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260919.1",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "wrangler": "^4.135.0"
+  }
+}

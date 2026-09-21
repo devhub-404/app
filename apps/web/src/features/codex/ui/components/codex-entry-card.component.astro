@@ -1,0 +1,41 @@
+---
+import { translate as translateI18n } from '../../i18n';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'codex'>;
+}
+const { entry } = Astro.props;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(Astro.locals.locale, key);
+---
+
+<article
+  class="flex h-full flex-col rounded-2xl border border-line bg-surface-elevated p-5 transition hover:-translate-y-0.5 hover:border-action-border"
+>
+  <div
+    class="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[.16em] text-content-muted"
+  >
+    <span class="flex items-center gap-2"
+      ><img src={entry.data.branding.logo} alt="" class="size-5 object-contain" width="96" height="96" />Codex</span
+    >
+  </div>
+  <h2 class="heading-subsection mt-4 text-xl">
+    <a href={`/codex/${entry.data.slug}`} class="hover:text-content-accent">{entry.data.title}</a>
+  </h2>
+  <p class="text-muted-body mt-3 flex-1">{entry.data.description}</p>
+  <div class="mt-5 flex flex-wrap gap-2">
+    {
+      entry.data.tags.map((tag) => (
+        <a
+          href={`/codex?tags=${encodeURIComponent(tag)}`}
+          class="rounded-full bg-surface-subtle px-2.5 py-1 text-xs text-content-muted hover:text-content-accent"
+        >
+          {tag}
+        </a>
+      ))
+    }
+  </div>
+  <a href={`/codex/${entry.data.slug}`} class="mt-5 text-sm font-semibold text-content-accent"
+    >{t('codex.readEntry')} →</a
+  >
+</article>

@@ -1,0 +1,15 @@
+---
+import { RoadmapsPage } from '@/features/roadmap/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/roadmap/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+<AppLayout
+  title={translateI18n(locale, 'roadmaps.devhubRoadmaps')}
+  description={translateI18n(locale, 'roadmaps.pathsStructuredLearnPracticeDevelopment')}
+  keywords="devhub,roadmaps,learning,development"
+>
+  <RoadmapsPage />
+</AppLayout>

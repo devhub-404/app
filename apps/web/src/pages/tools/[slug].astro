@@ -1,0 +1,15 @@
+---
+import { getTool, ToolPage } from '@/features/tool/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/tool/i18n';
+
+const tool = getTool(Astro.params['slug'] ?? '');
+const locale = Astro.locals.locale;
+if (!tool) return Astro.redirect('/404');
+const title = translateI18n(locale, tool.titleKey);
+const description = translateI18n(locale, tool.descriptionKey);
+---
+
+<AppLayout title={`DevHub - ${title}`} description={description} keywords={`devhub,tools,${tool.tags.join(',')}`}>
+  <ToolPage tool={tool} />
+</AppLayout>

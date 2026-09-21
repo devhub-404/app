@@ -1,0 +1,22 @@
+export const catalog = {
+  'feedbacklauncher.happenedOrYouSuggests': '¿Qué ocurrió o qué sugieres?',
+  'feedbacklauncher.helpImproveDevhub404': 'Ayuda a mejorar DevHub 404.',
+  'feedbacklauncher.description': 'Descripción',
+  'feedbacklauncher.sendFeedback': 'Enviar feedback',
+  'feedbacklauncher.close': 'Cerrar',
+  'feedbacklauncher.couldNotAttachScreenshottryAgain':
+    'No se pudo adjuntar la captura de pantalla. Inténtalo de nuevo.',
+  'feedbacklauncher.sendFailedTryAgain': 'No se pudo enviar el feedback. Inténtalo de nuevo.',
+  'feedbacklauncher.suggestion': 'Sugerencia',
+  'feedback.category.bug': 'Bug',
+  'feedback.category.issue': 'Problema',
+  'feedback.screenshotAttached': 'Captura de pantalla adjunta',
+  'feedback.attachScreenshot': 'Adjuntar captura de pantalla (opcional)',
+  'feedback.attachingScreenshot': 'Adjuntando captura de pantalla…',
+  'feedback.sending': 'Enviando…',
+  'feedbacklauncher.descriptionTooShort': 'Describe lo ocurrido en al menos 10 caracteres.',
+  'feedback.validation.descriptionTooShort': 'La descripción debe tener al menos 10 caracteres.',
+  'feedback.validation.descriptionTooLong': 'La descripción debe tener como máximo 4000 caracteres.',
+  'feedback.validation.contextUrlTooLong': 'La URL de contexto es demasiado larga.',
+  'feedback.validation.contextUrlInvalid': 'La URL de contexto no es válida.',
+} as const;

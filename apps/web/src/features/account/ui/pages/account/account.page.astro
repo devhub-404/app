@@ -1,0 +1,15 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import AccountOverview from '@/features/account/ui/components/account-overview.component.tsx';
+import { translate as translateI18n } from '@/features/account/i18n';
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+  <AccountPageComposition
+    active="overview"
+    heading={t('usermenu.account')}
+    subheading={t('accountindex.viewStatusDataAccessWorkDevhub')}
+  >
+    <AccountOverview locale={locale} client:load />
+  </AccountPageComposition>

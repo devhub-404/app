@@ -1,0 +1,62 @@
+[
+  {
+    "id": "f0000000-0000-4000-8000-000000000001",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Local Stack Observatory",
+    "slug": "local-stack-observatory",
+    "summary": "Painel para acompanhar saúde e estado de um stack local.",
+    "description": "Projeto experimental para tornar health checks, mailbox local e jobs pendentes compreensíveis durante o desenvolvimento.",
+    "projectUrl": "https://local.devhub.example/observatory",
+    "repositoryUrl": "https://github.com/devhub-community/local-stack-observatory",
+    "status": "published",
+    "publishedAt": "2026-08-18T12:00:00.000Z"
+  },
+  {
+    "id": "f0000000-0000-4000-8000-000000000002",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Typed Boundary Kit",
+    "slug": "typed-boundary-kit",
+    "summary": "Exemplos de contratos públicos para módulos TypeScript.",
+    "description": "Uma coleção de pequenos exemplos que mostram DTOs de entrada, projeções de saída e regras de import sem acoplar domínio à infraestrutura.",
+    "projectUrl": "https://typed-boundary.example",
+    "repositoryUrl": "https://github.com/devhub-community/typed-boundary-kit",
+    "status": "published",
+    "publishedAt": "2026-08-16T12:00:00.000Z"
+  },
+  {
+    "id": "f0000000-0000-4000-8000-000000000003",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Notas de Banco",
+    "slug": "notas-de-banco",
+    "summary": "Laboratório de planos de consulta e migrações PostgreSQL.",
+    "description": "Um espaço para registrar experimentos reproduzíveis de índices, locks e evolução de schemas.",
+    "projectUrl": "https://notas-banco.example",
+    "repositoryUrl": "https://github.com/devhub-community/notas-de-banco",
+    "status": "archived",
+    "publishedAt": "2026-08-12T12:00:00.000Z",
+    "hiddenAt": "2026-08-22T12:00:00.000Z"
+  },
+  {
+    "id": "f0000000-0000-4000-8000-000000000004",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "Acessibilidade na prática",
+    "slug": "acessibilidade-na-pratica",
+    "summary": "Casos de teste para interfaces recuperáveis e navegáveis.",
+    "description": "Projeto em desenvolvimento para comparar feedback, foco, semântica e comportamento responsivo em fluxos reais.",
+    "projectUrl": "https://a11y-pratica.example",
+    "repositoryUrl": "https://github.com/devhub-community/a11y-pratica",
+    "status": "draft"
+  },
+  {
+    "id": "f0000000-0000-4000-8000-000000000005",
+    "authorAccountId": "22222222-2222-4222-8222-222222222222",
+    "title": "DevHub Content Lab",
+    "slug": "devhub-content-lab",
+    "summary": "Ambiente de referência para superfícies de conhecimento.",
+    "description": "Protótipo institucional usado para validar descoberta, autoria, curadoria e governança de conteúdo técnico.",
+    "projectUrl": "http://localhost:4321",
+    "repositoryUrl": "https://github.com/devhub-community/devhub-content-lab",
+    "status": "published",
+    "publishedAt": "2026-08-10T12:00:00.000Z"
+  }
+]

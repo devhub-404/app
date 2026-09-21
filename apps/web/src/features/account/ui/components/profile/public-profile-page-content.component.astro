@@ -1,0 +1,27 @@
+---
+import PublicProfile from './public-profile.component.tsx';
+import type { PublicProfileDTO } from '@/features/account/types/profile.type.ts';
+
+interface Props {
+  username: string;
+  initialProfile?: PublicProfileDTO | null;
+  initialError?: boolean;
+}
+
+const { username, initialProfile, initialError } = Astro.props;
+const locale = Astro.locals.locale;
+---
+
+<div>
+  <div class="px-6 pb-10 pt-6">
+    <div class="mx-auto w-full max-w-4xl">
+      <PublicProfile
+        username={username}
+        initialProfile={initialProfile}
+        initialError={initialError}
+        locale={locale}
+        client:load
+      />
+    </div>
+  </div>
+</div>

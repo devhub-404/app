@@ -1,0 +1,638 @@
+---
+import { Icon } from 'astro-icon/components';
+import { formatPublicDate } from '@/shared/utils/format-public-date.util.ts';
+import { routes } from '@/shared/navigation/routes';
+import { translate as translateI18n } from '@/features/article/i18n';
+import type { ArticleItem } from '@/features/article/types/article.type.ts';
+import ArticleCardActions from './article-card-actions.component.tsx';
+import TagLink from '@/shared/ui/components/navigation/tag-link.component.tsx';
+interface Props {
+  article: ArticleItem;
+}
+const { article } = Astro.props;
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1], args?: unknown[]) => translateI18n(locale, key, args);
+const href = routes.article(article.slug);
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>
+
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>
+
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>
+
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>
+
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>
+
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>
+
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>
+
+---
+
+<article class="grid grid-cols-[40%_minmax(0,1fr)] gap-4 p-4 max-[700px]:block max-[700px]:p-3">
+  <div
+    class="relative min-h-48 overflow-hidden rounded-xl bg-surface-inset max-[700px]:mb-3 max-[700px]:h-36 max-[700px]:min-h-0"
+  >
+    <a href={href} aria-label={article.title} class="absolute inset-0 block overflow-hidden">
+      {
+        article.coverImageUrl ? (
+          <img src={article.coverImageUrl} alt="" loading="eager" class="absolute inset-0 size-full object-cover" />
+        ) : (
+          <div class="absolute inset-0 overflow-hidden bg-accent-gradient after:absolute after:top-[18%] after:left-[16%] after:h-[45%] after:w-[70%] after:skew-y-[-8deg] after:rounded after:border-4 after:border-line-strong after:bg-surface-inset" />
+        )
+      }
+    </a>
+  </div>
+  <div class="min-w-0 pt-1 pr-2 max-[700px]:p-0">
+    <p class="text-featured-label m-0 flex items-center gap-[.45rem]">
+      <Icon name="lucide:book-open" size={15} />{t('listing.featured')}
+    </p>
+    <h2 class="heading-feature-card mt-[.55rem] mb-[.45rem]">
+      <a href={href} class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated">{article.title}</a>
+    </h2>
+    <p class="text-featured-description m-0 max-w-xl">{article.description}</p>
+    <div class="mt-[.65rem] flex flex-wrap gap-[.45rem]">
+      {article.tags.map((tag) => <TagLink slug={tag.slug} label={tag.name} />)}
+    </div>
+    <div
+      class="mt-[.8rem] flex flex-wrap items-center gap-[.7rem] text-[.72rem] text-content-muted max-[700px]:text-[.66rem]"
+    >
+      <span
+        class="inline-flex size-[1.65rem] shrink-0 items-center justify-center rounded-full bg-action-deep text-xs font-bold text-content-inverse"
+        aria-hidden="true">{(article.author?.displayName || article.author?.username || '?').slice(0, 1)}</span
+      >
+      <span
+        >{
+          article.author ? (
+            <a
+              class="rounded-sm outline-none hover:text-content-accent focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-elevated"
+              href={routes.profile(article.author.username)}
+            >
+              {article.author.displayName || article.author.username}
+            </a>
+          ) : (
+            t('articledetail.authorUnavailable')
+          )
+        }</span
+      >
+      <span class="inline-flex items-center gap-1"
+        ><Icon name="lucide:clock-3" size={16} />{article.readingTimeMinutes} min</span
+      >
+      <span class="inline-flex items-center gap-1 max-[700px]:hidden"
+        ><Icon name="lucide:calendar-days" size={16} />{
+          formatPublicDate(article.publishedAt ?? article.updatedAt, locale)
+        }</span
+      >
+      <span
+        title={t('articledetail.views')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] max-[700px]:hidden"
+        ><Icon name="lucide:eye" size={15} />{article.views}</span
+      >
+      <a
+        href={`${href}#article-comments`}
+        aria-label={t('articledetail.comments')}
+        class="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.65rem] hover:text-content-accent max-[700px]:hidden"
+        ><Icon name="lucide:message-circle" size={15} />{article.commentCount}</a
+      >
+      <ArticleCardActions
+        articleId={article.id}
+        slug={article.slug}
+        title={article.title}
+        locale={locale}
+        client:visible
+      />
+    </div>
+  </div>
+</article>

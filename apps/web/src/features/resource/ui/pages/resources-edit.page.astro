@@ -1,0 +1,17 @@
+---
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import { routes } from '@/shared/navigation/routes';
+import EditResourceForm from '../components/forms/edit-resource-form.component.tsx';
+import { translate as translateI18n } from '@/features/resource/i18n';
+const { id } = Astro.params;
+---
+
+  <div class="py-6 sm:py-10">
+    <Container size="full">
+      <div class="mb-6">
+        <BackLink href={routes.resources} label={translateI18n(Astro.locals.locale, 'resourcesedit.resources')} />
+      </div>
+      <EditResourceForm locale={Astro.locals.locale} client:load id={id ?? ''} />
+    </Container>
+  </div>

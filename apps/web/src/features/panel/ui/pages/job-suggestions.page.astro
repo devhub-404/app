@@ -1,0 +1,14 @@
+---
+import PanelPageComposition from '@/features/panel/ui/components/panel-page-composition.component.astro';
+import JobSuggestionsAdminList from '@/features/panel/ui/components/job-suggestions-admin-list.component.tsx';
+import { translate as translateI18n } from '@/features/panel/i18n';
+const locale = Astro.locals.locale;
+---
+
+  <PanelPageComposition
+    active="job-suggestions"
+    heading={translateI18n(locale, 'jobsuggestions.title')}
+    subheading={translateI18n(locale, 'jobsuggestions.description')}
+  >
+    <JobSuggestionsAdminList locale={locale} client:load />
+  </PanelPageComposition>

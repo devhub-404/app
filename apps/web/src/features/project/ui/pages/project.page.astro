@@ -1,0 +1,149 @@
+---
+import { Icon } from 'astro-icon/components';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import BackLink from '@/shared/ui/components/navigation/back-link.component.astro';
+import ProjectActions from '@/features/project/ui/components/project-actions.component.tsx';
+import type { Project } from '@/features/project/types/project.type.ts';
+import { translate as translateI18n } from '@/features/project/i18n';
+import { routes } from '@/shared/navigation/routes';
+import TagLink from '@/shared/ui/components/navigation/tag-link.component.tsx';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1], args?: unknown[]) => translateI18n(locale, key, args);
+interface Props {
+  project: Project | null;
+  failed: boolean;
+}
+
+const { project, failed } = Astro.props;
+---
+
+  <div class="pb-10 sm:pb-14">
+    <Container>
+      <div class="py-5 sm:py-6">
+        <BackLink href={routes.projects} label={t('projectmanagement.projects')} />
+      </div>
+
+      {
+        project ? (
+          <article class="rounded-3xl border border-line bg-surface-elevated p-5 shadow-sm sm:p-8">
+            <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+              <div class="grid min-w-0 gap-6">
+                <div class="grid gap-3">
+                  <div class="grid gap-1">
+                    <p class="text-accent-label">{t('projectdetail.project')}</p>
+                    <p class="text-caption">{project.status}</p>
+                  </div>
+                  <h1 class="heading-detail">
+                    {project.title}
+                  </h1>
+
+                  <div class="flex flex-wrap gap-2" aria-label={t('projectdetail.actionsProject')}>
+                    {project.projectUrl && (
+                      <a
+                        href={project.projectUrl}
+                        rel="noreferrer"
+                        target="_blank"
+                        class="grid size-10 place-items-center rounded-xl bg-action text-content-on-accent shadow-sm hover:bg-action-hover"
+                        title={t('projectdetail.openProject')}
+                        aria-label={t('projectdetail.openProject')}
+                      >
+                        <Icon name="lucide:external-link" size={16} />
+                      </a>
+                    )}
+                    {project.repositoryUrl && (
+                      <a
+                        href={project.repositoryUrl}
+                        rel="noreferrer"
+                        target="_blank"
+                        class="grid size-10 place-items-center rounded-xl border border-line bg-surface hover:border-action-border hover:bg-surface-subtle"
+                        title={t('projectdetail.openRepository')}
+                        aria-label={t('projectdetail.openRepository')}
+                      >
+                        <Icon name="lucide:git-branch" size={16} />
+                      </a>
+                    )}
+                    <ProjectActions
+                      project={{
+                        id: project.id,
+                        slug: project.slug,
+                        title: project.title,
+                        authorAccountId: project.authorAccountId,
+                      }}
+                      shareLabel={t('projectdetail.shareProject')}
+                      copiedLabel={t('projectdetail.linkCopied')}
+                      manageLabel={t('projectdetail.manageProject')}
+                      locale={locale}
+                      client:load
+                    />
+                  </div>
+
+                  {project.author && (
+                    <p class="text-muted">
+                      {t('projectdetail.by')}
+                      <a class="font-semibold text-content-accent" href={routes.profile(project.author.username)}>
+                        {project.author.displayName || project.author.username}
+                      </a>
+                    </p>
+                  )}
+                  <p class="text-muted">{project.summary}</p>
+                  <div class="flex flex-wrap gap-2">
+                    {project.tagSlugs.map((tag) => (
+                      <TagLink slug={tag} />
+                    ))}
+                  </div>
+                </div>
+                <div class="whitespace-pre-wrap text-content">{project.description}</div>
+              </div>
+
+              <aside class="space-y-4 lg:sticky lg:top-6">
+                <section class="grid gap-4 rounded-2xl border border-line bg-surface p-5">
+                  <h2 class="heading-tiny text-xs">
+                    {t('projectdetail.aboutProject')}
+                  </h2>
+                  <dl class="grid gap-3 text-sm">
+                    <div class="grid gap-1">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('projectdetail.status')}</dt>
+                        <dd class="font-semibold text-content">{project.status}</dd>
+                      </>
+                    </div>
+                    {project.author && (
+                      <div class="grid gap-1">
+                        <dt class="text-xs text-content-muted">{t('projectdetail.author')}</dt>
+                        <dd class="font-semibold text-content">
+                          {project.author.displayName || project.author.username}
+                        </dd>
+                      </div>
+                    )}
+                    <div class="grid gap-2">
+                      <>
+                        <dt class="text-xs text-content-muted">{t('editproject.tags')}</dt>
+                        <dd class="flex flex-wrap gap-2">
+                          {project.tagSlugs.map((tag) => (
+                            <a href={routes.searchByTag(tag)} class="text-content-accent hover:underline">
+                              #{tag}
+                            </a>
+                          ))}
+                        </dd>
+                      </>
+                    </div>
+                  </dl>
+                </section>
+                <section class="grid gap-2 rounded-2xl border border-action-border bg-action-subtle p-5">
+                  <h2 class="heading-callout text-sm">
+                    {t('projectdetail.wantKnowProject')}
+                  </h2>
+                  <p class="text-muted-compact">{t('projectdetail.useCommandsAboveOpenDemoOrContinueRepository')}</p>
+                </section>
+              </aside>
+            </div>
+          </article>
+        ) : (
+          <section class="rounded-2xl border border-line bg-surface p-6 text-sm text-content-muted">
+            {failed ? t('projectdetail.couldNotLoadProject') : t('projectdetail.projectNotFound')}
+          </section>
+        )
+      }
+    </Container>
+  </div>

@@ -1,0 +1,23 @@
+---
+import ContributionCallout from '@/shared/ui/components/surfaces/contribution-callout.component.astro';
+import ResourceSuggestionForm from '@/features/resource/ui/components/suggestion/resource-suggestion-form.component.tsx';
+import ResourceRanking from './resource-ranking.component.tsx';
+import { translate as translateI18n } from '@/features/resource/i18n';
+import type { Locale } from '@/shared/i18n/core';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+---
+
+<ContributionCallout
+  eyebrow={t('resources.contribute')}
+  title={t('resources.sendResource')}
+  description={t('resources.shareReferenceExternalUsefulSendOnlyUrlCurationEditorial')}
+>
+  <ResourceSuggestionForm client:load locale={locale} />
+</ContributionCallout>
+<ResourceRanking client:visible locale={locale} />

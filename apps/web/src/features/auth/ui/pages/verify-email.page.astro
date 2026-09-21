@@ -1,0 +1,14 @@
+---
+import AuthPageComposition from '@/features/auth/ui/components/auth-page-composition.component.astro';
+import VerifyEmailNotice from '@/features/auth/ui/components/verify-email-notice.component.tsx';
+import { translate } from '@/features/auth/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+  <AuthPageComposition
+    title={translate(locale, 'page.verifyTitle')}
+    subtitle={translate(locale, 'page.verifySubtitle')}
+  >
+    <VerifyEmailNotice locale={locale} client:load />
+  </AuthPageComposition>

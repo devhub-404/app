@@ -1,0 +1,20 @@
+[
+  {
+    "id": "12000000-0000-4000-8000-000000000001",
+    "reporterAccountId": "22222222-2222-4222-8222-222222222222",
+    "category": "suggestion",
+    "description": "Adicionar uma indicação visual para o estado de sincronização local.",
+    "contextUrl": "http://localhost:4321/",
+    "status": "open"
+  },
+  {
+    "id": "12000000-0000-4000-8000-000000000002",
+    "reporterAccountId": "33333333-3333-4333-8333-333333333333",
+    "category": "bug",
+    "description": "A visualização de conteúdo precisa preservar o filtro após voltar da página de detalhe.",
+    "contextUrl": "http://localhost:4321/articles",
+    "status": "resolved",
+    "internalSeverity": "medium",
+    "resolvedAt": "2026-08-23T12:00:00.000Z"
+  }
+]

@@ -1,0 +1,84 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Item {
+  title: string;
+  description?: string;
+  href: string;
+  meta?: string;
+  logo?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  actionLabel: string;
+  icon: string;
+  items: Item[];
+  limit?: number;
+  emptyMessage?: string;
+}
+
+const { title, description, href, actionLabel, icon, items, limit = 4, emptyMessage } = Astro.props;
+---
+
+<article class="flex min-h-0 flex-col rounded-2xl border border-line bg-surface-elevated p-4 shadow-ui-surface sm:p-5">
+  <header class="flex items-start gap-3">
+    <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-action/15 text-content-accent">
+      <Icon name={icon} size={20} aria-hidden="true" />
+    </span>
+    <div class="min-w-0 flex-1">
+      <h2 class="heading-callout text-base">{title}</h2>
+      <p class="text-muted-compact mt-1">{description}</p>
+    </div>
+    <a
+      href={href}
+      class="shrink-0 text-xs font-semibold text-content-accent hover:text-content"
+      aria-label={`${actionLabel}: ${title}`}
+    >
+      <span class="hidden sm:inline">{actionLabel}</span>
+      <Icon name="lucide:arrow-right" size={16} class="sm:ml-1 sm:inline" aria-hidden="true" />
+    </a>
+  </header>
+
+  <ul class="mt-4 space-y-1.5">
+    {
+      items.length > 0 ? (
+        items.slice(0, limit).map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="group flex items-center gap-3 rounded-xl border border-line bg-surface-subtle/50 px-3 py-2.5 transition-colors hover:border-action-border hover:bg-hover"
+            >
+              <span class="grid size-7 shrink-0 place-items-center rounded-lg bg-action/10 p-1 text-content-accent">
+                {item.logo ? (
+                  <img src={item.logo} alt="" class="size-full object-contain" width="96" height="96" />
+                ) : (
+                  <Icon name="lucide:file-text" size={15} aria-hidden="true" />
+                )}
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="block truncate text-sm font-medium text-content group-hover:text-content-accent">
+                  {item.title}
+                </span>
+                {item.description && (
+                  <span class="mt-0.5 block truncate text-xs text-content-muted">{item.description}</span>
+                )}
+                {item.meta && <span class="mt-0.5 block text-[11px] text-content-muted">{item.meta}</span>}
+              </span>
+              <Icon
+                name="lucide:chevron-right"
+                size={15}
+                class="shrink-0 text-content-muted transition-transform group-hover:translate-x-0.5 group-hover:text-content-accent"
+                aria-hidden="true"
+              />
+            </a>
+          </li>
+        ))
+      ) : (
+        <li class="rounded-xl border border-dashed border-line px-3 py-4 text-sm text-content-muted">{emptyMessage}</li>
+      )
+    }
+  </ul>
+</article>

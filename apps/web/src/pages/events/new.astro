@@ -1,0 +1,16 @@
+---
+import { EventNewPage } from '@/features/event/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate as translateI18n } from '@/features/event/i18n';
+
+const locale = Astro.locals.locale;
+const direct = Astro.locals.account?.role === 'curator' || Astro.locals.account?.role === 'admin';
+---
+
+<AppLayout
+  title={direct ? translateI18n(locale, 'newevent.createEvent') : translateI18n(locale, 'eventnew.devhubSuggestEvent')}
+  description={translateI18n(locale, 'eventnew.suggestEventTechnicalCommunity')}
+  keywords="devhub,events"
+>
+  <EventNewPage />
+</AppLayout>

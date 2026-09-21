@@ -1,0 +1,12 @@
+---
+import { GuidelinesPage } from '@/features/home/public';
+import AppLayout from '@/app/ui/AppLayout.astro';
+import { translate } from '@/features/home/i18n';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
+---
+
+<AppLayout title={t('guidelines.metaTitle')} description={t('guidelines.metaDescription')} keywords="DevHub 404, community, code of conduct">
+  <GuidelinesPage />
+</AppLayout>

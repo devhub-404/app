@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Container from '@/shared/ui/layouts/components/container.component.astro';
+import SectionHeader from '@/shared/ui/layouts/components/section-header.component.astro';
+import Section from '@/shared/ui/layouts/components/section.component.astro';
+import { translate as translateI18n } from '../../i18n';
+import StaticContentListing from '@/shared/ui/components/listing/static-content-listing.component.tsx';
+import { selectLocalizedEntries } from '@/shared/content/localized-entries';
+import { parseSearchQuery } from '@/shared/ui/schemas/search.schema.ts';
+
+const locale = Astro.locals.locale;
+const t = (key: Parameters<typeof translateI18n>[1]) => translateI18n(locale, key);
+const { q: query, tags: initialTags } = parseSearchQuery(Astro.url.searchParams);
+const allEntries = selectLocalizedEntries(
+  await getCollection('codex', ({ data }) => data.status === 'published'),
+  locale,
+);
+const sortedEntries = [...allEntries].sort((a, b) => a.data.title.localeCompare(b.data.title));
+const defaultSelectedSlug = sortedEntries[0]?.data.slug;
+const tagOptions = [...new Set(allEntries.flatMap((entry) => entry.data.tags))].sort();
+const items = allEntries
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+  .map(({ data }) => ({
+    id: data.slug,
+    title: data.title,
+    description: data.description,
+    logo: data.branding.logo,
+    tags: data.tags,
+    searchText: data.slug,
+  }));
+---
+
+  <SectionHeader eyebrow={t('codex.entries')} title={t('codex.devhub')} description={t('codex.explore')} />
+  <Container size="full" class="p-8">
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div class="min-w-0">
+        <Section>
+          <StaticContentListing
+            client:load
+            items={items}
+            initialQuery={query}
+            initialTags={initialTags}
+            initialOptions={tagOptions.map((tag) => ({ slug: tag, name: tag }))}
+            basePath="/codex"
+            label={t('codex.entries')}
+            searchPlaceholder={t('codex.searchByTechnology')}
+            emptyMessage={t('codex.noEntries')}
+          />
+        </Section>
+      </div>
+      <aside class="lg:sticky lg:top-6 lg:self-start">
+        <nav aria-label={t('codex.entries')} class="rounded-2xl border border-line bg-surface-elevated p-5">
+          <h2 class="heading-tiny-accent text-sm">{t('codex.entries')}</h2><ul
+            class="mt-4 space-y-1"
+          >
+            {
+              sortedEntries.map((entry) => (
+                <li>
+                  <a
+                    href={`/codex/${entry.data.slug}`}
+                    aria-current={entry.data.slug === defaultSelectedSlug ? 'page' : undefined}
+                    class:list={[
+                      'flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-hover',
+                      entry.data.slug === defaultSelectedSlug
+                        ? 'bg-selected font-semibold text-content'
+                        : 'text-content-muted hover:text-content',
+                    ]}
+                  >
+                    <img
+                      src={entry.data.branding.logo}
+                      alt=""
+                      class="size-5 shrink-0 object-contain"
+                      width="96"
+                      height="96"
+                    />
+                    <span class="truncate">{entry.data.title}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </aside>
+    </div>
+  </Container>

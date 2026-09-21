@@ -1,0 +1,16 @@
+---
+import AccountPageComposition from '@/features/account/public/layout';
+import ProjectManagement from '../components/project-management.component.tsx';
+import { translate as translateI18n } from '@/features/project/i18n';
+import { routes } from '@/shared/navigation/routes';
+---
+
+  <AccountPageComposition
+    active="projects"
+    heading={translateI18n(Astro.locals.locale, 'accountprojects.myProjects')}
+    subheading={translateI18n(Astro.locals.locale, 'accountprojects.publishArchiveOrRemoveArtifactsProfessionals')}
+  >
+    <a slot="headerActions" href={routes.projectNew} class="action action-primary"
+      >{translateI18n(Astro.locals.locale, 'projectactions.addProject')}</a>
+    <ProjectManagement locale={Astro.locals.locale} client:load />
+  </AccountPageComposition>

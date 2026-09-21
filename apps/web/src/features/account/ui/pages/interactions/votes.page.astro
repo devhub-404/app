@@ -1,0 +1,14 @@
+---
+import AccountPageComposition from '@/features/account/ui/components/account-page-composition.component.astro';
+import AccountVotesPage from '@/features/account/ui/components/interactions/account-votes-page.component.tsx';
+import { translate as translateI18n } from '@/shared/i18n/app';
+const locale = Astro.locals.locale;
+---
+
+  <AccountPageComposition
+    active="votes"
+    heading={translateI18n(locale, 'votes.votes')}
+    subheading={translateI18n(locale, 'votes.viewStatusVotesActive')}
+  >
+    <AccountVotesPage locale={locale} client:load />
+  </AccountPageComposition>

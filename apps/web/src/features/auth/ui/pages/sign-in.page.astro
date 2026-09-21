@@ -1,0 +1,14 @@
+---
+import AuthPageComposition from '@/features/auth/ui/components/auth-page-composition.component.astro';
+import LoginOptions from '@/features/auth/ui/components/login-options.component.tsx';
+import { translate } from '@/features/auth/i18n';
+
+const locale = Astro.locals.locale;
+---
+
+  <AuthPageComposition
+    title={translate(locale, 'page.signInTitle')}
+    subtitle={translate(locale, 'page.signInSubtitle')}
+  >
+    <LoginOptions locale={locale} client:load />
+  </AuthPageComposition>
