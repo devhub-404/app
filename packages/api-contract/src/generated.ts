@@ -1,6 +1,6 @@
 /**
  * Generated from the API OpenAPI document.
- * OpenAPI SHA-256: 106e068df8e4ebf75acc785b2b249c592b1fd89c972e0daf2e845978e6ca39dd.
+ * OpenAPI SHA-256: 0a2e518c47b478d61cc622235d2f271f10f205292ee15893c6a66985fb035c1d.
  * Do not edit manually.
  */
 
@@ -2423,7 +2423,7 @@ export interface components {
     };
     "ReadinessStatusDTO": 
     {
-      "status": string;
+      "status": "ready" | "not_ready";
       "ready": boolean;
       "timestamp": string;
     };
