@@ -90,7 +90,7 @@ async function waitForVerificationUrl(email: string, startedAt: number) {
 async function registerAndVerify(page: Page): Promise<TestAccount> {
   const suffix = randomUUID().replaceAll("-", "").slice(0, 12);
   const account: TestAccount = {
-    email: `e2e-${suffix}@devhub.local`,
+    email: `e2e-${suffix}@devhub-404.local`,
     password: "E2E-Password-2026!",
     username: `e2e${suffix}`,
     displayName: `E2E User ${suffix}`,
@@ -241,7 +241,7 @@ test.describe("autenticação no navegador", () => {
     await page.goto("/login");
     await page
       .locator("#login-email")
-      .fill(`missing-${randomUUID()}@devhub.local`);
+      .fill(`missing-${randomUUID()}@devhub-404.local`);
     await page.locator("#login-password").fill("senha-incorreta");
     await page.getByRole("button", { name: "Entrar", exact: true }).click();
 

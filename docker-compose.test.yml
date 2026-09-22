@@ -1,4 +1,4 @@
-name: devhub-test
+name: devhub-404-test
 
 services:
   db:
@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: devhub
+      POSTGRES_DB: devhub_404_test
     ports:
       - '5433:5432'
     healthcheck:
@@ -35,7 +35,7 @@ services:
       - '9002:9000'
       - '9003:9001'
     volumes:
-      - devhub-test-object-store:/data
+      - devhub-404-test-object-store:/data
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 2s
@@ -53,8 +53,8 @@ services:
       - -c
       - >
         mc alias set local http://minio-test:9000 minioadmin minioadmin &&
-        mc mb --ignore-existing local/test-bucket &&
-        mc anonymous set download local/test-bucket
+        mc mb --ignore-existing local/devhub-404-test &&
+        mc anonymous set download local/devhub-404-test
 
 volumes:
-  devhub-test-object-store:
+  devhub-404-test-object-store:

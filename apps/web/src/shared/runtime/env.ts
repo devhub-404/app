@@ -7,10 +7,10 @@ import {
   PUBLIC_DISCORD_URL,
 } from 'astro:env/client';
 
-const repoOwner = (PUBLIC_GITHUB_REPO_OWNER ?? 'devhub')
+const repoOwner = (PUBLIC_GITHUB_REPO_OWNER ?? 'devhub-404')
   .replace(/^https?:\/\/(?:www\.)?github\.com\//, '')
   .split('/')[0];
-const repoName = PUBLIC_GITHUB_REPO_NAME ?? 'devhub';
+const repoName = PUBLIC_GITHUB_REPO_NAME ?? 'devhub-404';
 
 export const env = {
   isDev: APP_ENV === 'development',

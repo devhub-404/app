@@ -5,7 +5,7 @@ loadAppEnvironment();
 
 const url = process.env.DB_PRIMARY_URL;
 if (!url) throw new Error('DB_PRIMARY_URL is required for the test database');
-if (!/\/devhub_test(?:\?|$)/.test(url)) {
+if (!/\/devhub_404_test(?:\?|$)/.test(url)) {
   throw new Error(`Refusing to run test migrations against a non-test database: ${url}`);
 }
 

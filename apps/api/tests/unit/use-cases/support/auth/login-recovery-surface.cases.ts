@@ -105,21 +105,21 @@ describe('Auth primary-login and password-recovery surfaces', () => {
     const passkey = {
       generateAuthenticationOptions: vi.fn(async () => ({
         challenge: 'challenge-1',
-        options: { challenge: 'challenge-1', rpId: 'devhub.local' },
+        options: { challenge: 'challenge-1', rpId: 'devhub-404.local' },
       })),
     };
     const flow = { signSingleUse: vi.fn(async () => 'passkey-state-token') };
     const command = new StartPasskeyLoginCommand(
       passkey as never,
       flow as never,
-      { auth: { passkeyRpId: 'devhub.local' } } as never,
+      { auth: { passkeyRpId: 'devhub-404.local' } } as never,
     );
 
     await expect(command.execute()).resolves.toEqual({
-      options: { challenge: 'challenge-1', rpId: 'devhub.local' },
+      options: { challenge: 'challenge-1', rpId: 'devhub-404.local' },
       stateToken: 'passkey-state-token',
     });
-    expect(passkey.generateAuthenticationOptions).toHaveBeenCalledWith({ rpID: 'devhub.local' });
+    expect(passkey.generateAuthenticationOptions).toHaveBeenCalledWith({ rpID: 'devhub-404.local' });
     expect(flow.signSingleUse).toHaveBeenCalledWith(
       expect.objectContaining({
         purpose: 'passkey_state',

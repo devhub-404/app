@@ -8,8 +8,8 @@ const url = process.env.DB_PRIMARY_URL;
 if (!url) throw new Error('DB_PRIMARY_URL is required for Drizzle migrations');
 
 const expectedDatabase = {
-  development: 'devhub_dev',
-  test: 'devhub_test',
+  development: 'devhub_404_dev',
+  test: 'devhub_404_test',
 } as const;
 
 const expected = expectedDatabase[appEnv as keyof typeof expectedDatabase];
