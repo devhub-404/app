@@ -3,10 +3,14 @@ import {
   toAccountShellView,
   type AccountDetailsView,
   type AccountShellView,
-} from "./account-projection.type.ts";
+} from "../types/account-details-view.type.ts";
 
 export type AccountStateStatus =
-  "idle" | "loading" | "ready" | "unavailable" | "error";
+  | "idle"
+  | "loading"
+  | "ready"
+  | "unavailable"
+  | "error";
 
 export type AccountState = {
   status: AccountStateStatus;
@@ -22,16 +26,15 @@ const initialState: AccountState = {
   error: null,
 };
 
-/** Canonical account projection for the application shell and session runtime. */
-export const $appAccount = atom<AccountState>(initialState);
+export const $account = atom<AccountState>(initialState);
 
 export function setAccountLoading() {
-  const current = $appAccount.get();
-  $appAccount.set({ ...current, status: "loading", error: null });
+  const current = $account.get();
+  $account.set({ ...current, status: "loading", error: null });
 }
 
 export function setAccountDetails(details: AccountDetailsView) {
-  $appAccount.set({
+  $account.set({
     status: "ready",
     details,
     shell: toAccountShellView(details),
@@ -40,17 +43,17 @@ export function setAccountDetails(details: AccountDetailsView) {
 }
 
 export function setAccountShell(shell: AccountShellView) {
-  const current = $appAccount.get();
-  $appAccount.set({ ...current, shell, error: null });
+  const current = $account.get();
+  $account.set({ ...current, shell, error: null });
 }
 
 export function setAccountUnavailable(message: string) {
-  const current = $appAccount.get();
-  $appAccount.set({ ...current, status: "unavailable", error: message });
+  const current = $account.get();
+  $account.set({ ...current, status: "unavailable", error: message });
 }
 
 export function setAccountError(message: string) {
-  $appAccount.set({
+  $account.set({
     status: "error",
     details: null,
     shell: null,
@@ -58,6 +61,7 @@ export function setAccountError(message: string) {
   });
 }
 
-export function clearAppAccount() {
-  $appAccount.set(initialState);
+export function clearAccount() {
+  $account.set(initialState);
 }
+

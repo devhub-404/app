@@ -8,7 +8,6 @@ import {
 } from "@/features/auth/types";
 import { sanitizeReturnTo } from "@/features/auth/utils/return-to.util.ts";
 import { routes } from "@/shared/navigation/routes";
-import { notifyAppSessionAvailable } from "@/app/session/public";
 import type { Locale } from "@/shared/i18n/core";
 import { createSignal, onMount, Show } from "solid-js";
 function MagicLinkCallback(props: { locale: Locale }) {
@@ -21,7 +20,6 @@ function MagicLinkCallback(props: { locale: Locale }) {
   const [returnTo, setReturnTo] = createSignal<string>(routes.feed);
 
   const authenticated = () => {
-    notifyAppSessionAvailable();
     redirectTo(returnTo());
   };
 

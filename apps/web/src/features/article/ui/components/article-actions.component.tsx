@@ -10,7 +10,7 @@ import {
   ThumbsUp,
 } from "lucide-solid";
 import { useAccount } from "@/features/account/public/account-state";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import {
   getPersonalContentState,
   refreshPersonalState,

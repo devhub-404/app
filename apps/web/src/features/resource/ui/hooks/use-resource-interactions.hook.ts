@@ -2,7 +2,7 @@ import { createEffect, type Accessor } from "solid-js";
 import { createStore } from "solid-js/store";
 import { useStore } from "@nanostores/solid";
 import type { ResourceItem } from "@/features/resource/types/resource.type.ts";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import {
   $personalStateScope,
   getPersonalContentStates,

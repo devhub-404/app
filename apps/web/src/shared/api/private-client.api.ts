@@ -2,36 +2,35 @@ import createClient from "openapi-fetch";
 import type { paths } from "@devhub-404/api-contract";
 import { baseURL } from "@/shared/api/base-url.api.ts";
 import { publicClient } from "@/shared/api/openapi.api.ts";
-import { publishSessionEvent } from "@/shared/auth/session-events";
 import { combineAbortSignals } from "@/shared/runtime/abort-signal";
 import {
-  $appSessionScope,
-  beginSessionResolution,
-  getSessionScope,
-  invalidateSessionScope,
-  isAuthenticatedSessionScope,
-} from "@/app/session/session-scope";
+  $authSessionScope,
+  getAuthSessionScope,
+  isAuthenticatedAuthSession,
+} from "@/features/auth/runtime/auth-scope.ts";
 
 const openApiBaseUrl = baseURL.replace(/\/api\/?$/, "");
 const SESSION_RESOLUTION_HEADER = "x-devhub-session-resolution";
 const SESSION_WAIT_TIMEOUT_MS = 5_000;
+type PrivateAuthResponseObserver = (
+  request: Request,
+  response: Response,
+) => void | Promise<void>;
+let privateAuthResponseObserver: PrivateAuthResponseObserver | null = null;
 
 export const privateClient = createClient<paths>({
   baseUrl: openApiBaseUrl,
   credentials: "include",
 });
 
-export function notifySessionInvalidated(
-  options: { broadcast?: boolean } = {},
-): void {
-  invalidateSessionScope();
-  if (typeof window !== "undefined" && options.broadcast !== false)
-    publishSessionEvent("invalidated");
-}
-
-export function notifySessionAvailable(): void {
-  beginSessionResolution();
-  if (typeof window !== "undefined") publishSessionEvent("available");
+export function observePrivateAuthResponses(
+  observer: PrivateAuthResponseObserver,
+) {
+  privateAuthResponseObserver = observer;
+  return () => {
+    if (privateAuthResponseObserver === observer)
+      privateAuthResponseObserver = null;
+  };
 }
 
 function ensureOnline() {
@@ -63,8 +62,8 @@ function withSessionSignal(request: Request, signal: AbortSignal): Request {
 }
 
 function waitForAuthenticatedSession(request: Request): Promise<Request> {
-  const current = getSessionScope();
-  if (isAuthenticatedSessionScope(current.accountId)) {
+  const current = getAuthSessionScope();
+  if (isAuthenticatedAuthSession(current.accountId)) {
     return Promise.resolve(withSessionSignal(request, current.signal));
   }
 
@@ -89,11 +88,11 @@ function waitForAuthenticatedSession(request: Request): Promise<Request> {
       stop();
       window.clearTimeout(timeout);
       if (error) reject(error);
-      else resolve(withSessionSignal(request, getSessionScope().signal));
+    else resolve(withSessionSignal(request, getAuthSessionScope().signal));
     };
     const evaluate = () => {
-      const scope = getSessionScope();
-      if (isAuthenticatedSessionScope(scope.accountId)) finish();
+      const scope = getAuthSessionScope();
+      if (isAuthenticatedAuthSession(scope.accountId)) finish();
       else if (
         scope.status === "anonymous" ||
         scope.status === "unavailable" ||
@@ -102,7 +101,7 @@ function waitForAuthenticatedSession(request: Request): Promise<Request> {
         finish(sessionUnavailableError());
       }
     };
-    stop = $appSessionScope.listen(evaluate);
+    stop = $authSessionScope.listen(evaluate);
     evaluate();
   });
 }
@@ -120,7 +119,7 @@ privateClient.use({
     if (request.headers.get(SESSION_RESOLUTION_HEADER) === "true") {
       const cleanRequest = withoutSessionResolutionHeader(request);
       if (typeof window === "undefined") return cleanRequest;
-      const scope = getSessionScope();
+      const scope = getAuthSessionScope();
       if (
         scope.status === "anonymous" ||
         scope.status === "unavailable" ||
@@ -145,9 +144,9 @@ privateClient.use({
   async onResponse({ response }) {
     if (response.status !== 401 || typeof window === "undefined")
       return response;
-    // Transport invalidates the canonical session scope. Application runtime
-    // owns the route-aware redirect decision by consuming this lifecycle event.
-    notifySessionInvalidated();
+    // Auth owns the consequence of a 401. The transport only forwards the
+    // response to the one registered coordinator.
+    await privateAuthResponseObserver?.(new Request(response.url), response);
     return response;
   },
 });

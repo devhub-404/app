@@ -8,7 +8,7 @@ import type {
 import {
   getSessionScope,
   isAuthenticatedSessionScope,
-} from "@/app/session/session-scope";
+} from "@/features/auth/runtime/auth-scope.ts";
 
 function withCurrentSession(
   options?: InteractionRequestOptions,

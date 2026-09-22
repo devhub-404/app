@@ -13,7 +13,7 @@ import {
   getSessionScope,
   isAuthenticatedSessionScope,
   isCurrentSessionScope,
-} from "@/app/session/session-scope";
+} from "@/features/auth/runtime/auth-scope.ts";
 
 const MIN_POLL_MS = 30_000;
 const MAX_POLL_MS = 60_000;

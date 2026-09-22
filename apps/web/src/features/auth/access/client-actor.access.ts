@@ -1,5 +1,5 @@
 import { $account } from "../../account/public/client-state.ts";
-import { getSessionScope } from "@/app/session/session-scope";
+import { getAuthSessionScope } from "@/features/auth/runtime/auth-scope.ts";
 import { anonymousActor, type Actor } from "./actor.access.ts";
 
 /**
@@ -12,7 +12,7 @@ export function getClientActor(): Actor | null {
   const account = $account.get();
   const accountId = account.details?.account.id ?? account.shell?.account.id;
   if (!accountId) return anonymousActor;
-  const scope = getSessionScope();
+  const scope = getAuthSessionScope();
   if (scope.status !== "authenticated" || scope.accountId !== accountId)
     return anonymousActor;
   return {

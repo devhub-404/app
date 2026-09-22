@@ -14,7 +14,6 @@ import {
   takeOAuthReturnTo,
 } from "@/features/auth/utils/return-to.util.ts";
 import { routes } from "@/shared/navigation/routes";
-import { notifyAppSessionAvailable } from "@/app/session/public";
 import type { Locale } from "@/shared/i18n/core";
 interface Props {
   provider?: string;
@@ -33,7 +32,6 @@ function OAuthCallback(props: Props) {
   const [linkError, setLinkError] = createSignal<string | null>(null);
 
   const authenticated = () => {
-    notifyAppSessionAvailable();
     redirectTo(returnTo());
   };
 

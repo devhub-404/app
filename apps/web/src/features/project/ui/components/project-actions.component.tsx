@@ -3,7 +3,7 @@ import { Pencil } from "lucide-solid";
 import type { Project } from "@/features/project/types/project.type.ts";
 import { canEditProject } from "@/features/project/access/project.access.ts";
 import { useAccount } from "@/features/account/public/account-state";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import { anonymousActor, type Actor } from "@/features/auth/public/access";
 import { routes } from "@/shared/navigation/routes";
 import ShareButton from "@/shared/ui/components/actions/share-button.component.tsx";

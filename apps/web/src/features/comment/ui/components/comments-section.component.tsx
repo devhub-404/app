@@ -9,7 +9,7 @@ import {
 } from "@/features/comment/actions/comment.action.ts";
 import type { CommentDTO } from "@/features/comment/types/comment.type.ts";
 import { useAccount } from "@/features/account/public/account-state";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import { routes } from "@/shared/navigation/routes";
 import { useI18n } from "@/features/comment/i18n";
 import CommentThread from "./comment-thread.component.tsx";

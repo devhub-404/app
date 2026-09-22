@@ -1,11 +1,10 @@
 import { privateClient } from '@/shared/api';
 import { publicClient, type ApiClient } from '@/shared/api';
-import { readApiData, type ApiResult } from '@/shared/api';
+import { type ApiResult } from '@/shared/api';
 import type {
   AccountDetailsDTO,
   AccountShellDTO,
   AuthIdentityDTO,
-  AuthSessionDTO,
   CreateEmailDTO,
   EmailChangeCompletedDTO,
   GenericAuthenticatedAckDTO,
@@ -44,32 +43,6 @@ export class AccountApi {
 
   static async getPreferences(): Promise<ApiResult<PreferencesDTO>> {
     return privateClient.GET('/api/v1/me/preferences');
-  }
-
-  static async listSessions(client: ApiClient = privateClient): Promise<ApiResult<AuthSessionDTO[]>> {
-    const result = await client.GET('/api/v1/sessions');
-    const items = readApiData<{ items?: AuthSessionDTO[] }>(result)?.items ?? [];
-    return {
-      data: { data: items },
-      response: result.response,
-    };
-  }
-
-  static async logoutAllSessions(): Promise<ApiResult<unknown>> {
-    const result = await privateClient.DELETE('/api/v1/sessions');
-    return result;
-  }
-
-  static async logoutOtherSessions(): Promise<ApiResult<unknown>> {
-    const result = await privateClient.DELETE('/api/v1/sessions/others');
-    return result;
-  }
-
-  static async revokeSession(id: string): Promise<ApiResult<unknown>> {
-    const result = await privateClient.DELETE('/api/v1/sessions/{sessionId}', {
-      params: { path: { sessionId: id } },
-    });
-    return result;
   }
 
   static async listOAuthLinks(): Promise<ApiResult<AuthIdentityDTO[]>> {

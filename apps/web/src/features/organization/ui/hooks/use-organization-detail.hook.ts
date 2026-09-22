@@ -9,7 +9,7 @@ import type {
   OrganizationMembership,
 } from "@/features/organization/types/organization.type.ts";
 import { listJobsByOrganization } from "@/features/job/public";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import {
   getRouteScope,
   isCurrentRouteScope,

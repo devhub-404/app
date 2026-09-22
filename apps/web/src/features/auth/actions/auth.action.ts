@@ -2,6 +2,8 @@ import { AuthApi } from '../api/auth.api.ts';
 import type { ApiResult } from '@/shared/api';
 import { rememberOAuthReturnTo } from '@/features/auth/utils/return-to.util.ts';
 import { routes } from '@/shared/navigation/routes';
+import { authCoordinator } from '@/features/auth/runtime/auth-runtime';
+import { authenticationOutcomeFromResult } from '../types/authentication-outcome.type.ts';
 
 export type AuthCommandResult = { ok: true; code?: string | null } | { ok: false; code: string };
 
@@ -23,16 +25,32 @@ async function command(operation: () => Promise<ApiResult<unknown>>): Promise<Au
   return { ok: true, code: result.data?.code };
 }
 
+function completesAuthentication(result: ApiResult<unknown>): boolean {
+  return authenticationOutcomeFromResult(result as ApiResult<import("../types/login-result.type.ts").LoginResult>).kind ===
+    "authenticated";
+}
+
+async function establishSession<T>(
+  result: ApiResult<T>,
+  options: { force?: boolean } = {},
+): Promise<ApiResult<T>> {
+  if (options.force || completesAuthentication(result as ApiResult<unknown>))
+    await authCoordinator.establish();
+  return result;
+}
+
 export const register = (payload: Parameters<typeof AuthApi.register>[0]) => command(() => AuthApi.register(payload));
 
-export const login = (payload: Parameters<typeof AuthApi.login>[0]) => request(() => AuthApi.login(payload));
+export const login = async (payload: Parameters<typeof AuthApi.login>[0]) =>
+  establishSession(await request(() => AuthApi.login(payload)));
 
-export const loginPasskey = () => request(() => AuthApi.loginPasskey());
+export const loginPasskey = async () => establishSession(await request(() => AuthApi.loginPasskey()));
 
-export const verifyMfaTotp = (token: string, code: string) => request(() => AuthApi.verifyMfaTotp(token, code));
+export const verifyMfaTotp = async (token: string, code: string) =>
+  establishSession(await request(() => AuthApi.verifyMfaTotp(token, code)), { force: true });
 
-export const verifyMfaRecoveryCode = (token: string, recoveryCode: string) =>
-  request(() => AuthApi.verifyMfaRecoveryCode(token, recoveryCode));
+export const verifyMfaRecoveryCode = async (token: string, recoveryCode: string) =>
+  establishSession(await request(() => AuthApi.verifyMfaRecoveryCode(token, recoveryCode)));
 
 export const startTotpEnrollment = () => request(() => AuthApi.startTotpEnrollment());
 
@@ -63,7 +81,8 @@ export const deleteCredential = (id: string) => command(() => AuthApi.deleteCred
 export const requestMagicLink = (email: string, redirect?: string) =>
   request(() => AuthApi.requestMagicLink(email, redirect));
 
-export const completeMagicLink = (token: string) => request(() => AuthApi.completeMagicLink(token));
+export const completeMagicLink = async (token: string) =>
+  establishSession(await request(() => AuthApi.completeMagicLink(token)));
 
 export const startAccountRecovery = (email: string) => command(() => AuthApi.startAccountRecovery(email));
 
@@ -86,10 +105,12 @@ export const verifyEmail = (token: string) => command(() => AuthApi.verifyEmail(
 export const resendVerification = (payload: Parameters<typeof AuthApi.resendVerification>[0]) =>
   command(() => AuthApi.resendVerification(payload));
 
-export const handleOAuthCallback = (
+export const handleOAuthCallback = async (
   provider: Parameters<typeof AuthApi.handleOAuthCallback>[0],
   params: Parameters<typeof AuthApi.handleOAuthCallback>[1],
-) => request(() => AuthApi.handleOAuthCallback(provider, params));
+) => {
+  return establishSession(await request(() => AuthApi.handleOAuthCallback(provider, params)));
+};
 
 export async function startOAuth(
   provider: Parameters<typeof AuthApi.startOAuth>[0],

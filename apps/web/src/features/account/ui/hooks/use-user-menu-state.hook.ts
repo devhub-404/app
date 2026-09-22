@@ -1,13 +1,17 @@
 import { createMemo } from "solid-js";
 import { useAuth } from "@/features/auth/public";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import { routes } from "@/shared/navigation/routes";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";
-import type { AccountShellView } from "@/app/session/account-projection.type.ts";
+import type { AccountShellView } from "@/features/account/types/account-details-view.type.ts";
+import type { AuthSession } from "@/features/auth/types/auth-session.type.ts";
 
-export function useUserMenuState(initialAccount?: AccountShellView | null) {
+export function useUserMenuState(
+  initialAccount?: AccountShellView | null,
+  initialSession?: AuthSession | null,
+) {
   const { logout } = useAuth();
-  const { session, role } = useAuthSession(initialAccount);
+  const { session, role } = useAuthSession(initialAccount, initialSession);
 
   const displayName = createMemo(() => {
     const current = session();

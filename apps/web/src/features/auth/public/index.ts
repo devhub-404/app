@@ -11,3 +11,5 @@ export { default as MagicLinkPage } from '../ui/pages/magic-link.page.astro';
 export { default as OAuthCallbackPage } from '../ui/pages/o-auth-callback.page.astro';
 export { default as OAuthLinkCallbackPage } from '../ui/pages/o-auth-link-callback.page.astro';
 export { isClientAccessAllowed } from '../access/client-actor.access.ts';
+export { establishAuthSession } from './session.ts';
+export { useAuthActor } from '../access/use-auth-actor.hook.ts';

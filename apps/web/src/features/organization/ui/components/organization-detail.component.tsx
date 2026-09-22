@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js";
 import { withLocale } from "@/shared/i18n/core/solid";
 import { useI18n } from "@/features/organization/i18n";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import LoadingState from "@/shared/ui/components/feedback/loading-state.component.tsx";
 import RetryErrorState from "@/shared/ui/components/feedback/retry-error-state.component.tsx";
 import { useOrganizationDetail } from "../hooks/use-organization-detail.hook.ts";

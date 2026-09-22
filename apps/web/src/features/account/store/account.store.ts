@@ -1,17 +1,10 @@
-/**
- * Compatibility surface for account feature consumers.
- * The canonical store lives in the application session runtime.
- */
-export type {
-  AccountState,
-  AccountStateStatus,
-} from "@/app/session/app-account.store";
+export type { AccountState, AccountStateStatus } from "./account-projection.store";
 export {
-  $appAccount as $account,
-  clearAppAccount as clearAccount,
+  $account,
+  clearAccount,
   setAccountDetails,
   setAccountError,
   setAccountLoading,
   setAccountShell,
   setAccountUnavailable,
-} from "@/app/session/app-account.store";
+} from "./account-projection.store";

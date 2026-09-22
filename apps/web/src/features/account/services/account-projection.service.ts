@@ -1,31 +1,29 @@
 import { privateClient } from "@/shared/api";
 import { isAbortError } from "@/shared/runtime/abort-signal";
 import {
-  $appAccount,
+  $account,
   setAccountDetails,
   setAccountLoading,
   setAccountUnavailable,
-} from "./app-account.store";
-import type { AccountDetailsView } from "./account-projection.type.ts";
+} from "../store/account-projection.store.ts";
+import type { AccountDetailsView } from "../types/account-details-view.type.ts";
 import {
-  getSessionScope,
-  isCurrentSessionScope,
-  setAuthenticatedSessionScope,
-} from "./session-scope";
+  getAuthSessionScope,
+  isCurrentAuthSession,
+} from "@/features/auth/runtime/auth-scope.ts";
 
 let bootstrapPromise: Promise<AccountDetailsView | null> | null = null;
 
 async function fetchAccount(): Promise<AccountDetailsView> {
-  const requestScope = getSessionScope();
+  const requestScope = getAuthSessionScope();
   const { data } = await privateClient.GET("/api/v1/me/details", {
     headers: { "x-devhub-session-resolution": "true" },
     signal: requestScope.signal,
   });
-  const currentScope = getSessionScope();
-
+  const currentScope = getAuthSessionScope();
   if (
     (requestScope.status === "authenticated" &&
-      !isCurrentSessionScope(requestScope)) ||
+      !isCurrentAuthSession(requestScope)) ||
     currentScope.status === "anonymous" ||
     currentScope.status === "invalidating"
   ) {
@@ -33,26 +31,20 @@ async function fetchAccount(): Promise<AccountDetailsView> {
     stale.name = "AbortError";
     throw stale;
   }
-
-  // openapi-fetch returns the API response envelope in `data` itself.
-  // `readApiData` accepts the complete client result, so unwrap the envelope
-  // here without treating the account DTO as another client result.
   const details = (data as { data?: AccountDetailsView } | undefined)?.data;
   if (!details) throw new Error("ACCOUNT_NOT_FOUND");
   return details;
 }
 
-export async function bootstrapAppAccount(): Promise<AccountDetailsView | null> {
+export async function bootstrapAccount(): Promise<AccountDetailsView | null> {
   if (bootstrapPromise) return bootstrapPromise;
-
   bootstrapPromise = (async () => {
     try {
-      const snapshot = $appAccount.get();
+      const snapshot = $account.get();
       if (snapshot.details) return snapshot.details;
       setAccountLoading();
       const details = await fetchAccount();
       setAccountDetails(details);
-      setAuthenticatedSessionScope(details.account.id);
       return details;
     } catch (error) {
       if (isAbortError(error)) return null;
@@ -66,16 +58,14 @@ export async function bootstrapAppAccount(): Promise<AccountDetailsView | null> 
       bootstrapPromise = null;
     }
   })();
-
   return bootstrapPromise;
 }
 
-export async function refreshAppAccount(): Promise<AccountDetailsView> {
+export async function refreshAccount(): Promise<AccountDetailsView> {
   setAccountLoading();
   try {
     const details = await fetchAccount();
     setAccountDetails(details);
-    setAuthenticatedSessionScope(details.account.id);
     return details;
   } catch (error) {
     if (isAbortError(error)) throw error;
@@ -87,3 +77,4 @@ export async function refreshAppAccount(): Promise<AccountDetailsView> {
     throw error;
   }
 }
+

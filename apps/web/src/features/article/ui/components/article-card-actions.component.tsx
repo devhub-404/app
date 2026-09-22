@@ -2,7 +2,7 @@ import { Bookmark, Link, ThumbsUp } from "lucide-solid";
 import { Toggle } from "@ark-ui/solid";
 import { createEffect, Show } from "solid-js";
 import { createStore } from "solid-js/store";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import { useStore } from "@nanostores/solid";
 import {
   $personalStateScope,

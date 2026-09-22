@@ -15,7 +15,6 @@ import { routes } from "@/shared/navigation/routes";
 import type { OAuthProvider } from "@/features/auth/types/auth.type.ts";
 import type { ApiResult } from "@/shared/api";
 import type { LoginResult } from "@/features/auth/types";
-import { notifyAppSessionAvailable } from "@/app/session/public";
 import type { Locale } from "@/shared/i18n/core";
 import {
   preloadPasskeyAuthentication,
@@ -55,7 +54,6 @@ function LoginOptions(props: { locale: Locale }) {
     redirect?: string | null,
     code?: string | null,
   ) => {
-    notifyAppSessionAvailable();
     if (code) notifySuccess(code);
     // AccountBootstrap skips its presentation reload while the login
     // ceremony is completing, so this navigation remains the single owner

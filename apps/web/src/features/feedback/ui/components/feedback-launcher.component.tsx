@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-solid";
 import { uploadImage } from "@/shared/media/media.service";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import { submitFeedback } from "@/features/feedback/actions/feedback.action.ts";
 import type { FeedbackCategory } from "@/features/feedback/types/feedback.type.ts";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";

@@ -1,9 +1,9 @@
 import { ProfileApi } from "@/features/account/api/profile.api.ts";
 import type { UpdateProfileDTO } from "@/features/account/types/profile.type.ts";
 import {
-  $appAccount as $account,
+  $account,
   setAccountDetails,
-} from "@/app/session/app-account.store";
+} from "@/features/account/store/account-projection.store";
 import type { ApiClient } from "@/shared/api";
 
 export async function updateMyProfile(payload: UpdateProfileDTO) {

@@ -1,5 +1,5 @@
 import { useStore } from "@nanostores/solid";
-import { $appAccount as $account } from "@/app/session/app-account.store";
+import { $account } from "@/features/account/store/account-projection.store";
 import {
   bootstrapAccount,
   deleteAccount,
@@ -24,11 +24,11 @@ import {
 } from "@/features/account/actions/account.action.ts";
 
 export {
-  $appAccount as $account,
-  clearAppAccount as clearAccount,
+  $account,
+  clearAccount,
   setAccountDetails,
   setAccountShell,
-} from "@/app/session/app-account.store";
+} from "@/features/account/store/account-projection.store";
 
 export function useAccount() {
   return {

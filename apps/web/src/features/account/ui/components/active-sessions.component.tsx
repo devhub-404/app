@@ -1,7 +1,7 @@
 import Alert from "@/shared/ui/components/feedback/alert.component.tsx";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";
 import { useAccount } from "@/features/account/ui/hooks/use-account.hook.ts";
-import { useAppActor, refreshAppCurrentSession } from "@/app/session/public";
+import { useAuthActor } from "@/features/auth/public";
 import type { AuthSessionDTO } from "@/features/account/types/account.type.ts";
 import { LogOut, RefreshCw, Trash } from "lucide-solid";
 import { routes } from "@/shared/navigation/routes";
@@ -39,9 +39,8 @@ function ActiveSessions() {
     logoutAllSessions,
     logoutOtherSessions,
   } = useAccount();
-  const { sessionId } = useAppActor();
+  const { sessionId } = useAuthActor();
   const [sessions, setSessions] = createSignal<AuthSessionDTO[]>([]);
-  const [currentSessionReady, setCurrentSessionReady] = createSignal(false);
   const [loading, setLoading] = createSignal(true);
   const [pending, setPending] = createSignal<string | null>(null);
   const [error, setError] = createSignal<string | null>(null);
@@ -52,15 +51,9 @@ function ActiveSessions() {
     setLoading(true);
     setError(null);
     try {
-      const [result, currentSession] = await Promise.all([
-        refreshSessions(),
-        refreshAppCurrentSession(),
-      ]);
+      const result = await refreshSessions();
       if (result.ok) setSessions(result.items);
       else setError(t("activesessions.couldNotLoadSessionsNow"));
-      setCurrentSessionReady(currentSession !== null);
-      if (!currentSession)
-        setError(t("activesessions.couldNotLoadSessionsNow"));
     } catch {
       setError(t("activesessions.couldNotLoadSessionsNow"));
     } finally {
@@ -298,7 +291,7 @@ function ActiveSessions() {
                       </div>
                       <button
                         type="button"
-                        disabled={pending() !== null || !currentSessionReady()}
+                        disabled={pending() !== null || !sessionId()}
 
                         onClick={() => void remove(session.id)}
                         aria-busy={pending() === session.id}

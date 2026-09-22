@@ -17,7 +17,12 @@ const t = (key: TranslationKey) => translate(locale, key);
     >
     <div class="min-w-0 flex-1"><SearchMenu client:load /></div>
     <div class="flex shrink-0 items-center gap-2">
-      <UserMenu location="header" initialAccount={Astro.locals.account} client:load />
+      <UserMenu
+        location="header"
+        initialAccount={Astro.locals.account}
+        initialSession={Astro.locals.session}
+        client:load
+      />
     </div>
   </div>
 </header>

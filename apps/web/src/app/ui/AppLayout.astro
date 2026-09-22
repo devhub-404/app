@@ -6,7 +6,7 @@ import Header from "./shell/Header.astro";
 import Main from "@/shared/ui/layouts/components/main.component.astro";
 import Footer from "./shell/Footer.astro";
 import MobileNavigation from "./shell/MobileNavigation.astro";
-import AppSessionRuntime from "@/app/session/AppSessionRuntime";
+import AppRuntime from "@/app/runtime/AppRuntime";
 import { FeedbackLauncher } from "@/features/feedback/public";
 import { translate } from "@/shared/i18n/app";
 import type { PageMetadata } from "@/shared/ui/metadata/page-metadata.type.ts";
@@ -47,8 +47,9 @@ const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
     <MobileNavigation />
   </div>
   <Toast client:load transition:persist="app-toast" />
-  <AppSessionRuntime
+  <AppRuntime
     initialAccount={Astro.locals.account}
+    initialSession={Astro.locals.session}
     initialResolution={Astro.locals.accountResolution}
     client:load
   />

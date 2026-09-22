@@ -9,7 +9,7 @@ import {
   verifyMfaRecoveryCode,
   verifyMfaTotp,
 } from "@/features/auth/public/mfa";
-import { notifyAppSessionAvailable } from "@/app/session/public";
+import { establishAuthSession } from "@/features/auth/public";
 import { useI18n } from "@/features/account/i18n";
 import type { Locale } from "@/shared/i18n/core";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";
@@ -46,7 +46,7 @@ function AccountReactivation(props: { token: string; locale: Locale }) {
   );
 
   const authenticated = () => {
-    notifyAppSessionAvailable();
+    void establishAuthSession();
     redirectTo(routes.account.root);
   };
 

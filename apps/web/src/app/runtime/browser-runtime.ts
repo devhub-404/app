@@ -1,7 +1,6 @@
 import { navigate } from "astro:transitions/client";
 import { resetRouteScope } from "@/shared/runtime/route-scope";
 import { ensureNotificationsRuntime } from "@/features/account/public/notifications-runtime";
-import { initializeSessionScope } from "@/app/session/session-scope";
 
 let started = false;
 
@@ -74,21 +73,6 @@ function initPageRuntime() {
   }
 }
 
-function initializeDocumentSessionScope() {
-  const root = document.querySelector<HTMLElement>("[data-session-scope]");
-  if (!root) return;
-  const resolution = root.dataset["sessionResolution"];
-  if (
-    resolution !== "authenticated" &&
-    resolution !== "unauthenticated" &&
-    resolution !== "unavailable" &&
-    resolution !== "deferred"
-  ) {
-    return;
-  }
-  initializeSessionScope(resolution, root.dataset["sessionAccountId"] ?? null);
-}
-
 /**
  * Starts document-level behavior that must survive Astro ClientRouter swaps.
  * The runtime is deliberately idempotent because module scripts may be seen
@@ -99,7 +83,6 @@ export function startBrowserRuntime() {
   started = true;
 
   resetRouteScope();
-  initializeDocumentSessionScope();
   ensureNotificationsRuntime();
   document.addEventListener("astro:before-preparation", resetRouteScope);
   document.addEventListener("astro:page-load", initPageRuntime);

@@ -1,6 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { DEFAULT_LOCALE, localeFromAcceptLanguage } from "@/shared/i18n/core";
-import { resolveSession } from "@/app/session/server-session.api";
+import { resolveSession } from "@/features/auth/api/session-server.api.ts";
 import { hasValidSessionCookie } from "@/shared/auth/session-cookie";
 import { authorizeRequest } from "./authorization.access.ts";
 import { requiresRouteAuthentication, routeAccess } from "./route.access.ts";
@@ -27,13 +27,15 @@ export const accessMiddleware = defineMiddleware(async (context, next) => {
 
   context.locals.accountResolution = accountResolution;
   context.locals.account =
+    resolution?.status === "authenticated" ? resolution.account : null;
+  context.locals.session =
     resolution?.status === "authenticated" ? resolution.session : null;
   context.locals.sessionDurationMs = sessionDurationMs;
   context.locals.sessionLookup = requiresSession ? "required" : "skipped";
 
   if (resolution?.status === "authenticated") {
     context.locals.locale =
-      resolution.session.preferences.locale ??
+      resolution.account.preferences.locale ??
       localeFromAcceptLanguage(
         context.request.headers.get("accept-language"),
       ) ??

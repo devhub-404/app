@@ -1,5 +1,5 @@
 import { createMemo, createSignal, onMount } from "solid-js";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import { getProfileByUsername } from "@/features/account/actions/profile.action.ts";
 import type { PublicProfileDTO } from "@/features/account/types/profile.type.ts";
 import {

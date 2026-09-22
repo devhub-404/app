@@ -40,7 +40,7 @@ import {
   getPersonalContentStates,
   refreshPersonalState,
 } from "@/shared/runtime/personal-state";
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
 import { routes } from "@/shared/navigation/routes";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";
 import { useI18n } from "@/features/q-and-a/i18n";

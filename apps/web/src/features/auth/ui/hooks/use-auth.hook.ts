@@ -1,4 +1,7 @@
-import { useAppActor as useAuthSession } from "@/app/session/public";
+import { useStore } from "@nanostores/solid";
+import { createMemo } from "solid-js";
+import { $auth } from "@/features/auth/store/auth.store.ts";
+import { authCoordinator } from "@/features/auth/runtime/auth-runtime";
 import {
   changePassword as changePasswordAction,
   completeAccountRecovery as completeAccountRecoveryAction,
@@ -30,7 +33,6 @@ import {
   verifyMfaTotp,
   type AuthCommandResult,
 } from "@/features/auth/actions/auth.action.ts";
-import { logoutAppSession as logoutAction } from "@/app/session/public";
 import { notifyError, notifySuccess } from "@/shared/ui/feedback/notifications";
 
 async function withMutationFeedback(
@@ -46,12 +48,22 @@ async function withMutationFeedback(
 }
 
 export function useAuth() {
-  const authSession = useAuthSession();
+  const auth = useStore($auth);
+  const authenticated = createMemo(() => auth().status === "authenticated");
+  const session = createMemo(() => ({
+    status: authenticated() ? ("authenticated" as const) : ("unauthenticated" as const),
+    me: null,
+  }));
   return {
-    session: authSession.session,
-    authenticated: authSession.authenticated,
-    sessionId: authSession.sessionId,
-    role: authSession.role,
+    session,
+    authenticated,
+    sessionId: createMemo(() => {
+      const state = auth();
+      return authenticated() && state.status === "authenticated"
+        ? state.session.id
+        : null;
+    }),
+    role: createMemo(() => null),
     login: async (...args: Parameters<typeof loginAction>) => {
       const result = await loginAction(...args);
       if (result.error)
@@ -81,7 +93,7 @@ export function useAuth() {
     register: (...args: Parameters<typeof registerAction>) =>
       withMutationFeedback(() => registerAction(...args)),
     logout: async () => {
-      const result = await logoutAction();
+      const result = await authCoordinator.logoutCurrent();
       if (!result.ok) {
         notifyError(result.code);
         return false;

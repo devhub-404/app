@@ -1,4 +1,4 @@
-import type { SessionResolution } from "@/app/session/server-session.api";
+import type { SessionResolution } from "@/features/auth/api/session-server.api.ts";
 import { canAccessRoute, type RouteAccess } from "./route.access.ts";
 
 function redirectToLogin(request: Request): Response {
@@ -31,6 +31,6 @@ export function authorizeRequest(
   if (resolution.status === "unavailable") return authUnavailable();
 
   const role =
-    resolution.status === "authenticated" ? resolution.session.role : undefined;
+    resolution.status === "authenticated" ? resolution.account.role : undefined;
   return canAccessRoute(access, role) ? null : forbidden();
 }

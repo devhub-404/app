@@ -2,7 +2,7 @@ import { createMemo, createSignal, For } from "solid-js";
 import { useStore } from "@nanostores/solid";
 import { Menu } from "@ark-ui/solid/menu";
 import { ChevronDown } from "lucide-solid";
-import { $appAccount as $account } from "@/app/session/app-account.store";
+import { $account } from "@/features/account/store/account-projection.store";
 import { updatePreferences } from "@/features/account/actions/account.action.ts";
 import { applyLocale, clearLocaleOverride } from "@/shared/i18n/core/solid";
 import type { Locale } from "@/shared/i18n/core";

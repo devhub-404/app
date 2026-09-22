@@ -1,16 +1,24 @@
 import { AccountApi } from "@/features/account/api/account.api.ts";
+import {
+  logoutAllSessions as logoutAllAuthSessions,
+  logoutOtherSessions as logoutOtherAuthSessions,
+  refreshSessions as refreshAuthSessions,
+  revokeSession as revokeAuthSession,
+} from "@/features/auth/actions/session.action.ts";
 import type { OAuthProvider } from "@/features/account/types/account.type.ts";
 import type { AccountDetailsView } from "@/features/account/types";
 import {
-  bootstrapAppAccount,
-  refreshAppAccount,
-} from "@/app/session/app-session.actions";
+  bootstrapAccount,
+  refreshAccount,
+} from "@/features/account/services/account-projection.service.ts";
 import {
-  $appAccount as $account,
+  $account,
   setAccountDetails,
-} from "@/app/session/app-account.store";
-import { invalidateAppSession } from "@/app/session/public";
+} from "@/features/account/store/account-projection.store";
+import { invalidateAuthSession } from "@/features/auth/public/session.ts";
 import { isAbortError } from "@/shared/runtime/abort-signal";
+
+export { bootstrapAccount, refreshAccount };
 
 export type ProtectedAccountActionResult =
   | { kind: "success" }
@@ -65,34 +73,21 @@ function updateDetails(
   setAccountDetails(updater(current.details));
 }
 
-export const bootstrapAccount = bootstrapAppAccount;
-export const refreshAccount = refreshAppAccount;
 
 export async function refreshSessions() {
-  const { data, error } = await AccountApi.listSessions();
-  if (error) {
-    return { ok: false as const, items: [], code: error.code };
-  }
-  const sessions = Array.isArray(data?.data) ? data?.data : [];
-  return { ok: true as const, items: sessions };
+  return refreshAuthSessions();
 }
 
 export async function revokeSession(id: string) {
-  return runProtectedAccountAction(() => AccountApi.revokeSession(id));
+  return revokeAuthSession(id);
 }
 
 export async function logoutAllSessions() {
-  return runProtectedAccountAction(
-    () => AccountApi.logoutAllSessions(),
-    async () => {
-      // This endpoint revokes the current Session as part of the full set.
-      await invalidateAppSession();
-    },
-  );
+  return logoutAllAuthSessions();
 }
 
 export async function logoutOtherSessions() {
-  return runProtectedAccountAction(() => AccountApi.logoutOtherSessions());
+  return logoutOtherAuthSessions();
 }
 
 export async function refreshOAuthLinks() {
@@ -203,7 +198,7 @@ export async function disableAccount() {
     async () => {
       // Account deactivation revokes Sessions server-side (AUTH-RN-011).
       // Do not issue a second authenticated DELETE with an already-invalid cookie.
-      await invalidateAppSession();
+      await invalidateAuthSession();
     },
   );
 }
@@ -213,7 +208,7 @@ export async function deleteAccount() {
     () => AccountApi.deleteMe(),
     async () => {
       // deletion=PENDING revokes Sessions server-side (ACC-RN-005/AUTH-RN-011).
-      await invalidateAppSession();
+      await invalidateAuthSession();
     },
   );
 }
@@ -223,7 +218,7 @@ export async function getAccountOverview(
 ) {
   const [detailsResult, sessionsResult] = await Promise.all([
     AccountApi.getDetails(client),
-    AccountApi.listSessions(client),
+    refreshAuthSessions(client),
   ]);
 
   if (detailsResult.error || !detailsResult.data?.data) {
@@ -233,16 +228,14 @@ export async function getAccountOverview(
   return {
     kind: "ready" as const,
     details: detailsResult.data.data,
-    sessionCount: sessionsResult.error
-      ? null
-      : (sessionsResult.data?.data?.length ?? 0),
+    sessionCount: sessionsResult.ok ? sessionsResult.items.length : null,
   };
 }
 
 export async function getAccountSessions(
   client: import("@/shared/api").ApiClient,
 ) {
-  const { data, error } = await AccountApi.listSessions(client);
-  if (error) return { kind: "unavailable" as const, items: [] };
-  return { kind: "ready" as const, items: data?.data ?? [] };
+  const result = await refreshAuthSessions(client);
+  if (!result.ok) return { kind: "unavailable" as const, items: [] };
+  return { kind: "ready" as const, items: result.items };
 }

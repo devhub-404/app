@@ -1,9 +1,9 @@
 import {
-  $appSessionScope,
+  $authSessionScope,
   getSessionScope,
   isAuthenticatedSessionScope,
   isCurrentSessionScope,
-} from "@/app/session/session-scope";
+} from "@/features/auth/runtime/auth-scope.ts";
 import { ViewApi } from "@/shared/interactions/view/api/view.api.ts";
 
 async function record(resourceId: string, options?: { signal?: AbortSignal }) {
@@ -45,7 +45,7 @@ export function recordView(resourceId: string) {
         finish(null);
       }
     };
-    unsubscribeScope = $appSessionScope.listen(attempt);
+    unsubscribeScope = $authSessionScope.listen(attempt);
     attempt();
   });
 }

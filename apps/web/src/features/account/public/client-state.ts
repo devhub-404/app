@@ -1,1 +1,1 @@
-export { $appAccount as $account } from "@/app/session/app-account.store";
+export { $account } from "@/features/account/store/account-projection.store";

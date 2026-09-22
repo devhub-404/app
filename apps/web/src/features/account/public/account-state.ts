@@ -1,8 +1,8 @@
 export { useAccount } from "../ui/hooks/use-account.hook.ts";
 export {
-  $appAccount as $account,
-  clearAppAccount as clearAccount,
+  $account,
+  clearAccount,
   setAccountDetails,
   setAccountShell,
-} from "@/app/session/app-account.store";
+} from "@/features/account/store/account-projection.store";
 export type { AccountDetailsView, AccountShellView } from "../types";

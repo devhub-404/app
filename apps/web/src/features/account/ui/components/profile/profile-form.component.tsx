@@ -9,7 +9,7 @@ import {
   createUpdateProfileSchema,
   type UpdateProfileFormInput,
 } from "@/features/account/ui/schemas/profile/forms.schema.ts";
-import { $appAccount as $account } from "@/app/session/app-account.store";
+import { $account } from "@/features/account/store/account-projection.store";
 import { updateMyProfile } from "@/features/account/actions/profile.action.ts";
 import { bootstrapAccount } from "@/features/account/actions/account.action.ts";
 import { uploadImage } from "@/shared/media/media.service";
