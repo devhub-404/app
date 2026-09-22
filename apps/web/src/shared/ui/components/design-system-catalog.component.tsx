@@ -110,7 +110,7 @@ export default function DesignSystemCatalog() {
                 <button
                   {...triggerProps}
                   type="button"
-                  class="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl border border-line bg-surface px-4 text-sm font-semibold text-content hover:border-action-border"
+                  class="action action-secondary"
                 >
                   Abrir drawer
                 </button>
@@ -144,14 +144,14 @@ export default function DesignSystemCatalog() {
                 <button
                   {...triggerProps}
                   type="button"
-                  class="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl border border-line bg-surface px-4 text-sm font-semibold text-content hover:border-action-border"
+                  class="action action-secondary"
                 >
                   Navegação mobile
                 </button>
               )}
             />
             <Menu.Root>
-              <Menu.Trigger class="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-xl border border-line bg-surface px-4 text-sm font-semibold text-content hover:border-action-border">
+              <Menu.Trigger class="action action-secondary">
                 Abrir menu
               </Menu.Trigger>
               <Menu.Positioner class="z-50">

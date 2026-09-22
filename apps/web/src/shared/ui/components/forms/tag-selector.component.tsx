@@ -31,6 +31,7 @@ function TagSelector(props: Props) {
   const [term, setTerm] = createSignal('');
   const [request, setRequest] = createSignal<string | undefined>();
   let activeController: AbortController | undefined;
+  let openRequestTimer: number | undefined;
 
   const [result] = createResource(
     () => (props.remote === false ? undefined : request()),
@@ -76,22 +77,27 @@ function TagSelector(props: Props) {
 
   onCleanup(() => {
     requestTags.cancel();
+    if (openRequestTimer !== undefined) window.clearTimeout(openRequestTimer);
     activeController?.abort();
   });
 
   return (
     <div class={`grid gap-2 ${props.class ?? ''}`}>
       <Show when={props.label}>
-        <label for={props.id} class="field-label">{props.label}</label>
+        <label for={props.id ? `menu:${props.id}:trigger` : undefined} class="field-label">{props.label}</label>
       </Show>
       <Menu.Root
+        id={props.id}
         onOpenChange={(details) => {
-          if (details.open && props.remote !== false && request() === undefined) setRequest('');
+          if (details.open && props.remote !== false && request() === undefined) {
+            openRequestTimer = window.setTimeout(() => {
+              openRequestTimer = undefined;
+              setRequest('');
+            }, 0);
+          }
         }}
-        positioning={{ placement: 'bottom-start', gutter: 8 }}
       >
         <Menu.Trigger
-          id={props.id}
           type="button"
           disabled={props.disabled}
           aria-label={props.label ?? t('listing.allTags')}
