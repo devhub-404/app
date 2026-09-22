@@ -1,17 +1,16 @@
 ---
-import BaseLayout from '@/shared/ui/layouts/BaseLayout.astro';
-import Toast from '@/shared/ui/components/feedback/toast.component.tsx';
-import Sidebar from './shell/Sidebar.astro';
-import Header from './shell/Header.astro';
-import Main from '@/shared/ui/layouts/components/main.component.astro';
-import Footer from './shell/Footer.astro';
-import MobileNavigation from './shell/MobileNavigation.astro';
-import AccountBootstrap from '@/app/runtime/AccountBootstrap';
-import AccountScopeSync from '@/app/runtime/AccountScopeSync';
-import { FeedbackLauncher } from '@/features/feedback/public';
-import { translate } from '@/shared/i18n/app';
-import type { PageMetadata } from '@/shared/ui/metadata/page-metadata.type.ts';
-import { createPageMetadata } from '@/shared/ui/metadata/page-metadata.util.ts';
+import BaseLayout from "@/shared/ui/layouts/BaseLayout.astro";
+import Toast from "@/shared/ui/components/feedback/toast.component.tsx";
+import Sidebar from "./shell/Sidebar.astro";
+import Header from "./shell/Header.astro";
+import Main from "@/shared/ui/layouts/components/main.component.astro";
+import Footer from "./shell/Footer.astro";
+import MobileNavigation from "./shell/MobileNavigation.astro";
+import AppSessionRuntime from "@/app/session/AppSessionRuntime";
+import { FeedbackLauncher } from "@/features/feedback/public";
+import { translate } from "@/shared/i18n/app";
+import type { PageMetadata } from "@/shared/ui/metadata/page-metadata.type.ts";
+import { createPageMetadata } from "@/shared/ui/metadata/page-metadata.util.ts";
 
 interface Props extends PageMetadata {}
 
@@ -21,12 +20,14 @@ const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
 ---
 
 <BaseLayout {...baseProps}>
-  <Fragment slot="head"><slot name="head" /></Fragment>
+  <Fragment slot="head">
+    <slot name="head" />
+  </Fragment>
   <a
     href="#app-content"
     class="fixed left-3 top-3 z-100 -translate-y-20 rounded-lg bg-action px-4 py-2 text-sm font-semibold text-content-on-accent focus:translate-y-0"
   >
-    {t('shell.skipToContent')}
+    {t("shell.skipToContent")}
   </a>
   <div
     class="min-h-screen"
@@ -39,27 +40,26 @@ const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
     <div class="lg:flex">
       <Sidebar />
       <div class="w-full">
-        <Main>{Astro.slots.has('body') ? <slot name="body" /> : <slot />}</Main>
+        <Main>{Astro.slots.has("body") ? <slot name="body" /> : <slot />}</Main>
         <Footer />
       </div>
     </div>
     <MobileNavigation />
   </div>
   <Toast client:load transition:persist="app-toast" />
-  <AccountBootstrap
+  <AppSessionRuntime
     initialAccount={Astro.locals.account}
     initialResolution={Astro.locals.accountResolution}
     client:only="solid-js"
-    transition:persist="account-bootstrap"
+    transition:persist="app-session-runtime"
   />
-  <AccountScopeSync
-    initialResolution={Astro.locals.accountResolution}
-    client:only="solid-js"
-    transition:persist="account-scope-sync"
+  <FeedbackLauncher
+    locale={locale}
+    client:idle
+    transition:persist="feedback-launcher"
   />
-  <FeedbackLauncher locale={locale} client:idle transition:persist="feedback-launcher" />
   <script>
-    import { startBrowserRuntime } from '@/app/runtime/browser-runtime';
+    import { startBrowserRuntime } from "@/app/runtime/browser-runtime";
     startBrowserRuntime();
   </script>
 </BaseLayout>
