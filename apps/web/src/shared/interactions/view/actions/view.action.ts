@@ -1,10 +1,10 @@
 import {
-  $sessionScope,
+  $appSessionScope,
   getSessionScope,
   isAuthenticatedSessionScope,
   isCurrentSessionScope,
-} from '@/shared/runtime/session-scope';
-import { ViewApi } from '@/shared/interactions/view/api/view.api.ts';
+} from "@/app/session/session-scope";
+import { ViewApi } from "@/shared/interactions/view/api/view.api.ts";
 
 async function record(resourceId: string, options?: { signal?: AbortSignal }) {
   return ViewApi.record(resourceId, options);
@@ -15,7 +15,7 @@ export function recordView(resourceId: string) {
   if (isAuthenticatedSessionScope(currentScope.accountId)) {
     return record(resourceId, { signal: currentScope.signal });
   }
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
 
   return new Promise<Awaited<ReturnType<typeof record>> | null>((resolve) => {
     let settled = false;
@@ -37,11 +37,15 @@ export function recordView(resourceId: string) {
         void record(resourceId, { signal: scope.signal }).then((result) =>
           isCurrentSessionScope(scope) ? finish(result) : finish(null),
         );
-      } else if (scope.status === 'anonymous' || scope.status === 'invalidating' || scope.status === 'unavailable') {
+      } else if (
+        scope.status === "anonymous" ||
+        scope.status === "invalidating" ||
+        scope.status === "unavailable"
+      ) {
         finish(null);
       }
     };
-    unsubscribeScope = $sessionScope.listen(attempt);
+    unsubscribeScope = $appSessionScope.listen(attempt);
     attempt();
   });
 }

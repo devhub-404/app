@@ -1,7 +1,10 @@
-import { ProfileApi } from '@/features/account/api/profile.api.ts';
-import type { UpdateProfileDTO } from '@/features/account/types/profile.type.ts';
-import { $account, setAccountDetails } from '@/features/account/store/account.store';
-import type { ApiClient } from '@/shared/api';
+import { ProfileApi } from "@/features/account/api/profile.api.ts";
+import type { UpdateProfileDTO } from "@/features/account/types/profile.type.ts";
+import {
+  $appAccount as $account,
+  setAccountDetails,
+} from "@/app/session/app-account.store";
+import type { ApiClient } from "@/shared/api";
 
 export async function updateMyProfile(payload: UpdateProfileDTO) {
   const result = await ProfileApi.updateMyProfile(payload);
@@ -18,7 +21,10 @@ export async function updateMyProfile(payload: UpdateProfileDTO) {
   }
   return true;
 }
-export async function getProfileByUsername(username: string, client?: ApiClient) {
+export async function getProfileByUsername(
+  username: string,
+  client?: ApiClient,
+) {
   const { data, error } = await ProfileApi.getByUsername(username, client);
   if (error) return null;
   return data?.data ?? null;

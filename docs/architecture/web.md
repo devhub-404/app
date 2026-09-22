@@ -62,7 +62,12 @@ composition point.
 - `access` controls local presentation of permitted operations;
 - an operation may be hidden or disabled according to UI policy, but this
   never replaces API authorization;
-- shared session/account state belongs to application context;
+- `src/app/session` owns canonical session state, the account projection used by
+  the shell, and the global lifecycle;
+- `AppLayout` mounts the session runtime persistently so state survives Astro
+  navigations;
+- features do not own local session or authenticated-account stores; they
+  consume required projections or use the private transport;
 - temporary page state does not go into a global store.
 
 ## Content

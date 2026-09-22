@@ -1,3 +1,7 @@
+/**
+ * Compatibility surface for account feature consumers.
+ * The canonical store lives in the application session runtime.
+ */
 export type {
   AccountState,
   AccountStateStatus,

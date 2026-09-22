@@ -1,1 +1,1 @@
-export { $account } from '../store/account.store.ts';
+export { $appAccount as $account } from "@/app/session/app-account.store";

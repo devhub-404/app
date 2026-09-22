@@ -1,9 +1,11 @@
 import { onCleanup, onMount } from "solid-js";
+import { useStore } from "@nanostores/solid";
+import { $appAccount, setAccountShell } from "@/app/session/app-account.store";
 import {
-  useAccount,
-  setAccountShell,
-  type AccountShellView,
-} from "@/features/account/public/account-state";
+  bootstrapAppAccount,
+  refreshAppAccount,
+} from "@/app/session/app-session.actions";
+import type { AccountShellView } from "@/app/session/account-projection.type.ts";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";
 import { routes } from "@/shared/navigation/routes";
 import { listenForSessionLifecycle } from "./session-lifecycle";
@@ -18,7 +20,7 @@ import {
   getSessionScope,
   invalidateSessionScope,
   setUnavailableSessionScope,
-} from "@/shared/runtime/session-scope";
+} from "@/app/session/session-scope";
 import { clearSessionPersistence } from "@/shared/storage/local-database";
 import {
   canAccessRoute,
@@ -45,7 +47,7 @@ type Props = {
 };
 
 function AccountBootstrap(props: Props) {
-  const { state, bootstrapAccount, refreshAccount } = useAccount();
+  const state = useStore($appAccount);
 
   // A server-authenticated document already carries the authoritative
   // projection. Public documents with a session cookie defer that lookup until
@@ -85,7 +87,7 @@ function AccountBootstrap(props: Props) {
       let details = state().details;
       const shell = state().shell;
       if ((!details || details.role == null) && canResolveAccount) {
-        details = await bootstrapAccount();
+        details = await bootstrapAppAccount();
         canResolveAccount = false;
         retryAttempt = 0;
       }
@@ -153,7 +155,7 @@ function AccountBootstrap(props: Props) {
         canResolveAccount = true;
         const skipLocaleReload =
           window.location.pathname === routes.auth.signIn;
-        void refreshAccount()
+        void refreshAppAccount()
           .then(() => {
             canResolveAccount = false;
             retryAttempt = 0;

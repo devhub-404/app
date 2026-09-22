@@ -50,12 +50,13 @@ account's public interfaces without importing its infrastructure.
 
 ## Web
 
+- `apps/web/src/app/session/` — global state, SSR resolution,
+  synchronization, current-session state, and application logout;
+- `apps/web/src/app/access/` — route resolution and protection;
 - `apps/web/src/features/auth/access/`
 - `apps/web/src/features/auth/actions/`
 - `apps/web/src/features/auth/api/`
 - `apps/web/src/features/auth/public/`
-- `apps/web/src/features/auth/runtime/`
-- `apps/web/src/features/auth/store/`
 - `apps/web/src/features/auth/ui/`
 - `apps/web/src/features/auth/utils/`
 

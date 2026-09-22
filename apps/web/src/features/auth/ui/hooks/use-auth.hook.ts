@@ -1,4 +1,4 @@
-import { useAuthSession } from './use-auth-session.hook.ts';
+import { useAppActor as useAuthSession } from "@/app/session/public";
 import {
   changePassword as changePasswordAction,
   completeAccountRecovery as completeAccountRecoveryAction,
@@ -29,11 +29,13 @@ import {
   verifyMfaRecoveryCode,
   verifyMfaTotp,
   type AuthCommandResult,
-} from '@/features/auth/actions/auth.action.ts';
-import { logout as logoutAction } from '@/features/auth/actions/logout.action.ts';
-import { notifyError, notifySuccess } from '@/shared/ui/feedback/notifications';
+} from "@/features/auth/actions/auth.action.ts";
+import { logoutAppSession as logoutAction } from "@/app/session/public";
+import { notifyError, notifySuccess } from "@/shared/ui/feedback/notifications";
 
-async function withMutationFeedback(operation: () => Promise<AuthCommandResult>): Promise<boolean> {
+async function withMutationFeedback(
+  operation: () => Promise<AuthCommandResult>,
+): Promise<boolean> {
   const result = await operation();
   if (!result.ok) {
     notifyError(result.code);
@@ -52,7 +54,8 @@ export function useAuth() {
     role: authSession.role,
     login: async (...args: Parameters<typeof loginAction>) => {
       const result = await loginAction(...args);
-      if (result.error) notifyError(result.error.code ?? 'NETWORK_REQUEST_FAILED');
+      if (result.error)
+        notifyError(result.error.code ?? "NETWORK_REQUEST_FAILED");
       return result;
     },
     loginPasskey,
@@ -68,38 +71,45 @@ export function useAuth() {
     regenerateRecoveryCodes,
     listPasskeyDevices,
     registerPasskey,
-    updatePasskeyDeviceName: (...args: Parameters<typeof updatePasskeyDeviceNameAction>) =>
-      withMutationFeedback(() => updatePasskeyDeviceNameAction(...args)),
+    updatePasskeyDeviceName: (
+      ...args: Parameters<typeof updatePasskeyDeviceNameAction>
+    ) => withMutationFeedback(() => updatePasskeyDeviceNameAction(...args)),
     deleteCredential: (...args: Parameters<typeof deleteCredentialAction>) =>
       withMutationFeedback(() => deleteCredentialAction(...args)),
     requestMagicLink,
     completeMagicLink,
-    register: (...args: Parameters<typeof registerAction>) => withMutationFeedback(() => registerAction(...args)),
+    register: (...args: Parameters<typeof registerAction>) =>
+      withMutationFeedback(() => registerAction(...args)),
     logout: async () => {
       const result = await logoutAction();
       if (!result.ok) {
         notifyError(result.code);
         return false;
       }
-      if (!result.alreadyInvalidated) notifySuccess('AUTH_LOGGED_OUT');
+      if (!result.alreadyInvalidated) notifySuccess("AUTH_LOGGED_OUT");
       return true;
     },
-    requestPasswordReset: (...args: Parameters<typeof requestPasswordResetAction>) =>
-      withMutationFeedback(() => requestPasswordResetAction(...args)),
-    startAccountRecovery: (...args: Parameters<typeof startAccountRecoveryAction>) =>
-      withMutationFeedback(() => startAccountRecoveryAction(...args)),
-    completeAccountRecovery: (...args: Parameters<typeof completeAccountRecoveryAction>) =>
-      withMutationFeedback(() => completeAccountRecoveryAction(...args)),
+    requestPasswordReset: (
+      ...args: Parameters<typeof requestPasswordResetAction>
+    ) => withMutationFeedback(() => requestPasswordResetAction(...args)),
+    startAccountRecovery: (
+      ...args: Parameters<typeof startAccountRecoveryAction>
+    ) => withMutationFeedback(() => startAccountRecoveryAction(...args)),
+    completeAccountRecovery: (
+      ...args: Parameters<typeof completeAccountRecoveryAction>
+    ) => withMutationFeedback(() => completeAccountRecoveryAction(...args)),
     resetPassword: (...args: Parameters<typeof resetPasswordAction>) =>
       withMutationFeedback(() => resetPasswordAction(...args)),
     changePassword: (...args: Parameters<typeof changePasswordAction>) =>
       withMutationFeedback(() => changePasswordAction(...args)),
-    createPasswordCredential: (...args: Parameters<typeof createPasswordCredentialAction>) =>
-      withMutationFeedback(() => createPasswordCredentialAction(...args)),
+    createPasswordCredential: (
+      ...args: Parameters<typeof createPasswordCredentialAction>
+    ) => withMutationFeedback(() => createPasswordCredentialAction(...args)),
     verifyEmail: (...args: Parameters<typeof verifyEmailAction>) =>
       withMutationFeedback(() => verifyEmailAction(...args)),
-    resendVerification: (...args: Parameters<typeof resendVerificationAction>) =>
-      withMutationFeedback(() => resendVerificationAction(...args)),
+    resendVerification: (
+      ...args: Parameters<typeof resendVerificationAction>
+    ) => withMutationFeedback(() => resendVerificationAction(...args)),
     handleOAuthCallback,
     startOAuth,
   };

@@ -1,17 +1,15 @@
 import { createEffect } from "solid-js";
-import {
-  clearAccount,
-  useAccount,
-} from "@/features/account/public/account-state";
+import { useStore } from "@nanostores/solid";
+import { $appAccount, clearAppAccount } from "@/app/session/app-account.store";
 import { clearPersonalState } from "@/shared/runtime/personal-state";
 import { setNotificationsAccountScope } from "@/features/account/public/notifications-runtime";
-import { clearCurrentSession } from "@/features/auth/public/session";
+import { clearAppCurrentSession } from "@/app/session/app-current-session.store";
 import {
   beginSessionResolution,
   getSessionScope,
   setAuthenticatedSessionScope,
   setAnonymousSessionScope,
-} from "@/shared/runtime/session-scope";
+} from "@/app/session/session-scope";
 
 type Props = {
   initialResolution:
@@ -19,7 +17,7 @@ type Props = {
 };
 
 function AccountScopeSync(props: Props) {
-  const { state } = useAccount();
+  const state = useStore($appAccount);
   let initialResolutionPending = true;
   let lastAccountId: string | null | undefined;
 
@@ -35,7 +33,7 @@ function AccountScopeSync(props: Props) {
       // scope after logout; a real login/cross-tab login marks the scope as
       // resolving before the projection is allowed back in.
       if (scope.status === "anonymous" || scope.status === "invalidating") {
-        clearAccount();
+        clearAppAccount();
         return;
       }
       initialResolutionPending = false;
@@ -48,11 +46,11 @@ function AccountScopeSync(props: Props) {
       }
       setAuthenticatedSessionScope(accountId);
       setNotificationsAccountScope(accountId);
-      clearCurrentSession();
+      clearAppCurrentSession();
     } else {
       setNotificationsAccountScope(null);
       clearPersonalState();
-      clearCurrentSession();
+      clearAppCurrentSession();
       const scope = getSessionScope();
       if (scope.status === "resolving") {
         // A cross-tab login or the initial SSR resolution deliberately clears
