@@ -61,14 +61,14 @@ describe('SubmitContactMessageCommand', () => {
         email: 'Person@Example.com',
         subject: 'Solicitação formal',
         message: 'Mensagem institucional para análise.',
-        contextUrl: 'https://devhub.example/contact?source=footer',
+        contextUrl: 'https://devhub-404.example/contact?source=footer',
       }),
     ).resolves.toEqual({ accepted: true });
 
     expect(send).toHaveBeenCalledWith(
       expect.objectContaining({
-        to: 'contact@devhub.example',
-        html: expect.stringContaining('https://devhub.example/contact?source=footer'),
+        to: 'contact@devhub-404.example',
+        html: expect.stringContaining('https://devhub-404.example/contact?source=footer'),
       }),
     );
   });

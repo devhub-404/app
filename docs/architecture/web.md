@@ -62,7 +62,24 @@ composition point.
 - `access` controls local presentation of permitted operations;
 - an operation may be hidden or disabled according to UI policy, but this
   never replaces API authorization;
-- shared session/account state belongs to application context;
+- `features/auth` owns the authentication source of truth: the current auth
+  session, resolution state, logout single-flight, private-response
+  invalidation, and cross-tab lifecycle synchronization;
+- `features/account` owns the account projection (`$account`) and its
+  `/me/details` bootstrap; it never changes authentication state;
+- `src/app/runtime/AppRuntime.tsx` is composition only. It mounts auth and
+  account runtimes with `client:load`, passing the SSR session and account
+  projections into them;
+- `AppLayout` and the shell receive SSR projections only for initial render and
+  hydration. Authenticated transitions are confirmed through
+  `/api/v1/sessions/current`; account identity is then loaded from `/api/v1/me`
+  or `/api/v1/me/details` according to the route;
+- the lifecycle bus uses `BroadcastChannel`, a same-document event, and a
+  `localStorage` fallback. It publishes `available` only after the producing
+  tab confirms the session, and publishes one `invalidated` event per active
+  logout/invalidation;
+- features do not own local session or authenticated-account stores; they
+  consume the auth and account projections or use the private transport;
 - temporary page state does not go into a global store.
 
 ## Content
@@ -77,4 +94,5 @@ Astro collections. It must not be copied into a feature or duplicated inside
 - all form schemas: unit tests, including search schemas;
 - middleware and metadata: unit tests;
 - `astro check` and Worker build: structural validation;
-- there are no Web E2E or integration tests at this time.
+- authentication browser flows are covered by `apps/web/tests/e2e/authentication`;
+- there are no broader Web integration tests at this time.

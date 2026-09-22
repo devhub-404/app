@@ -1,12 +1,12 @@
-import { createMemo, createSignal, onMount } from 'solid-js';
-import { useAuthSession } from '@/features/auth/public/session';
-import { getProfileByUsername } from '@/features/account/actions/profile.action.ts';
-import type { PublicProfileDTO } from '@/features/account/types/profile.type.ts';
+import { createMemo, createSignal, onMount } from "solid-js";
+import { useAuthActor as useAuthSession } from "@/features/auth/public";
+import { getProfileByUsername } from "@/features/account/actions/profile.action.ts";
+import type { PublicProfileDTO } from "@/features/account/types/profile.type.ts";
 import {
   profileTabs,
   type ProfileContributionType,
   type ProfileTab,
-} from '@/features/account/ui/components/profile/public/profile-contributions.component.ts';
+} from "@/features/account/ui/components/profile/public/profile-contributions.component.ts";
 
 type Props = {
   username: string;
@@ -16,8 +16,12 @@ type Props = {
 
 export function usePublicProfile(props: Props) {
   const { session } = useAuthSession();
-  const [profile, setProfile] = createSignal<PublicProfileDTO | null>(props.initialProfile ?? null);
-  const [loading, setLoading] = createSignal(props.initialProfile === undefined);
+  const [profile, setProfile] = createSignal<PublicProfileDTO | null>(
+    props.initialProfile ?? null,
+  );
+  const [loading, setLoading] = createSignal(
+    props.initialProfile === undefined,
+  );
   const [error, setError] = createSignal(Boolean(props.initialError));
   const [selectedTab, setSelectedTab] = createSignal<ProfileTab | null>(null);
 
@@ -25,7 +29,9 @@ export function usePublicProfile(props: Props) {
     setLoading(true);
     setError(false);
     try {
-      setProfile(await getProfileByUsername(String(props.username ?? '').trim()));
+      setProfile(
+        await getProfileByUsername(String(props.username ?? "").trim()),
+      );
     } catch {
       setError(true);
     } finally {
@@ -40,27 +46,37 @@ export function usePublicProfile(props: Props) {
   const canEdit = createMemo(() => {
     const state = session();
     const data = profile();
-    return Boolean(data && state.status === 'authenticated' && state.me.profile?.username === data.username);
+    return Boolean(
+      data &&
+      state.status === "authenticated" &&
+      state.me.profile?.username === data.username,
+    );
   });
 
   const contributions = createMemo(() => profile()?.contributions ?? []);
   const filters = createMemo(() => {
     const counts = new Map<ProfileContributionType, number>();
-    for (const item of contributions()) counts.set(item.type, (counts.get(item.type) ?? 0) + 1);
+    for (const item of contributions())
+      counts.set(item.type, (counts.get(item.type) ?? 0) + 1);
     return profileTabs.map((tab) => ({
       ...tab,
-      count: tab.types.reduce((total, type) => total + (counts.get(type) ?? 0), 0),
+      count: tab.types.reduce(
+        (total, type) => total + (counts.get(type) ?? 0),
+        0,
+      ),
     }));
   });
 
   const activeTab = createMemo(() => selectedTab() ?? filters()[0]?.id ?? null);
   const visibleContributions = createMemo(() => {
     const tab = profileTabs.find((item) => item.id === activeTab());
-    return tab ? contributions().filter((item) => tab.types.includes(item.type)) : [];
+    return tab
+      ? contributions().filter((item) => tab.types.includes(item.type))
+      : [];
   });
   const interactions = createMemo(() =>
     contributions()
-      .filter((item) => item.type === 'question' || item.type === 'answer')
+      .filter((item) => item.type === "question" || item.type === "answer")
       .slice(0, 4),
   );
 

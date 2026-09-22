@@ -13,6 +13,13 @@ type TestAccount = {
   totpSecret?: string;
 };
 
+const seededAccount: TestAccount = {
+  email: "member@devhub-404.local",
+  password: "DevHub-Member-2026!",
+  username: "localmember",
+  displayName: "Membro Local",
+};
+
 type MailEnvelope = {
   to: string[];
   urls: string[];
@@ -26,12 +33,32 @@ const mailboxDirectory = resolve(
 const testApiUrl = process.env.E2E_API_URL ?? "http://localhost:3001";
 
 function userMenu(page: Page) {
-  return page.getByRole("button", { name: "Menu do usuário" }).first();
+  return page
+    .getByRole("button", { name: /Menu do usuário|User menu/i })
+    .first();
+}
+
+function trackSessionResolutions(page: Page) {
+  let count = 0;
+  page.on("request", (request) => {
+    if (
+      request.url().includes("/api/v1/sessions/current") &&
+      request.method() === "GET"
+    ) {
+      count += 1;
+    }
+  });
+  return {
+    count: () => count,
+    reset: () => {
+      count = 0;
+    },
+  };
 }
 
 async function expectAuthenticatedSession(page: Page) {
   const session = await page.evaluate(async (apiUrl) => {
-    const response = await fetch(`${apiUrl}/api/v1/me/details`, {
+    const response = await fetch(`${apiUrl}/api/v1/sessions/current`, {
       credentials: "include",
     });
 
@@ -43,7 +70,7 @@ async function expectAuthenticatedSession(page: Page) {
 
 async function expectUnauthenticatedSession(page: Page) {
   const session = await page.evaluate(async (apiUrl) => {
-    const response = await fetch(`${apiUrl}/api/v1/me/details`, {
+    const response = await fetch(`${apiUrl}/api/v1/sessions/current`, {
       credentials: "include",
     });
 
@@ -90,7 +117,7 @@ async function waitForVerificationUrl(email: string, startedAt: number) {
 async function registerAndVerify(page: Page): Promise<TestAccount> {
   const suffix = randomUUID().replaceAll("-", "").slice(0, 12);
   const account: TestAccount = {
-    email: `e2e-${suffix}@devhub.local`,
+    email: `e2e-${suffix}@devhub-404.local`,
     password: "E2E-Password-2026!",
     username: `e2e${suffix}`,
     displayName: `E2E User ${suffix}`,
@@ -191,6 +218,59 @@ test.describe("autenticação no navegador", () => {
     ).toBeVisible();
   });
 
+  test("autentica a conta seed, sincroniza a sessão e encerra o logout", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ locale: "pt-BR" });
+    const pageA = await context.newPage();
+    const pageB = await context.newPage();
+    const pageC = await context.newPage();
+    const resolutionsA = trackSessionResolutions(pageA);
+    const resolutionsB = trackSessionResolutions(pageB);
+    const resolutionsC = trackSessionResolutions(pageC);
+
+    try {
+      await pageA.goto("/login?redirect=%2Ffeed");
+      await pageB.goto("/articles");
+      await expect(userMenu(pageB)).not.toBeVisible();
+      resolutionsA.reset();
+      resolutionsB.reset();
+
+      await signIn(pageA, { ...seededAccount });
+      await expect(userMenu(pageA)).toBeVisible();
+      expect(resolutionsA.count()).toBe(1);
+      await expectAuthenticatedSession(pageA);
+
+      // The already-open public page must consume the same app-level session
+      // lifecycle without a second login or a feature-local account store.
+      await expect(userMenu(pageB)).toBeVisible();
+      expect(resolutionsB.count()).toBe(1);
+      await expectAuthenticatedSession(pageB);
+      await pageC.goto("/account/profile");
+      await expect(userMenu(pageC)).toBeVisible();
+      // SSR already delivered the authenticated session. Hydration must not
+      // probe /sessions/current a second time.
+      expect(resolutionsC.count()).toBe(0);
+      await expectAuthenticatedSession(pageC);
+
+      await userMenu(pageA).click();
+      await pageA.getByRole("menuitem", { name: "Sair", exact: true }).click();
+      await expect(pageA).toHaveURL(/\/login/);
+      await expectUnauthenticatedSession(pageA);
+
+      // A public page remains where it is after logout; only its authenticated
+      // projection is cleared. Private pages are the ones redirected to login.
+      await expect(pageB).toHaveURL(/\/articles/);
+      await expect(userMenu(pageB)).not.toBeVisible();
+      await expectUnauthenticatedSession(pageB);
+      await expect(pageC).toHaveURL(/\/login/);
+      await expect(userMenu(pageC)).not.toBeVisible();
+      await expectUnauthenticatedSession(pageC);
+    } finally {
+      await context.close();
+    }
+  });
+
   test("cadastra, verifica, autentica, carrega o profile e sincroniza login e logout entre abas", async ({
     browser,
   }) => {
@@ -241,7 +321,7 @@ test.describe("autenticação no navegador", () => {
     await page.goto("/login");
     await page
       .locator("#login-email")
-      .fill(`missing-${randomUUID()}@devhub.local`);
+      .fill(`missing-${randomUUID()}@devhub-404.local`);
     await page.locator("#login-password").fill("senha-incorreta");
     await page.getByRole("button", { name: "Entrar", exact: true }).click();
 

@@ -1,12 +1,13 @@
-import { onCleanup, onMount } from "solid-js";
+import { createEffect, onCleanup, onMount } from "solid-js";
+import { useStore } from "@nanostores/solid";
+import { $account, setAccountShell } from "@/features/account/store/account-projection.store";
 import {
-  useAccount,
-  setAccountShell,
-  type AccountShellView,
-} from "@/features/account/public/account-state";
+  bootstrapAccount,
+  refreshAccount,
+} from "@/features/account/services/account-projection.service.ts";
+import type { AccountShellView } from "@/features/account/types/account-details-view.type.ts";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";
 import { routes } from "@/shared/navigation/routes";
-import { listenForSessionLifecycle } from "./session-lifecycle";
 import { clearSessionState } from "./session-cleanup";
 import {
   applyLocale,
@@ -14,17 +15,15 @@ import {
   readLocaleOverride,
 } from "@/shared/i18n/core/solid";
 import {
-  beginSessionResolution,
   getSessionScope,
-  invalidateSessionScope,
-  setUnavailableSessionScope,
-} from "@/shared/runtime/session-scope";
+} from "@/features/auth/runtime/auth-scope.ts";
 import { clearSessionPersistence } from "@/shared/storage/local-database";
 import {
   canAccessRoute,
   requiresRouteAuthentication,
   routeAccess,
 } from "@/app/access/route.access.ts";
+import { $auth } from "@/features/auth/store/auth.store.ts";
 
 function buildRedirect(): string {
   return (
@@ -45,7 +44,8 @@ type Props = {
 };
 
 function AccountBootstrap(props: Props) {
-  const { state, bootstrapAccount, refreshAccount } = useAccount();
+  const state = useStore($account);
+  const auth = useStore($auth);
 
   // A server-authenticated document already carries the authoritative
   // projection. Public documents with a session cookie defer that lookup until
@@ -61,7 +61,6 @@ function AccountBootstrap(props: Props) {
     retryTimer = window.setTimeout(() => {
       retryTimer = undefined;
       if (state().details) return;
-      beginSessionResolution();
       void checkRoute();
     }, delay);
   };
@@ -72,7 +71,6 @@ function AccountBootstrap(props: Props) {
       canResolveAccount = false;
       return;
     }
-    setUnavailableSessionScope();
     scheduleRetry();
   };
 
@@ -84,7 +82,10 @@ function AccountBootstrap(props: Props) {
     try {
       let details = state().details;
       const shell = state().shell;
-      if ((!details || details.role == null) && canResolveAccount) {
+      const scope = getSessionScope();
+      const sessionNeedsResolution =
+        scope.status === "resolving" || scope.status === "authenticated";
+      if ((!details || details.role == null) && (canResolveAccount || sessionNeedsResolution)) {
         details = await bootstrapAccount();
         canResolveAccount = false;
         retryAttempt = 0;
@@ -136,20 +137,20 @@ function AccountBootstrap(props: Props) {
   onMount(() => {
     if (props.initialResolution === "authenticated" && props.initialAccount) {
       setAccountShell(props.initialAccount);
-      canResolveAccount = false;
     }
 
     const run = () => void checkRoute();
 
-    const stopSessionLifecycle = listenForSessionLifecycle({
-      onAvailable: () => {
-        // A shared cookie may now represent a different Account. Drop every
-        // account-scoped projection before resolving `/me` again.
+    let lastAuthRevision = auth().revision;
+    createEffect(() => {
+      const currentAuth = auth();
+      if (currentAuth.revision === lastAuthRevision) return;
+      lastAuthRevision = currentAuth.revision;
+      if (currentAuth.status === "authenticated") {
+        const accountId =
+          state().details?.account.id ?? state().shell?.account.id ?? null;
+        if (accountId === currentAuth.session.userId && state().details) return;
         clearSessionState();
-        // AccountScopeSync observes the cleared projection and would
-        // otherwise classify this transient state as anonymous. Mark the
-        // session as resolving before refreshAccount reaches privateClient.
-        beginSessionResolution();
         canResolveAccount = true;
         const skipLocaleReload =
           window.location.pathname === routes.auth.signIn;
@@ -160,23 +161,20 @@ function AccountBootstrap(props: Props) {
             return checkRoute({ skipLocaleReload });
           })
           .catch(handleResolutionFailure);
-      },
-      onInvalidated: () => {
-        // Every tab must invalidate its own scope before a persistent shell or
-        // a stale SSR projection can render the account again.
-        invalidateSessionScope();
+        return;
+      }
+      if (currentAuth.status === "anonymous") {
         clearSessionState();
         canResolveAccount = false;
         void clearSessionPersistence();
         if (requiresRouteAuthentication(routeAccess(window.location.pathname)))
           redirectToLogin();
-      },
+      }
     });
     run();
     document.addEventListener("astro:page-load", run);
     onCleanup(() => {
       if (retryTimer !== undefined) window.clearTimeout(retryTimer);
-      stopSessionLifecycle();
       document.removeEventListener("astro:page-load", run);
     });
   });

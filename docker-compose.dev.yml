@@ -1,4 +1,4 @@
-name: devhub-dev
+name: devhub-404-dev
 
 services:
   db:
@@ -6,13 +6,13 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: devhub_dev
+      POSTGRES_DB: devhub_404_dev
     ports:
       - '5434:5432'
     volumes:
-      - devhub-dev-db:/var/lib/postgresql
+      - devhub-404-dev-db:/var/lib/postgresql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d devhub_dev']
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d devhub_404_dev']
       interval: 2s
       timeout: 5s
       retries: 20
@@ -22,7 +22,7 @@ services:
     ports:
       - '6381:6379'
     volumes:
-      - devhub-dev-redis:/data
+      - devhub-404-dev-redis:/data
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 2s
@@ -30,7 +30,7 @@ services:
       retries: 20
 
   minio:
-    image: minio/minio:latest
+    image: quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -39,7 +39,7 @@ services:
       - '9010:9000'
       - '9011:9001'
     volumes:
-      - devhub-dev-object-store:/data
+      - devhub-404-dev-object-store:/data
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 2s
@@ -48,7 +48,7 @@ services:
 
   minio-init:
     profiles: ['init']
-    image: minio/mc:latest
+    image: quay.io/minio/mc@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727
     depends_on:
       minio:
         condition: service_healthy
@@ -57,10 +57,10 @@ services:
       - -c
       - >
         mc alias set local http://minio:9000 minioadmin minioadmin &&
-        mc mb --ignore-existing local/devhub-dev &&
-        mc anonymous set download local/devhub-dev
+        mc mb --ignore-existing local/devhub-404-dev &&
+        mc anonymous set download local/devhub-404-dev
 
 volumes:
-  devhub-dev-db:
-  devhub-dev-redis:
-  devhub-dev-object-store:
+  devhub-404-dev-db:
+  devhub-404-dev-redis:
+  devhub-404-dev-object-store:

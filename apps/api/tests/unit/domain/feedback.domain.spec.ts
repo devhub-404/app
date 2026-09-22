@@ -7,7 +7,7 @@ describe('Feedback domain', () => {
     reporterAccountId: 'account-1',
     category: 'issue' as const,
     description: 'Falha reproduzível no fluxo de autenticação.',
-    contextUrl: 'https://devhub.test/login',
+    contextUrl: 'https://devhub-404.test/login',
     screenshotMediaId: 'media-1',
   };
 

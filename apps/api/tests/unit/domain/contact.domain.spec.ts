@@ -13,10 +13,10 @@ describe('Contact domain', () => {
 
   it('CONTACT-RN-003 preserves only same-origin context URLs', () => {
     expect(
-      ContactSubmissionPolicy.normalizeContextUrl('https://devhub.example/contact?q=1', 'https://devhub.example'),
-    ).toBe('https://devhub.example/contact?q=1');
+      ContactSubmissionPolicy.normalizeContextUrl('https://devhub-404.example/contact?q=1', 'https://devhub-404.example'),
+    ).toBe('https://devhub-404.example/contact?q=1');
     expect(() =>
-      ContactSubmissionPolicy.normalizeContextUrl('https://outside.example/', 'https://devhub.example'),
+      ContactSubmissionPolicy.normalizeContextUrl('https://outside.example/', 'https://devhub-404.example'),
     ).toThrow();
   });
 });

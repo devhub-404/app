@@ -1,4 +1,4 @@
-name: devhub-test
+name: devhub-404-test
 
 services:
   db:
@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: devhub
+      POSTGRES_DB: devhub_404_test
     ports:
       - '5433:5432'
     healthcheck:
@@ -26,7 +26,7 @@ services:
       retries: 20
 
   minio-test:
-    image: minio/minio:latest
+    image: quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
     command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
@@ -35,7 +35,7 @@ services:
       - '9002:9000'
       - '9003:9001'
     volumes:
-      - devhub-test-object-store:/data
+      - devhub-404-test-object-store:/data
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
       interval: 2s
@@ -44,7 +44,7 @@ services:
 
   minio-test-init:
     profiles: ['init']
-    image: minio/mc:latest
+    image: quay.io/minio/mc@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727
     depends_on:
       minio-test:
         condition: service_healthy
@@ -53,8 +53,8 @@ services:
       - -c
       - >
         mc alias set local http://minio-test:9000 minioadmin minioadmin &&
-        mc mb --ignore-existing local/test-bucket &&
-        mc anonymous set download local/test-bucket
+        mc mb --ignore-existing local/devhub-404-test &&
+        mc anonymous set download local/devhub-404-test
 
 volumes:
-  devhub-test-object-store:
+  devhub-404-test-object-store:

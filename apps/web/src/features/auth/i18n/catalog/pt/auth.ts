@@ -41,7 +41,7 @@ export const catalog = {
   'common.sending': 'Enviando…',
   'common.verifying': 'Verificando…',
   'common.invalidData': 'Dados inválidos.',
-  'common.emailPlaceholder': 'voce@devhub.com',
+  'common.emailPlaceholder': 'voce@devhub404.org',
   'recovery.startError': 'Não foi possível iniciar a recuperação agora.',
   'recovery.uniformAck':
     'Se esse email backup verificado puder recuperar uma conta, enviaremos um link. A resposta é deliberadamente uniforme.',

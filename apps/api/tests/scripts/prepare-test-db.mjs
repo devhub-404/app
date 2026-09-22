@@ -20,7 +20,7 @@ function run(command, args, options = {}) {
   return (result.stdout ?? '').trim();
 }
 
-run('docker', [...compose, 'up', '-d', 'db', 'redis-test', 'minio-test']);
+run('docker', [...compose, 'up', '-d', '--wait', 'db', 'redis-test', 'minio-test']);
 
 run('docker', [...compose, '--profile', 'init', 'run', '--rm', 'minio-test-init']);
 
@@ -39,6 +39,6 @@ for (let attempt = 0; attempt < 60; attempt += 1) {
 if (!ready) throw new Error('PostgreSQL did not become ready for the test suite');
 
 run('docker', [...compose, 'exec', '-T', 'redis-test', 'redis-cli', 'FLUSHDB']);
-run('docker', [...compose, 'exec', '-T', 'db', 'dropdb', '-U', 'postgres', '--if-exists', 'devhub_test']);
-run('docker', [...compose, 'exec', '-T', 'db', 'createdb', '-U', 'postgres', 'devhub_test']);
+run('docker', [...compose, 'exec', '-T', 'db', 'dropdb', '-U', 'postgres', '--if-exists', 'devhub_404_test']);
+run('docker', [...compose, 'exec', '-T', 'db', 'createdb', '-U', 'postgres', 'devhub_404_test']);
 run('pnpm', ['exec', 'drizzle-kit', 'migrate', '--config', 'tests/drizzle.test.config.ts'], { cwd: apiRoot });

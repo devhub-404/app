@@ -12903,7 +12903,7 @@
     }
   },
   "info": {
-    "title": "DevHub API",
+    "title": "DevHub 404 API",
     "description": "",
     "version": "1.0",
     "contact": {}
@@ -18376,6 +18376,10 @@
         "properties": {
           "status": {
             "type": "string",
+            "enum": [
+              "ready",
+              "not_ready"
+            ],
             "example": "ready"
           },
           "ready": {

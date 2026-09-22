@@ -50,12 +50,22 @@ account's public interfaces without importing its infrastructure.
 
 ## Web
 
+- `apps/web/src/features/auth/store/` — canonical browser authentication
+  state and session revisions;
+- `apps/web/src/features/auth/runtime/` — session resolution, logout
+  coordination, request invalidation, and cross-tab synchronization;
+- `apps/web/src/features/auth/api/` — browser and SSR clients for
+  `/api/v1/sessions/current` and related auth-session operations;
+- `apps/web/src/features/account/store/account-projection.store.ts` — account
+  projection consumed by the shell and features; it is not an auth source of
+  truth;
+- `apps/web/src/app/runtime/AppRuntime.tsx` — application composition of the
+  auth and account runtimes;
+- `apps/web/src/app/access/` — route resolution and protection;
 - `apps/web/src/features/auth/access/`
 - `apps/web/src/features/auth/actions/`
 - `apps/web/src/features/auth/api/`
 - `apps/web/src/features/auth/public/`
-- `apps/web/src/features/auth/runtime/`
-- `apps/web/src/features/auth/store/`
 - `apps/web/src/features/auth/ui/`
 - `apps/web/src/features/auth/utils/`
 
