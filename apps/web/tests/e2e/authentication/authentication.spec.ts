@@ -42,7 +42,8 @@ function trackSessionResolutions(page: Page) {
   let count = 0;
   page.on("request", (request) => {
     if (
-      request.url().includes("/api/v1/me/details")
+      request.url().includes("/api/v1/sessions/current") &&
+      request.method() === "GET"
     ) {
       count += 1;
     }
@@ -57,7 +58,7 @@ function trackSessionResolutions(page: Page) {
 
 async function expectAuthenticatedSession(page: Page) {
   const session = await page.evaluate(async (apiUrl) => {
-    const response = await fetch(`${apiUrl}/api/v1/me/details`, {
+    const response = await fetch(`${apiUrl}/api/v1/sessions/current`, {
       credentials: "include",
     });
 
@@ -69,7 +70,7 @@ async function expectAuthenticatedSession(page: Page) {
 
 async function expectUnauthenticatedSession(page: Page) {
   const session = await page.evaluate(async (apiUrl) => {
-    const response = await fetch(`${apiUrl}/api/v1/me/details`, {
+    const response = await fetch(`${apiUrl}/api/v1/sessions/current`, {
       credentials: "include",
     });
 
@@ -247,7 +248,9 @@ test.describe("autenticação no navegador", () => {
       await expectAuthenticatedSession(pageB);
       await pageC.goto("/account/profile");
       await expect(userMenu(pageC)).toBeVisible();
-      expect(resolutionsC.count()).toBe(1);
+      // SSR already delivered the authenticated session. Hydration must not
+      // probe /sessions/current a second time.
+      expect(resolutionsC.count()).toBe(0);
       await expectAuthenticatedSession(pageC);
 
       await userMenu(pageA).click();
