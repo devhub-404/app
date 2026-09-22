@@ -50,8 +50,7 @@ const t = (key: Parameters<typeof translate>[1]) => translate(locale, key);
   <AppSessionRuntime
     initialAccount={Astro.locals.account}
     initialResolution={Astro.locals.accountResolution}
-    client:only="solid-js"
-    transition:persist="app-session-runtime"
+    client:load
   />
   <FeedbackLauncher
     locale={locale}

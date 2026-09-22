@@ -13,6 +13,13 @@ type TestAccount = {
   totpSecret?: string;
 };
 
+const seededAccount: TestAccount = {
+  email: "member@devhub-404.local",
+  password: "DevHub-Member-2026!",
+  username: "localmember",
+  displayName: "Membro Local",
+};
+
 type MailEnvelope = {
   to: string[];
   urls: string[];
@@ -26,7 +33,26 @@ const mailboxDirectory = resolve(
 const testApiUrl = process.env.E2E_API_URL ?? "http://localhost:3001";
 
 function userMenu(page: Page) {
-  return page.getByRole("button", { name: "Menu do usuário" }).first();
+  return page
+    .getByRole("button", { name: /Menu do usuário|User menu/i })
+    .first();
+}
+
+function trackSessionResolutions(page: Page) {
+  let count = 0;
+  page.on("request", (request) => {
+    if (
+      request.url().includes("/api/v1/me/details")
+    ) {
+      count += 1;
+    }
+  });
+  return {
+    count: () => count,
+    reset: () => {
+      count = 0;
+    },
+  };
 }
 
 async function expectAuthenticatedSession(page: Page) {
@@ -189,6 +215,57 @@ test.describe("autenticação no navegador", () => {
     await expect(
       page.getByRole("button", { name: "Entrar", exact: true }).last(),
     ).toBeVisible();
+  });
+
+  test("autentica a conta seed, sincroniza a sessão e encerra o logout", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ locale: "pt-BR" });
+    const pageA = await context.newPage();
+    const pageB = await context.newPage();
+    const pageC = await context.newPage();
+    const resolutionsA = trackSessionResolutions(pageA);
+    const resolutionsB = trackSessionResolutions(pageB);
+    const resolutionsC = trackSessionResolutions(pageC);
+
+    try {
+      await pageA.goto("/login?redirect=%2Ffeed");
+      await pageB.goto("/articles");
+      await expect(userMenu(pageB)).not.toBeVisible();
+      resolutionsA.reset();
+      resolutionsB.reset();
+
+      await signIn(pageA, { ...seededAccount });
+      await expect(userMenu(pageA)).toBeVisible();
+      expect(resolutionsA.count()).toBe(1);
+      await expectAuthenticatedSession(pageA);
+
+      // The already-open public page must consume the same app-level session
+      // lifecycle without a second login or a feature-local account store.
+      await expect(userMenu(pageB)).toBeVisible();
+      expect(resolutionsB.count()).toBe(1);
+      await expectAuthenticatedSession(pageB);
+      await pageC.goto("/account/profile");
+      await expect(userMenu(pageC)).toBeVisible();
+      expect(resolutionsC.count()).toBe(1);
+      await expectAuthenticatedSession(pageC);
+
+      await userMenu(pageA).click();
+      await pageA.getByRole("menuitem", { name: "Sair", exact: true }).click();
+      await expect(pageA).toHaveURL(/\/login/);
+      await expectUnauthenticatedSession(pageA);
+
+      // A public page remains where it is after logout; only its authenticated
+      // projection is cleared. Private pages are the ones redirected to login.
+      await expect(pageB).toHaveURL(/\/articles/);
+      await expect(userMenu(pageB)).not.toBeVisible();
+      await expectUnauthenticatedSession(pageB);
+      await expect(pageC).toHaveURL(/\/login/);
+      await expect(userMenu(pageC)).not.toBeVisible();
+      await expectUnauthenticatedSession(pageC);
+    } finally {
+      await context.close();
+    }
   });
 
   test("cadastra, verifica, autentica, carrega o profile e sincroniza login e logout entre abas", async ({

@@ -7,7 +7,8 @@ import { useUserMenuState } from '@/features/account/ui/hooks/use-user-menu-stat
 import UserAvatar from './user-avatar.component.tsx';
 import { Menu } from '@ark-ui/solid/menu';
 import { ChevronDown, CircleUserRound, FolderKanban, LayoutDashboard, LogIn, LogOut, Settings, ShieldCheck, User } from 'lucide-solid';
-type Props = { location: 'header' | 'sidebar' };
+import type { AccountShellView } from '@/app/session/account-projection.type.ts';
+type Props = { location: 'header' | 'sidebar'; initialAccount?: AccountShellView | null };
 
 type ItemProps = {
   value: string;
@@ -34,7 +35,7 @@ function MenuItem(props: ItemProps) {
 
 function UserMenu(props: Props) {
   const { t } = useI18n();
-  const state = useUserMenuState();
+  const state = useUserMenuState(props.initialAccount);
   const sidebar = () => props.location === 'sidebar';
 
   return (

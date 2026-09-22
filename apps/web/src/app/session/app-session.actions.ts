@@ -1,4 +1,4 @@
-import { privateClient, readApiData } from "@/shared/api";
+import { privateClient } from "@/shared/api";
 import { isAbortError } from "@/shared/runtime/abort-signal";
 import {
   $appAccount,
@@ -7,7 +7,11 @@ import {
   setAccountUnavailable,
 } from "./app-account.store";
 import type { AccountDetailsView } from "./account-projection.type.ts";
-import { getSessionScope, isCurrentSessionScope } from "./session-scope";
+import {
+  getSessionScope,
+  isCurrentSessionScope,
+  setAuthenticatedSessionScope,
+} from "./session-scope";
 
 let bootstrapPromise: Promise<AccountDetailsView | null> | null = null;
 
@@ -30,7 +34,10 @@ async function fetchAccount(): Promise<AccountDetailsView> {
     throw stale;
   }
 
-  const details = readApiData<AccountDetailsView>(data);
+  // openapi-fetch returns the API response envelope in `data` itself.
+  // `readApiData` accepts the complete client result, so unwrap the envelope
+  // here without treating the account DTO as another client result.
+  const details = (data as { data?: AccountDetailsView } | undefined)?.data;
   if (!details) throw new Error("ACCOUNT_NOT_FOUND");
   return details;
 }
@@ -45,6 +52,7 @@ export async function bootstrapAppAccount(): Promise<AccountDetailsView | null> 
       setAccountLoading();
       const details = await fetchAccount();
       setAccountDetails(details);
+      setAuthenticatedSessionScope(details.account.id);
       return details;
     } catch (error) {
       if (isAbortError(error)) return null;
@@ -67,6 +75,7 @@ export async function refreshAppAccount(): Promise<AccountDetailsView> {
   try {
     const details = await fetchAccount();
     setAccountDetails(details);
+    setAuthenticatedSessionScope(details.account.id);
     return details;
   } catch (error) {
     if (isAbortError(error)) throw error;

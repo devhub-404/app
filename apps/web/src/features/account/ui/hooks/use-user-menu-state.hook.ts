@@ -3,10 +3,11 @@ import { useAuth } from "@/features/auth/public";
 import { useAppActor as useAuthSession } from "@/app/session/public";
 import { routes } from "@/shared/navigation/routes";
 import { redirectTo } from "@/shared/utils/redirect.util.ts";
+import type { AccountShellView } from "@/app/session/account-projection.type.ts";
 
-export function useUserMenuState() {
+export function useUserMenuState(initialAccount?: AccountShellView | null) {
   const { logout } = useAuth();
-  const { session, role } = useAuthSession();
+  const { session, role } = useAuthSession(initialAccount);
 
   const displayName = createMemo(() => {
     const current = session();

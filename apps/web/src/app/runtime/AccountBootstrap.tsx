@@ -86,7 +86,10 @@ function AccountBootstrap(props: Props) {
     try {
       let details = state().details;
       const shell = state().shell;
-      if ((!details || details.role == null) && canResolveAccount) {
+      const scope = getSessionScope();
+      const sessionNeedsResolution =
+        scope.status === "resolving" || scope.status === "authenticated";
+      if ((!details || details.role == null) && (canResolveAccount || sessionNeedsResolution)) {
         details = await bootstrapAppAccount();
         canResolveAccount = false;
         retryAttempt = 0;
@@ -138,7 +141,6 @@ function AccountBootstrap(props: Props) {
   onMount(() => {
     if (props.initialResolution === "authenticated" && props.initialAccount) {
       setAccountShell(props.initialAccount);
-      canResolveAccount = false;
     }
 
     const run = () => void checkRoute();

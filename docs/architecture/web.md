@@ -64,8 +64,13 @@ composition point.
   never replaces API authorization;
 - `src/app/session` owns canonical session state, the account projection used by
   the shell, and the global lifecycle;
-- `AppLayout` mounts the session runtime persistently so state survives Astro
-  navigations;
+- `AppLayout` mounts the session runtime after the shell islands with
+  `client:load`; the coordinator is recreated on Astro navigations so each
+  document consumes its current SSR session projection, while its global
+  stores survive the navigation;
+- the shell receives the SSR `AccountShellView` only as an initial hydration
+  projection; subsequent identity and lifecycle changes come from
+  `src/app/session`;
 - features do not own local session or authenticated-account stores; they
   consume required projections or use the private transport;
 - temporary page state does not go into a global store.
@@ -82,4 +87,5 @@ Astro collections. It must not be copied into a feature or duplicated inside
 - all form schemas: unit tests, including search schemas;
 - middleware and metadata: unit tests;
 - `astro check` and Worker build: structural validation;
-- there are no Web E2E or integration tests at this time.
+- authentication browser flows are covered by `apps/web/tests/e2e/authentication`;
+- there are no broader Web integration tests at this time.
