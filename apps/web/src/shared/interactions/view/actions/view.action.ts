@@ -3,7 +3,7 @@ import {
   getSessionScope,
   isAuthenticatedSessionScope,
   isCurrentSessionScope,
-} from "@/features/auth/runtime/auth-scope.ts";
+} from "@/features/auth/public/session.ts";
 import { ViewApi } from "@/shared/interactions/view/api/view.api.ts";
 
 async function record(resourceId: string, options?: { signal?: AbortSignal }) {

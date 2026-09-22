@@ -1,6 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { DEFAULT_LOCALE, localeFromAcceptLanguage } from "@/shared/i18n/core";
-import { resolveSession } from "@/features/auth/api/session-server.api.ts";
+import { resolveSession } from "@/features/auth/public/server.ts";
 import { hasValidSessionCookie } from "@/shared/auth/session-cookie";
 import { authorizeRequest } from "./authorization.access.ts";
 import { requiresRouteAuthentication, routeAccess } from "./route.access.ts";

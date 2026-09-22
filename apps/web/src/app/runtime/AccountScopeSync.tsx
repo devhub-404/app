@@ -5,7 +5,7 @@ import { clearPersonalState } from "@/shared/runtime/personal-state";
 import { setNotificationsAccountScope } from "@/features/account/public/notifications-runtime";
 import {
   getSessionScope,
-} from "@/features/auth/runtime/auth-scope.ts";
+} from "@/features/auth/public/session.ts";
 
 function AccountScopeSync() {
   const state = useStore($account);

@@ -8,7 +8,7 @@ import type { ApiResult } from "@/shared/api";
 import {
   getSessionScope,
   isAuthenticatedSessionScope,
-} from "@/features/auth/runtime/auth-scope.ts";
+} from "@/features/auth/public/session.ts";
 
 export type VoteInput = { resourceId: string; active: boolean };
 export type VoteQuery = { resourceIds?: string[] };

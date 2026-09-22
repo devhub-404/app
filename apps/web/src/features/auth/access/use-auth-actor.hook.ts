@@ -1,6 +1,6 @@
 import { useStore } from "@nanostores/solid";
 import { createMemo } from "solid-js";
-import { $account } from "@/features/account/store/account-projection.store.ts";
+import { $account } from "@/features/account/public/client-state.ts";
 import { $auth } from "@/features/auth/store/auth.store.ts";
 import type { AccountShellView } from "@/features/account/types/account-details-view.type.ts";
 import type { Actor } from "./actor.access.ts";

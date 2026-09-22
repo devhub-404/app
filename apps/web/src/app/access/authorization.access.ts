@@ -1,4 +1,4 @@
-import type { SessionResolution } from "@/features/auth/api/session-server.api.ts";
+import type { SessionResolution } from "@/features/auth/public/server.ts";
 import { canAccessRoute, type RouteAccess } from "./route.access.ts";
 
 function redirectToLogin(request: Request): Response {

@@ -23,6 +23,12 @@ function createId() {
 }
 
 export function createAuthSessionLifecycleBus(): AuthSessionLifecycleBus {
+  if (typeof window === "undefined") {
+    throw new Error(
+      "The auth session lifecycle bus can only be created in the browser.",
+    );
+  }
+
   const sourceTabId = createId();
   const seenNonces = new Set<string>();
   const localListeners = new Set<

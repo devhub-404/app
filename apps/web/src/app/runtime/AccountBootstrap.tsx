@@ -16,7 +16,7 @@ import {
 } from "@/shared/i18n/core/solid";
 import {
   getSessionScope,
-} from "@/features/auth/runtime/auth-scope.ts";
+} from "@/features/auth/public/session.ts";
 import { clearSessionPersistence } from "@/shared/storage/local-database";
 import {
   canAccessRoute,
