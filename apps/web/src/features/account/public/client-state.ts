@@ -1,1 +1,1 @@
-export { $account } from '../store/account.store.ts';
+export { $account } from "@/features/account/store/account-projection.store";

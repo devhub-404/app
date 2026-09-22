@@ -1,9 +1,19 @@
-import { backoff, random } from '@utilify/core';
-import { NotificationsApi } from '@/features/account/api/notification.api.ts';
-import type { NotificationItem, NotificationSync } from '@/features/account/types/notification.type.ts';
-import { $notifications, initialNotificationsState } from '@/features/account/store/notification.store';
-import { readApiData } from '@/shared/api';
-import { getSessionScope, isAuthenticatedSessionScope, isCurrentSessionScope } from '@/shared/runtime/session-scope';
+import { backoff, random } from "@utilify/core";
+import { NotificationsApi } from "@/features/account/api/notification.api.ts";
+import type {
+  NotificationItem,
+  NotificationSync,
+} from "@/features/account/types/notification.type.ts";
+import {
+  $notifications,
+  initialNotificationsState,
+} from "@/features/account/store/notification.store";
+import { readApiData } from "@/shared/api";
+import {
+  getSessionScope,
+  isAuthenticatedSessionScope,
+  isCurrentSessionScope,
+} from "@/features/auth/runtime/auth-scope.ts";
 
 const MIN_POLL_MS = 30_000;
 const MAX_POLL_MS = 60_000;
@@ -49,8 +59,17 @@ function merge(items: NotificationItem[]) {
 export async function syncNotifications(): Promise<boolean> {
   if (!activeAccountId) return false;
   const scope = getSessionScope();
-  if (scope.accountId !== activeAccountId || !isAuthenticatedSessionScope(activeAccountId)) return false;
-  if (disposed || typeof document === 'undefined' || document.visibilityState !== 'visible') return false;
+  if (
+    scope.accountId !== activeAccountId ||
+    !isAuthenticatedSessionScope(activeAccountId)
+  )
+    return false;
+  if (
+    disposed ||
+    typeof document === "undefined" ||
+    document.visibilityState !== "visible"
+  )
+    return false;
   if (inFlight) return inFlight;
   let task: Promise<boolean>;
   task = backoff(
@@ -58,11 +77,13 @@ export async function syncNotifications(): Promise<boolean> {
       if (!isCurrentSessionScope(scope)) return false;
       const state = $notifications.get();
       $notifications.set({ ...state, loading: true });
-      const result = await NotificationsApi.sync(state.cursor, { signal: scope.signal });
+      const result = await NotificationsApi.sync(state.cursor, {
+        signal: scope.signal,
+      });
       if (!isCurrentSessionScope(scope)) return false;
-      if (result.error) throw new Error('NOTIFICATIONS_SYNC_FAILED');
+      if (result.error) throw new Error("NOTIFICATIONS_SYNC_FAILED");
       const data = readApiData<NotificationSync>(result);
-      if (!data) throw new Error('NOTIFICATIONS_SYNC_FAILED');
+      if (!data) throw new Error("NOTIFICATIONS_SYNC_FAILED");
       merge(data.items);
       $notifications.set({
         ...$notifications.get(),
@@ -74,7 +95,7 @@ export async function syncNotifications(): Promise<boolean> {
       failureLevel = 0;
       return data.items.length > 0;
     },
-    { initialDelay: 400, maxAttempts: 3, maxDelay: 8_000, jitterMode: 'full' },
+    { initialDelay: 400, maxAttempts: 3, maxDelay: 8_000, jitterMode: "full" },
   )
     .catch(() => {
       if (!isCurrentSessionScope(scope)) return false;
@@ -95,8 +116,8 @@ function schedule() {
     !isAuthenticatedSessionScope(activeAccountId) ||
     disposed ||
     consumers === 0 ||
-    typeof document === 'undefined' ||
-    document.visibilityState !== 'visible'
+    typeof document === "undefined" ||
+    document.visibilityState !== "visible"
   )
     return;
   if (timer) clearTimeout(timer);
@@ -125,10 +146,10 @@ export function startNotificationsSync() {
   consumers += 1;
   disposed = false;
   if (consumers === 1) {
-    document.addEventListener('visibilitychange', handleVisibility);
-    window.addEventListener('focus', resetAndSyncNotifications);
-    window.addEventListener('pointerdown', handleActivity, { passive: true });
-    window.addEventListener('keydown', handleActivity);
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("focus", resetAndSyncNotifications);
+    window.addEventListener("pointerdown", handleActivity, { passive: true });
+    window.addEventListener("keydown", handleActivity);
     resetAndSyncNotifications();
   }
   return () => {
@@ -136,20 +157,20 @@ export function startNotificationsSync() {
     if (consumers !== 0) return;
     disposed = true;
     if (timer) clearTimeout(timer);
-    document.removeEventListener('visibilitychange', handleVisibility);
-    window.removeEventListener('focus', resetAndSyncNotifications);
-    window.removeEventListener('pointerdown', handleActivity);
-    window.removeEventListener('keydown', handleActivity);
+    document.removeEventListener("visibilitychange", handleVisibility);
+    window.removeEventListener("focus", resetAndSyncNotifications);
+    window.removeEventListener("pointerdown", handleActivity);
+    window.removeEventListener("keydown", handleActivity);
     $notifications.set(initialNotificationsState);
   };
 }
 
 function handleVisibility() {
-  if (document.visibilityState === 'visible') resetAndSyncNotifications();
+  if (document.visibilityState === "visible") resetAndSyncNotifications();
   else if (timer) clearTimeout(timer);
 }
 function handleActivity() {
-  if (document.visibilityState === 'visible' && idleLevel > 0) {
+  if (document.visibilityState === "visible" && idleLevel > 0) {
     idleLevel = 0;
     schedule();
   }
@@ -158,8 +179,14 @@ function handleActivity() {
 export async function markNotificationRead(item: NotificationItem) {
   if (item.readAt || !activeAccountId) return;
   const scope = getSessionScope();
-  if (scope.accountId !== activeAccountId || !isAuthenticatedSessionScope(activeAccountId)) return;
-  const result = await NotificationsApi.markRead(item.id, { signal: scope.signal });
+  if (
+    scope.accountId !== activeAccountId ||
+    !isAuthenticatedSessionScope(activeAccountId)
+  )
+    return;
+  const result = await NotificationsApi.markRead(item.id, {
+    signal: scope.signal,
+  });
   if (!isCurrentSessionScope(scope)) return;
   if (result.data?.data) {
     merge([result.data.data]);
@@ -173,11 +200,19 @@ export async function markNotificationRead(item: NotificationItem) {
 export async function markAllNotificationsRead() {
   if (!activeAccountId) return;
   const scope = getSessionScope();
-  if (scope.accountId !== activeAccountId || !isAuthenticatedSessionScope(activeAccountId)) return;
+  if (
+    scope.accountId !== activeAccountId ||
+    !isAuthenticatedSessionScope(activeAccountId)
+  )
+    return;
   const result = await NotificationsApi.markAllRead({ signal: scope.signal });
   if (!isCurrentSessionScope(scope)) return;
   if (!result.data?.data) return;
   const now = new Date().toISOString();
-  merge($notifications.get().items.map((item) => (item.readAt ? item : { ...item, readAt: now })));
+  merge(
+    $notifications
+      .get()
+      .items.map((item) => (item.readAt ? item : { ...item, readAt: now })),
+  );
   $notifications.set({ ...$notifications.get(), unread: 0 });
 }

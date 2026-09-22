@@ -1,26 +1,14 @@
 import { createEffect } from "solid-js";
-import {
-  clearAccount,
-  useAccount,
-} from "@/features/account/public/account-state";
+import { useStore } from "@nanostores/solid";
+import { $account, clearAccount } from "@/features/account/store/account-projection.store";
 import { clearPersonalState } from "@/shared/runtime/personal-state";
 import { setNotificationsAccountScope } from "@/features/account/public/notifications-runtime";
-import { clearCurrentSession } from "@/features/auth/public/session";
 import {
-  beginSessionResolution,
   getSessionScope,
-  setAuthenticatedSessionScope,
-  setAnonymousSessionScope,
-} from "@/shared/runtime/session-scope";
+} from "@/features/auth/runtime/auth-scope.ts";
 
-type Props = {
-  initialResolution:
-    "authenticated" | "unauthenticated" | "unavailable" | "deferred";
-};
-
-function AccountScopeSync(props: Props) {
-  const { state } = useAccount();
-  let initialResolutionPending = true;
+function AccountScopeSync() {
+  const state = useStore($account);
   let lastAccountId: string | null | undefined;
 
   createEffect(() => {
@@ -38,7 +26,6 @@ function AccountScopeSync(props: Props) {
         clearAccount();
         return;
       }
-      initialResolutionPending = false;
       if (scope.status === "authenticated" && scope.accountId === accountId) {
         // This island is recreated by Astro ClientRouter. The session and
         // personal runtime already own this Account; remounting the island
@@ -46,33 +33,17 @@ function AccountScopeSync(props: Props) {
         setNotificationsAccountScope(accountId);
         return;
       }
-      setAuthenticatedSessionScope(accountId);
       setNotificationsAccountScope(accountId);
-      clearCurrentSession();
     } else {
       setNotificationsAccountScope(null);
       clearPersonalState();
-      clearCurrentSession();
       const scope = getSessionScope();
       if (scope.status === "resolving") {
         // A cross-tab login or the initial SSR resolution deliberately clears
         // the old projection before re-reading /me. Keep the transitional
         // state intact so privateClient can perform that resolution instead
         // of rejecting it as an anonymous request.
-      } else if (
-        initialResolutionPending &&
-        props.initialResolution !== "unauthenticated" &&
-        scope.status !== "authenticated" &&
-        scope.status !== "unavailable"
-      ) {
-        beginSessionResolution();
-      } else if (
-        scope.status !== "authenticated" &&
-        scope.status !== "unavailable"
-      ) {
-        setAnonymousSessionScope();
       }
-      initialResolutionPending = false;
     }
   });
 

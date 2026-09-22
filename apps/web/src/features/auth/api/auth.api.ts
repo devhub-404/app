@@ -65,10 +65,6 @@ function mapAuthenticationResult<T extends import('../types/login-result.type.ts
 }
 
 export class AuthApi {
-  static logout() {
-    return privateClient.DELETE('/api/v1/sessions/current');
-  }
-
   static async startOAuth(
     provider: OAuthProvider,
     flow: OAuthFlow = 'login',

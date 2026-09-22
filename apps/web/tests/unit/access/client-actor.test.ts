@@ -4,10 +4,19 @@ import { clearAccount, setAccountDetails, setAccountShell } from '../../../src/f
 import type { AccountDetailsView } from '../../../src/features/account/types/account-details-view.type.ts';
 import { getClientActor } from '../../../src/features/auth/access/client-actor.access.ts';
 import {
-  setAnonymousSessionScope,
-  setAuthenticatedSessionScope,
-  setUnavailableSessionScope,
-} from '../../../src/shared/runtime/session-scope.ts';
+  setAnonymousSession,
+  setAuthenticatedSession,
+  setAuthUnavailable,
+} from '../../../src/features/auth/store/auth.store.ts';
+
+const session = {
+  id: 'session-1',
+  userId: 'account-1',
+  authMethod: 'password' as const,
+  lastProofOfPossessionAt: '2026-09-22T10:00:00.000Z',
+  createdAt: '2026-09-22T09:00:00.000Z',
+  expiresAt: '2026-10-22T09:00:00.000Z',
+};
 
 test('client actor refuses a stale account after logout', () => {
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, 'window');
@@ -15,11 +24,11 @@ test('client actor refuses a stale account after logout', () => {
 
   try {
     setAccountDetails({ account: { id: 'account-1' }, role: 'admin' } as AccountDetailsView);
-    setAuthenticatedSessionScope('account-1');
+    setAuthenticatedSession(session);
     assert.equal(getClientActor()?.accountId, 'account-1');
     assert.equal(getClientActor()?.role, 'admin');
 
-    setAnonymousSessionScope();
+    setAnonymousSession();
     assert.equal(getClientActor()?.accountId, null);
     assert.equal(getClientActor()?.role, null);
   } finally {
@@ -40,13 +49,13 @@ test('client actor refuses shell permissions while session resolution is unavail
       preferences: { locale: null },
       role: 'admin',
     });
-    setUnavailableSessionScope();
+    setAuthUnavailable();
 
     assert.equal(getClientActor()?.accountId, null);
     assert.equal(getClientActor()?.role, null);
   } finally {
     clearAccount();
-    setAnonymousSessionScope();
+    setAnonymousSession();
     if (previousWindow) Object.defineProperty(globalThis, 'window', previousWindow);
     else delete (globalThis as { window?: unknown }).window;
   }
