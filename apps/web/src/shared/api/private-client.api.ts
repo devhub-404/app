@@ -7,7 +7,7 @@ import {
   $authSessionScope,
   getAuthSessionScope,
   isAuthenticatedAuthSession,
-} from "@/features/auth/runtime/auth-scope.ts";
+} from "@/features/auth/public/session.ts";
 
 const openApiBaseUrl = baseURL.replace(/\/api\/?$/, "");
 const SESSION_RESOLUTION_HEADER = "x-devhub-session-resolution";

@@ -53,7 +53,9 @@ account's public interfaces without importing its infrastructure.
 - `apps/web/src/features/auth/store/` — canonical browser authentication
   state and session revisions;
 - `apps/web/src/features/auth/runtime/` — session resolution, logout
-  coordination, request invalidation, and cross-tab synchronization;
+  coordination, request invalidation, and cross-tab synchronization. The
+  client runtime and lifecycle bus are created only during browser hydration,
+  never while the Cloudflare SSR Worker evaluates its global module scope;
 - `apps/web/src/features/auth/api/` — browser and SSR clients for
   `/api/v1/sessions/current` and related auth-session operations;
 - `apps/web/src/features/account/store/account-projection.store.ts` — account
@@ -66,6 +68,9 @@ account's public interfaces without importing its infrastructure.
 - `apps/web/src/features/auth/actions/`
 - `apps/web/src/features/auth/api/`
 - `apps/web/src/features/auth/public/`
+- `apps/web/src/features/auth/public/server.ts` and
+  `apps/web/src/features/auth/public/session.ts` — public server/session
+  integration entries for application and shared consumers;
 - `apps/web/src/features/auth/ui/`
 - `apps/web/src/features/auth/utils/`
 

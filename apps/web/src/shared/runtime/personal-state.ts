@@ -11,7 +11,7 @@ import {
   getSessionScope,
   isAuthenticatedSessionScope,
   isCurrentSessionScope,
-} from "@/features/auth/runtime/auth-scope.ts";
+} from "@/features/auth/public/session.ts";
 import type { SyncedVote } from "@/shared/interactions/vote/types/vote.type.ts";
 import type { BookmarkDTO } from "@/shared/interactions/bookmark/types/bookmark.type.ts";
 

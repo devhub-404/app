@@ -65,6 +65,9 @@ composition point.
 - `features/auth` owns the authentication source of truth: the current auth
   session, resolution state, logout single-flight, private-response
   invalidation, and cross-tab lifecycle synchronization;
+- the auth client runtime and lifecycle bus are created lazily from the
+  hydrated `AuthRuntime` only; SSR may import auth modules but must not create
+  browser synchronization or mutable client coordinators;
 - `features/account` owns the account projection (`$account`) and its
   `/me/details` bootstrap; it never changes authentication state;
 - `src/app/runtime/AppRuntime.tsx` is composition only. It mounts auth and
@@ -78,6 +81,8 @@ composition point.
   `localStorage` fallback. It publishes `available` only after the producing
   tab confirms the session, and publishes one `invalidated` event per active
   logout/invalidation;
+- Web consumers outside `features/auth` use its public server/session entries;
+  they do not import auth API or runtime internals directly;
 - features do not own local session or authenticated-account stores; they
   consume the auth and account projections or use the private transport;
 - temporary page state does not go into a global store.

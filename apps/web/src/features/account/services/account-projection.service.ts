@@ -10,7 +10,7 @@ import type { AccountDetailsView } from "../types/account-details-view.type.ts";
 import {
   getAuthSessionScope,
   isCurrentAuthSession,
-} from "@/features/auth/runtime/auth-scope.ts";
+} from "@/features/auth/public/session.ts";
 
 let bootstrapPromise: Promise<AccountDetailsView | null> | null = null;
 
@@ -77,4 +77,3 @@ export async function refreshAccount(): Promise<AccountDetailsView> {
     throw error;
   }
 }
-
